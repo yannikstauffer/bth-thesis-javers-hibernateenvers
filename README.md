@@ -1,1 +1,1 @@
-# FFHS-BTh_Thesis-Javers_HibernateEnvers
+# bth-thesis-javers-hibernateenvers

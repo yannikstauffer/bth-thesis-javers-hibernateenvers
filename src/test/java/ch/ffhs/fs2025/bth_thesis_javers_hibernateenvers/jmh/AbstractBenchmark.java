@@ -35,7 +35,8 @@ public abstract class AbstractBenchmark {
                 .resultFormat(ResultFormatType.JSON)
                 .result("./benchmark-results/" + benchmarkFileName)
                 .shouldFailOnError(true)
-                .jvmArgs("-server")
+                // todo: remove postgres profile to run on h2
+                .jvmArgs("-server", "-Dspring.config.location=classpath:/application-postgres.properties")
                 .build();
 
         new Runner(opt).run();

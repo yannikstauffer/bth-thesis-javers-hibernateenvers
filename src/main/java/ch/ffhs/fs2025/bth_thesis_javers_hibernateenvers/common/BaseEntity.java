@@ -1,4 +1,4 @@
-package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.base;
+package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;

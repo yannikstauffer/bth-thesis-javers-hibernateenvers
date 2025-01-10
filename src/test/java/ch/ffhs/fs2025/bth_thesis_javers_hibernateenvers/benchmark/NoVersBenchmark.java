@@ -22,6 +22,11 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 public class NoVersBenchmark extends AbstractBenchmark {
 
+    @Override
+    protected String benchmarkName() {
+        return "NoVers";
+    }
+
     @Setup
     public void setup() {
         this.context = new SpringApplication(BthThesisJaversHibernateenversApplication.class).run();

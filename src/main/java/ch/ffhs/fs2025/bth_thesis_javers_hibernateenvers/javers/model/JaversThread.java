@@ -20,16 +20,22 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "javers_threads")
-public class JaversThread extends BaseEntity implements Thread<JaversComment, JaversUser> {
+public class JaversThread extends BaseEntity implements Thread<JaversUser, JaversPost> {
 
     private String title;
 
     private String content;
+    private byte[] attachment;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private JaversUser owner;
 
     @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<JaversComment> comments = new ArrayList<>();
+    private List<JaversPost> posts = new ArrayList<>();
+
+    @Override
+    public Class<JaversPost> getChildType() {
+        return JaversPost.class;
+    }
 }

@@ -2,7 +2,7 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common;
 
 import java.util.List;
 
-public interface User<C extends Comment<?, ?, ?>, T extends Thread<?, ?>> {
+public interface User<T extends Thread<?, P>, P extends Post<?, T, C>, C extends Comment<?, P>> {
 
     String getUsername();
 
@@ -15,4 +15,8 @@ public interface User<C extends Comment<?, ?, ?>, T extends Thread<?, ?>> {
     List<T> getThreads();
 
     void setThreads(List<T> threads);
+
+    List<P> getPosts();
+
+    void setPosts(List<P> posts);
 }

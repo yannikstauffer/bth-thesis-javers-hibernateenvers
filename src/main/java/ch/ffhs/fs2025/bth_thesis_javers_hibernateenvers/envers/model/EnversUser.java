@@ -19,14 +19,17 @@ import java.util.List;
 @AllArgsConstructor
 @Entity(name = "envers_users")
 @Audited
-public class EnversUser extends BaseEntity implements User<EnversComment, EnversThread> {
+public class EnversUser extends BaseEntity implements User<EnversThread, EnversPost, EnversComment> {
 
     private String username;
 
     @OneToMany(mappedBy = "owner")
-    private List<EnversComment> comments = new ArrayList<>();
+    private List<EnversThread> threads = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner")
-    private List<EnversThread> threads = new ArrayList<>();
+    private List<EnversPost> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "owner")
+    private List<EnversComment> comments = new ArrayList<>();
 
 }

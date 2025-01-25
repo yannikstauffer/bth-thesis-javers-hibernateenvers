@@ -1,7 +1,7 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.novers.model;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.BaseEntity;
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Post;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -19,23 +19,25 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "novers_threads")
-public class NoversThread extends BaseEntity implements Thread<NoversUser, NoversPost> {
-
-    private String title;
+@Entity(name = "novers_posts")
+public class NoversPost extends BaseEntity implements Post<NoversUser, NoversThread, NoversComment> {
 
     private String content;
     private byte[] attachment;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NoversComment> comments = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private NoversUser owner;
 
-    @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NoversPost> posts = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "thread_id")
+    private NoversThread thread;
 
     @Override
-    public Class<NoversPost> getChildType() {
-        return NoversPost.class;
+    public Class<NoversComment> getChildType() {
+        return NoversComment.class;
     }
 }

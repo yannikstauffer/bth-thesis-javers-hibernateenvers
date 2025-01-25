@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "novers_users")
-public class NoversUser extends BaseEntity implements User<NoversComment, NoversThread> {
+public class NoversUser extends BaseEntity implements User<NoversThread, NoversPost, NoversComment> {
 
     private String username;
 
@@ -26,5 +26,8 @@ public class NoversUser extends BaseEntity implements User<NoversComment, Novers
 
     @OneToMany(mappedBy = "owner")
     private List<NoversThread> threads = new ArrayList<>();
+
+    @OneToMany(mappedBy = "owner")
+    private List<NoversPost> posts = new ArrayList<>();
 
 }

@@ -2,22 +2,18 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common;
 
 import java.util.List;
 
-public interface Thread<C extends Comment<?, ?, ?>, U extends User<?, ?>> {
+public interface Thread<U extends User<?, P, ?>, P extends Post<U, ?, ?>> extends Payload, ChildType<P> {
 
     String getTitle();
 
     void setTitle(String title);
 
-    String getContent();
-
-    void setContent(String content);
-
     U getOwner();
 
     void setOwner(U owner);
 
-    List<C> getComments();
+    List<P> getPosts();
 
-    void setComments(List<C> comments);
+    void setPosts(List<P> comments);
 
 }

@@ -17,14 +17,17 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "javers_users")
-public class JaversUser extends BaseEntity implements User<JaversComment, JaversThread> {
+public class JaversUser extends BaseEntity implements User<JaversThread, JaversPost, JaversComment> {
 
     private String username;
 
     @OneToMany(mappedBy = "owner")
-    private List<JaversComment> comments = new ArrayList<>();
+    private List<JaversThread> threads = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner")
-    private List<JaversThread> threads = new ArrayList<>();
+    private List<JaversPost> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "owner")
+    private List<JaversComment> comments = new ArrayList<>();
 
 }

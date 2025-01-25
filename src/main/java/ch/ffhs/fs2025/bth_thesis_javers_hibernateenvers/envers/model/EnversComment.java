@@ -2,19 +2,14 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.envers.model;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.BaseEntity;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Comment;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -22,23 +17,17 @@ import java.util.List;
 @AllArgsConstructor
 @Entity(name = "envers_comments")
 @Audited
-public class EnversComment extends BaseEntity implements Comment<EnversComment, EnversThread, EnversUser> {
+public class EnversComment extends BaseEntity implements Comment<EnversUser, EnversPost> {
 
-    protected String content;
+    private String content;
+    private byte[] attachment;
 
     @ManyToOne
-    @JoinColumn(name = "parent_id")
-    private EnversComment parent;
-
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EnversComment> children = new ArrayList<>();
+    @JoinColumn(name = "post_id")
+    private EnversPost post;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private EnversUser owner;
-
-    @ManyToOne
-    @JoinColumn(name = "thread_id")
-    private EnversThread thread;
 
 }

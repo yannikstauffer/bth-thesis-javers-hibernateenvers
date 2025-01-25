@@ -1,7 +1,7 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.envers.model;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.BaseEntity;
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Post;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -20,24 +20,26 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "envers_threads")
+@Entity(name = "envers_posts")
 @Audited
-public class EnversThread extends BaseEntity implements Thread<EnversUser, EnversPost> {
-
-    private String title;
+public class EnversPost extends BaseEntity implements Post<EnversUser, EnversThread, EnversComment> {
 
     private String content;
     private byte[] attachment;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EnversComment> comments = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private EnversUser owner;
 
-    @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EnversPost> posts = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "thread_id")
+    private EnversThread thread;
 
     @Override
-    public Class<EnversPost> getChildType() {
-        return EnversPost.class;
+    public Class<EnversComment> getChildType() {
+        return EnversComment.class;
     }
 }

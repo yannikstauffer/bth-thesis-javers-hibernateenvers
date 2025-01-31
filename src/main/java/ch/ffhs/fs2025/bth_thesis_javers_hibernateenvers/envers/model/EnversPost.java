@@ -5,6 +5,7 @@ import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Post;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ import java.util.List;
 public class EnversPost extends BaseEntity implements Post<EnversUser, EnversThread, EnversComment> {
 
     private String content;
+    @Lob
     private byte[] attachment;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)

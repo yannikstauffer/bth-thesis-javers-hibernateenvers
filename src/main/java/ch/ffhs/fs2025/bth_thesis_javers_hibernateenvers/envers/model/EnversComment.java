@@ -4,6 +4,7 @@ import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.BaseEntity;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Comment;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +21,7 @@ import org.hibernate.envers.Audited;
 public class EnversComment extends BaseEntity implements Comment<EnversUser, EnversPost> {
 
     private String content;
+    @Lob
     private byte[] attachment;
 
     @ManyToOne

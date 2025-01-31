@@ -7,8 +7,8 @@ import java.util.UUID;
 @Service
 class PayloadService {
 
-    public String name(StructureComplexity structureComplexity, PayloadType payloadType) {
-        return structureComplexity.name() + "_" + payloadType.name();
+    public String name(ObjectGraphComplexity objectGraphComplexity, PayloadType payloadType) {
+        return objectGraphComplexity.name() + "_" + payloadType.name();
     }
 
     public String content() {

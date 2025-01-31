@@ -5,6 +5,7 @@ import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ public class JaversThread extends BaseEntity implements Thread<JaversUser, Javer
     private String title;
 
     private String content;
+    @Lob
     private byte[] attachment;
 
     @ManyToOne

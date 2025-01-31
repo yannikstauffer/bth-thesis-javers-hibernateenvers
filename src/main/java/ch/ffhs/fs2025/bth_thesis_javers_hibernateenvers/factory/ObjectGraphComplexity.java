@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum StructureComplexity {
-    SINGLE(1), MEDIUM(5), HIGH(50);
+public enum ObjectGraphComplexity {
+    SINGLE(1), MEDIUM(3), HIGH(10);
 
     private final int entityCount;
 }

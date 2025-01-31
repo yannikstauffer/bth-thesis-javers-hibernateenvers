@@ -17,16 +17,16 @@ public class TestDataFactory {
     private final UserFactory userFactory;
     private final ThreadFactory threadFactory;
 
-    protected <T> T create(Class<T> type, PayloadType payloadType, StructureComplexity structureComplexity) {
+    protected <T> T create(Class<T> type, PayloadType payloadType, ObjectGraphComplexity objectGraphComplexity) {
         T testData;
 
         if (isPost(type)) {
-            testData = getPostAsT(type, payloadType, structureComplexity);
+            testData = getPostAsT(type, payloadType, objectGraphComplexity);
         } else if (isThread(type)) {
             testData = type.cast(threadFactory.create((Class<Thread<?, ?>>) type, payloadType));
             Thread thread = ((Thread) testData);
-            for (int i = 0; i < structureComplexity.getEntityCount(); i++) {
-                thread.getPosts().add(create(thread.getChildType(), payloadType, structureComplexity));
+            for (int i = 0; i < objectGraphComplexity.getEntityCount(); i++) {
+                thread.getPosts().add(create(thread.getChildType(), payloadType, objectGraphComplexity));
             }
         } else if (isComment(type)) {
             testData = type.cast(commentFactory.create((Class<Comment<?, ?>>) type, payloadType));
@@ -38,12 +38,12 @@ public class TestDataFactory {
         return testData;
     }
 
-    private <T> T getPostAsT(Class<T> type, PayloadType payloadType, StructureComplexity structureComplexity) {
+    private <T> T getPostAsT(Class<T> type, PayloadType payloadType, ObjectGraphComplexity objectGraphComplexity) {
         T testData;
         testData = type.cast(postFactory.create((Class<Post<?, ?, ?>>) type, payloadType));
         Post post = ((Post) testData);
-        for (int i = 0; i < structureComplexity.getEntityCount(); i++) {
-            post.getComments().add(create(post.getChildType(), payloadType, structureComplexity));
+        for (int i = 0; i < objectGraphComplexity.getEntityCount(); i++) {
+            post.getComments().add(create(post.getChildType(), payloadType, objectGraphComplexity));
         }
         return testData;
     }

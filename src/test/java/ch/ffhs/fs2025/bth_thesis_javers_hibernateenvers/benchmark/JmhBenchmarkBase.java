@@ -23,7 +23,7 @@ public abstract class JmhBenchmarkBase {
     @Test
     public void executeJmhRunner() throws RunnerException {
         String benchmarkClassName = this.getClass().getSimpleName();
-        String benchmarkFileName = benchmarkClassName + "_" + LocalDateTime.now().format(DATE_TIME_FORMATTER) + ".json";
+        String benchmarkFileName = LocalDateTime.now().format(DATE_TIME_FORMATTER) + "_" + benchmarkClassName + ".json";
 
         Options opt = new OptionsBuilder()
                 .include("\\." + benchmarkClassName + "\\.")

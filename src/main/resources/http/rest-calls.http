@@ -1,0 +1,54 @@
+### Create a new thread
+POST http://localhost:8080/{{implementation}}/threads
+Content-Type: application/json
+Accept: application/json
+
+{}
+
+> {%
+    client.test("Create a new thread", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### Get all threads
+GET http://localhost:8080/{{implementation}}/threads
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    client.test("Get all threads", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.global.set("threadId", response.body[response.body.length - 1].id);
+    });
+%}
+
+### Update a thread
+PATCH http://localhost:8080/{{implementation}}/threads/{{threadId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "updated title",
+  "content": "updated content"
+}
+
+> {%
+    client.test("Update a thread", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+
+### Check updated thread
+GET http://localhost:8080/{{implementation}}/threads/{{threadId}}
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    client.test("Check updated thread", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.title === "updated title", "Title was not updated");
+        client.assert(response.body.content === "updated content", "Content was not updated");
+    });
+%}

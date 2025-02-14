@@ -77,6 +77,7 @@ class PayloadFactoryImpl extends AbstractPayloadFactory<PayloadImpl> {
 @Setter
 class PayloadImpl implements Payload {
 
+    private Integer id;
     private String content;
     private byte[] attachment;
 

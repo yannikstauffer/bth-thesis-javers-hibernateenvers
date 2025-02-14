@@ -7,7 +7,8 @@ Accept: application/json
 
 > {%
     client.test("Create a new thread", function () {
-        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.status === 201, "Response status is not 201");
+        client.global.set("threadId", response.body);
     });
 %}
 
@@ -19,18 +20,22 @@ Accept: application/json
 > {%
     client.test("Get all threads", function () {
         client.assert(response.status === 200, "Response status is not 200");
-        client.global.set("threadId", response.body[response.body.length - 1].id);
     });
 %}
 
+
 ### Update a thread
-PATCH http://localhost:8080/{{implementation}}/threads/{{threadId}}
+< {%
+    client.global.set("updateId", $timestamp);
+%}
+
+POST http://localhost:8080/{{implementation}}/threads/{{threadId}}
 Content-Type: application/json
 Accept: application/json
 
 {
-  "title": "updated title",
-  "content": "updated content"
+  "title": "updated title {{updateId}}",
+  "content": "updated content {{updateId}}"
 }
 
 > {%
@@ -39,16 +44,37 @@ Accept: application/json
     });
 %}
 
-
 ### Check updated thread
 GET http://localhost:8080/{{implementation}}/threads/{{threadId}}
 Content-Type: application/json
 Accept: application/json
 
 > {%
+    let updatedId = client.global.get("updateId");
     client.test("Check updated thread", function () {
         client.assert(response.status === 200, "Response status is not 200");
-        client.assert(response.body.title === "updated title", "Title was not updated");
-        client.assert(response.body.content === "updated content", "Content was not updated");
+        client.assert(response.body.title === "updated title " + updatedId, "Faulty title: " + response.body.title);
+        client.assert(response.body.content === "updated content " + updatedId, "Faulty content: " + response.body.content);
+    });
+%}
+
+### Delete updated thread
+DELETE http://localhost:8080/{{implementation}}/threads/{{threadId}}
+Content-Type: application/json
+
+> {%
+    client.test("Delete updated thread", function () {
+        client.assert(response.status === 204, "Response status is not 204");
+    });
+%}
+
+### Check if thread is deleted
+GET http://localhost:8080/{{implementation}}/threads/{{threadId}}
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    client.test("Check if thread is deleted", function () {
+        client.assert(response.status === 404, "Response status is not 404");
     });
 %}

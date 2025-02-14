@@ -9,7 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.UUID;
 
-public abstract class AbstractUpdateBenchmark<T extends Thread<?, ?>, R extends CrudRepository<T, Integer>> extends ThreadBenchmarkBase<T, R> {
+public abstract class AbstractUpdateBenchmark<T extends Thread<?>, R extends CrudRepository<T, Integer>> extends ThreadBenchmarkBase<T, R> {
 
     protected void repeatedSetupRoutine(int i) {
         var thread = getThread();

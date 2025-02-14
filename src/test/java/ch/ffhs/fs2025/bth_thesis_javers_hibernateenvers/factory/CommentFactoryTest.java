@@ -24,14 +24,14 @@ class CommentFactoryTest {
     @InjectMocks
     private CommentFactory commentFactory;
 
-    static Stream<Class<? extends Comment<?, ?>>> commentTypes() {
+    static Stream<Class<? extends Comment<?>>> commentTypes() {
         return Stream.of(NoversComment.class, JaversComment.class, EnversComment.class);
     }
 
     @ParameterizedTest
     @MethodSource("commentTypes")
-    void create(Class<Comment<?, ?>> commentType) {
-        Comment<?, ?> comment = commentFactory.create(commentType);
+    void create(Class<Comment<?>> commentType) {
+        Comment<?> comment = commentFactory.create(commentType);
 
         assertThat(comment)
                 .isNotNull()

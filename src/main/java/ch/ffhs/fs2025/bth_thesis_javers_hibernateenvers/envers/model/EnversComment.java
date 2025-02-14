@@ -18,7 +18,7 @@ import org.hibernate.envers.Audited;
 @AllArgsConstructor
 @Entity(name = "envers_comments")
 @Audited
-public class EnversComment extends BaseEntity implements Comment<EnversUser, EnversPost> {
+public class EnversComment extends BaseEntity implements Comment<EnversPost> {
 
     private String content;
     @Lob
@@ -27,9 +27,5 @@ public class EnversComment extends BaseEntity implements Comment<EnversUser, Env
     @ManyToOne
     @JoinColumn(name = "post_id")
     private EnversPost post;
-
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private EnversUser owner;
 
 }

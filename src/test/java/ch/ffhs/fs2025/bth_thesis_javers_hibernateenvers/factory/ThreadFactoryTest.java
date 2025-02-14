@@ -25,14 +25,14 @@ class ThreadFactoryTest {
     @InjectMocks
     private ThreadFactory threadFactory;
 
-    static Stream<Class<? extends Thread<?, ?>>> threadTypes() {
+    static Stream<Class<? extends Thread<?>>> threadTypes() {
         return Stream.of(NoversThread.class, JaversThread.class, EnversThread.class);
     }
 
     @ParameterizedTest
     @MethodSource("threadTypes")
-    void create(Class<Thread<?, ?>> commentType) {
-        Thread<?, ?> comment = threadFactory.create(commentType);
+    void create(Class<Thread<?>> commentType) {
+        Thread<?> comment = threadFactory.create(commentType);
 
         assertThat(comment)
                 .isNotNull()

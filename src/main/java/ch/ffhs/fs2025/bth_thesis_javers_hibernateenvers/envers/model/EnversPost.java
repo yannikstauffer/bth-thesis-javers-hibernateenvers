@@ -23,7 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity(name = "envers_posts")
 @Audited
-public class EnversPost extends BaseEntity implements Post<EnversUser, EnversThread, EnversComment> {
+public class EnversPost extends BaseEntity implements Post<EnversThread, EnversComment> {
 
     private String content;
     @Lob
@@ -31,10 +31,6 @@ public class EnversPost extends BaseEntity implements Post<EnversUser, EnversThr
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EnversComment> comments = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private EnversUser owner;
 
     @ManyToOne
     @JoinColumn(name = "thread_id")

@@ -9,7 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ThreadBenchmarkBase<T extends Thread<?, ?>, R extends CrudRepository<T, Integer>> extends JmhBenchmarkBase {
+public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRepository<T, Integer>> extends JmhBenchmarkBase {
 
     protected R repository;
 

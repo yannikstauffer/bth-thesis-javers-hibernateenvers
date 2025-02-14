@@ -24,14 +24,14 @@ class PostFactoryTest {
     @InjectMocks
     private PostFactory postFactory;
 
-    static Stream<Class<? extends Post<?, ?, ?>>> postTypes() {
+    static Stream<Class<? extends Post<?, ?>>> postTypes() {
         return Stream.of(NoversPost.class, JaversPost.class, EnversPost.class);
     }
 
     @ParameterizedTest
     @MethodSource("postTypes")
-    void create(Class<Post<?, ?, ?>> commentType) {
-        Post<?, ?, ?> comment = postFactory.create(commentType);
+    void create(Class<Post<?, ?>> commentType) {
+        Post<?, ?> comment = postFactory.create(commentType);
 
         assertThat(comment)
                 .isNotNull()

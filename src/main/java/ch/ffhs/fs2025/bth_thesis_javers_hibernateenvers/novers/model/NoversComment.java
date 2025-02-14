@@ -16,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "novers_comments")
-public class NoversComment extends BaseEntity implements Comment<NoversUser, NoversPost> {
+public class NoversComment extends BaseEntity implements Comment<NoversPost> {
 
     private String content;
     @Lob
@@ -25,10 +25,6 @@ public class NoversComment extends BaseEntity implements Comment<NoversUser, Nov
     @ManyToOne
     @JoinColumn(name = "post_id")
     private NoversPost post;
-
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private NoversUser owner;
 
 
 }

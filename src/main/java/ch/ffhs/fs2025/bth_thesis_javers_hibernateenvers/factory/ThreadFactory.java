@@ -8,22 +8,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-class ThreadFactory extends AbstractPayloadFactory<Thread<?, ?>> {
+class ThreadFactory extends AbstractPayloadFactory<Thread<?>> {
 
     @Autowired
     public ThreadFactory(PayloadService payloadService) {
         super(payloadService);
     }
 
-    public Thread<?, ?> create(Class<Thread<?, ?>> type, ObjectGraphComplexity objectGraphComplexity, PayloadType payloadType) {
-        Thread<?, ?> thread = super.create(type, payloadType);
+    public Thread<?> create(Class<Thread<?>> type, ObjectGraphComplexity objectGraphComplexity, PayloadType payloadType) {
+        Thread<?> thread = super.create(type, payloadType);
         thread.setTitle(payloadService.name(objectGraphComplexity, payloadType));
 
         return thread;
     }
 
     @Override
-    Thread<?, ?> create(Class<Thread<?, ?>> type) {
+    Thread<?> create(Class<Thread<?>> type) {
         return switch (type.getSimpleName()) {
             case "NoversThread" -> type.cast(new NoversThread());
             case "JaversThread" -> type.cast(new JaversThread());

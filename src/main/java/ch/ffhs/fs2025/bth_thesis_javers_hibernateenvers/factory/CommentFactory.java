@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-class CommentFactory extends AbstractPayloadFactory<Comment<?, ?>> {
+class CommentFactory extends AbstractPayloadFactory<Comment<?>> {
 
     @Autowired
     public CommentFactory(PayloadService payloadService) {
@@ -16,7 +16,7 @@ class CommentFactory extends AbstractPayloadFactory<Comment<?, ?>> {
     }
 
     @Override
-    protected Comment<?, ?> create(Class<Comment<?, ?>> type) {
+    protected Comment<?> create(Class<Comment<?>> type) {
         return switch (type.getSimpleName()) {
             case "NoversComment" -> type.cast(new NoversComment());
             case "JaversComment" -> type.cast(new JaversComment());

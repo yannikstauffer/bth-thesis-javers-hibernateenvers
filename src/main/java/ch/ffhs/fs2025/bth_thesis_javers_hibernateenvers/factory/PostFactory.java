@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-class PostFactory extends AbstractPayloadFactory<Post<?, ?, ?>> {
+class PostFactory extends AbstractPayloadFactory<Post<?, ?>> {
 
     @Autowired
     public PostFactory(PayloadService payloadService) {
@@ -16,7 +16,7 @@ class PostFactory extends AbstractPayloadFactory<Post<?, ?, ?>> {
     }
 
     @Override
-    Post<?, ?, ?> create(Class<Post<?, ?, ?>> type) {
+    Post<?, ?> create(Class<Post<?, ?>> type) {
         return switch (type.getSimpleName()) {
             case "NoversPost" -> type.cast(new NoversPost());
             case "JaversPost" -> type.cast(new JaversPost());

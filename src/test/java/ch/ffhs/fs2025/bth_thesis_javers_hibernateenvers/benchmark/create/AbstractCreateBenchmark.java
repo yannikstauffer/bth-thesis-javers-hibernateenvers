@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public abstract class AbstractCreateBenchmark<T extends Thread<?, ?>, R extends CrudRepository<T, Integer>> extends ThreadBenchmarkBase<T, R> {
+public abstract class AbstractCreateBenchmark<T extends Thread<?>, R extends CrudRepository<T, Integer>> extends ThreadBenchmarkBase<T, R> {
 
     protected void repeatedSetupRoutine(int i) {
         var thread = getThread();

@@ -21,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "novers_posts")
-public class NoversPost extends BaseEntity implements Post<NoversUser, NoversThread, NoversComment> {
+public class NoversPost extends BaseEntity implements Post<NoversThread, NoversComment> {
 
     private String content;
     @Lob
@@ -29,10 +29,6 @@ public class NoversPost extends BaseEntity implements Post<NoversUser, NoversThr
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NoversComment> comments = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private NoversUser owner;
 
     @ManyToOne
     @JoinColumn(name = "thread_id")

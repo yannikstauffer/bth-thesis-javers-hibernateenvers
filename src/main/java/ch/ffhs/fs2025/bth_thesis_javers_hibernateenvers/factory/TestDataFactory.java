@@ -14,22 +14,21 @@ public class TestDataFactory {
 
     private final CommentFactory commentFactory;
     private final PostFactory postFactory;
-    private final UserFactory userFactory;
     private final ThreadFactory threadFactory;
 
-    protected <T> T create(Class<T> type, PayloadType payloadType, ObjectGraphComplexity objectGraphComplexity) {
+    public <T> T create(Class<T> type, PayloadType payloadType, ObjectGraphComplexity objectGraphComplexity) {
         T testData;
 
         if (isPost(type)) {
             testData = getPostAsT(type, payloadType, objectGraphComplexity);
         } else if (isThread(type)) {
-            testData = type.cast(threadFactory.create((Class<Thread<?, ?>>) type, payloadType));
+            testData = type.cast(threadFactory.create((Class<Thread<?>>) type, payloadType));
             Thread thread = ((Thread) testData);
             for (int i = 0; i < objectGraphComplexity.getEntityCount(); i++) {
                 thread.getPosts().add(create(thread.getChildType(), payloadType, objectGraphComplexity));
             }
         } else if (isComment(type)) {
-            testData = type.cast(commentFactory.create((Class<Comment<?, ?>>) type, payloadType));
+            testData = type.cast(commentFactory.create((Class<Comment<?>>) type, payloadType));
         } else {
             throw new IllegalArgumentException("Unsupported type: " + type);
 
@@ -40,7 +39,7 @@ public class TestDataFactory {
 
     private <T> T getPostAsT(Class<T> type, PayloadType payloadType, ObjectGraphComplexity objectGraphComplexity) {
         T testData;
-        testData = type.cast(postFactory.create((Class<Post<?, ?, ?>>) type, payloadType));
+        testData = type.cast(postFactory.create((Class<Post<?, ?>>) type, payloadType));
         Post post = ((Post) testData);
         for (int i = 0; i < objectGraphComplexity.getEntityCount(); i++) {
             post.getComments().add(create(post.getChildType(), payloadType, objectGraphComplexity));

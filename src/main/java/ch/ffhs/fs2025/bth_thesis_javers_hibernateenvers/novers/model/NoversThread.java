@@ -4,9 +4,7 @@ import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.BaseEntity;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "novers_threads")
-public class NoversThread extends BaseEntity implements Thread<NoversUser, NoversPost> {
+public class NoversThread extends BaseEntity implements Thread<NoversPost> {
 
     private String title;
 
@@ -29,9 +27,6 @@ public class NoversThread extends BaseEntity implements Thread<NoversUser, Nover
     @Lob
     private byte[] attachment;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private NoversUser owner;
 
     @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NoversPost> posts = new ArrayList<>();

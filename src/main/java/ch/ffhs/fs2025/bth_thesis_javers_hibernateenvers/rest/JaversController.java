@@ -9,11 +9,10 @@ import org.javers.repository.jql.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+//@RestController
 @RequestMapping(value = "/javers", consumes = "application/json", produces = "application/json")
 public class JaversController extends AbstractController<JaversThread> {
 

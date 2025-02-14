@@ -1,6 +1,7 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.update;
 
 
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.NoversBenchmarkConfiguration;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.novers.model.NoversThread;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.novers.repository.NoversThreadRepository;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -24,5 +25,8 @@ public class NoversUpdateBenchmark extends AbstractUpdateBenchmark<NoversThread,
         return NoversThreadRepository.class;
     }
 
+    protected Class<?> getApplicationConfiguration() {
+        return NoversBenchmarkConfiguration.class;
+    }
 
 }

@@ -18,13 +18,19 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRep
 
     @Setup
     public void setup() {
+//        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+//        context.register(BthThesisJaversHibernateenversApplication.class, getApplicationConfiguration());
+//        context.refresh();
+//        this.context = context;
         this.context = new SpringApplication(BthThesisJaversHibernateenversApplication.class).run();
-        repository = this.context.getBean(getRepositoryClass()); //UserService
+        repository = this.context.getBean(getRepositoryClass());
 
         for (int i = 0; i < 1000000; i++) {
             repeatedSetupRoutine(i);
         }
     }
+
+    protected abstract Class<?> getApplicationConfiguration();
 
     protected abstract T getThread();
 

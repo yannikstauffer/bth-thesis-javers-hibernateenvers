@@ -1,7 +1,6 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.create;
 
 
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.EnversBenchmarkConfiguration;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.envers.model.EnversThread;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.envers.repository.EnversThreadRepository;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -25,7 +24,4 @@ public class EnversCreateBenchmark extends AbstractCreateBenchmark<EnversThread,
         return EnversThreadRepository.class;
     }
 
-    protected Class<?> getApplicationConfiguration() {
-        return EnversBenchmarkConfiguration.class;
-    }
 }

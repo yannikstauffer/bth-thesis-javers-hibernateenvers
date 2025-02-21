@@ -1,7 +1,6 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.create;
 
 
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.NoversBenchmarkConfiguration;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.novers.model.NoversThread;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.novers.repository.NoversThreadRepository;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -25,7 +24,4 @@ public class NoversCreateBenchmark extends AbstractCreateBenchmark<NoversThread,
         return NoversThreadRepository.class;
     }
 
-    protected Class<?> getApplicationConfiguration() {
-        return NoversBenchmarkConfiguration.class;
-    }
 }

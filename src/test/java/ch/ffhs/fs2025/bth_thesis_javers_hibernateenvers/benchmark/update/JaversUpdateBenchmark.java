@@ -1,7 +1,6 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.update;
 
 
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.JaversBenchmarkConfiguration;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.javers.model.JaversThread;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.javers.repository.JaversThreadRepository;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -23,10 +22,6 @@ public class JaversUpdateBenchmark extends AbstractUpdateBenchmark<JaversThread,
 
     protected Class<JaversThreadRepository> getRepositoryClass() {
         return JaversThreadRepository.class;
-    }
-
-    protected Class<?> getApplicationConfiguration() {
-        return JaversBenchmarkConfiguration.class;
     }
 
 }

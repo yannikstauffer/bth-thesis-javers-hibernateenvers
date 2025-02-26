@@ -22,12 +22,12 @@ public abstract class AbstractCreateBenchmark<T extends Thread<?>, R extends Cru
     protected void repeatedSetupRoutine(int i) {
         var thread = getThread();
         thread.setContent("TestThread");
-        threads.add(thread);
+        addTestObject(thread);
     }
 
     @Benchmark
     public void persist(Blackhole blackhole) {
-        var saved = repository.save(threads.get(pointer++));
+        var saved = getRepository().save(nextTestObject());
 
         blackhole.consume(saved);
     }

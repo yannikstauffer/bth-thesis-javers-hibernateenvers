@@ -19,16 +19,16 @@ public abstract class AbstractUpdateBenchmark<T extends Thread<?>, R extends Cru
     protected void repeatedSetupRoutine(int i) {
         var thread = getThread();
         thread.setContent("TestThread");
-        var updated = repository.save(thread);
+        var updated = getRepository().save(thread);
         updated.setContent("UpdatedThread_" + UUID.randomUUID());
         updated.setAttachment(new byte[1000]);
-        threads.add(updated);
+        addTestObject(updated);
     }
 
 
     @Benchmark
     public void update(Blackhole blackhole) {
-        var updated = repository.save(threads.get(pointer++));
+        var updated = getRepository().save(nextTestObject());
 
         blackhole.consume(updated);
     }

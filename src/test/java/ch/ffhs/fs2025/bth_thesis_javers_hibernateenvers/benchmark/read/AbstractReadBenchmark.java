@@ -17,14 +17,14 @@ public abstract class AbstractReadBenchmark<T extends Thread<?>, R extends CrudR
     protected void repeatedSetupRoutine(int i) {
         var thread = getThread();
         thread.setContent("TestThread");
-        var created = repository.save(thread);
+        var created = getRepository().save(thread);
 
-        threads.add(created);
+        addTestObject(created);
     }
 
     @Benchmark
     public void find(Blackhole blackhole) {
-        var found = repository.findById(pointer++);
+        var found = getRepository().findById(nextTestObjectPointer());
         blackhole.consume(found);
     }
 }

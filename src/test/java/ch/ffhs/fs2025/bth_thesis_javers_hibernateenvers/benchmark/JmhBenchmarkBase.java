@@ -14,8 +14,8 @@ import java.time.format.DateTimeFormatter;
 
 public abstract class JmhBenchmarkBase {
 
-    private static final Integer MEASUREMENT_ITERATIONS = 10;
-    private static final Integer WARMUP_ITERATIONS = 10;
+    private static final Integer MEASUREMENT_ITERATIONS = 5;
+    private static final Integer WARMUP_ITERATIONS = 5;
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 
     protected ApplicationContext context;
@@ -29,8 +29,8 @@ public abstract class JmhBenchmarkBase {
                 .include("\\." + benchmarkClassName + "\\.")
                 .warmupIterations(WARMUP_ITERATIONS) // CITE: traini_2023
                 .measurementIterations(MEASUREMENT_ITERATIONS)
-                .measurementTime(TimeValue.milliseconds(500))
-                .warmupTime(TimeValue.milliseconds(500))
+                .measurementTime(TimeValue.milliseconds(1000))
+                .warmupTime(TimeValue.milliseconds(1000))
                 .forks(1) // CITE: costa_2021
                 .threads(1)
                 .shouldDoGC(true)

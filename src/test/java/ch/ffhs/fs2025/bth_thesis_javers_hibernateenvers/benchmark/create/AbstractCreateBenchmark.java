@@ -27,7 +27,7 @@ public abstract class AbstractCreateBenchmark<T extends Thread<?>, R extends Cru
 
     @Benchmark
     public void persist(Blackhole blackhole) {
-        var saved = repository.save(threads.get(pointer));
+        var saved = repository.save(threads.get(pointer++));
 
         blackhole.consume(saved);
     }

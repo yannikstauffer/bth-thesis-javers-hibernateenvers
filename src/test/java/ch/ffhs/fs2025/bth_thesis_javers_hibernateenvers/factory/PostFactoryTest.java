@@ -30,11 +30,11 @@ class PostFactoryTest {
 
     @ParameterizedTest
     @MethodSource("postTypes")
-    void create(Class<Post<?, ?>> commentType) {
-        Post<?, ?> comment = postFactory.create(commentType);
+    void create(Class<Post<?, ?>> postType) {
+        Post<?, ?> post = postFactory.create(postType);
 
-        assertThat(comment)
+        assertThat(post)
                 .isNotNull()
-                .isInstanceOf(commentType);
+                .isInstanceOf(postType);
     }
 }

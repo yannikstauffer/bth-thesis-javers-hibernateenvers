@@ -25,7 +25,8 @@ public class TestDataFactory {
             testData = type.cast(threadFactory.create((Class<Thread<?>>) type, payloadType));
             Thread thread = ((Thread) testData);
             for (int i = 0; i < objectGraphComplexity.getEntityCount(); i++) {
-                thread.getPosts().add(create(thread.getChildType(), payloadType, objectGraphComplexity));
+                var post = create(thread.getChildType(), payloadType, objectGraphComplexity);
+                thread.addChild((Post) post);
             }
         } else if (isComment(type)) {
             testData = type.cast(commentFactory.create((Class<Comment<?>>) type, payloadType));
@@ -37,12 +38,14 @@ public class TestDataFactory {
         return testData;
     }
 
+
     private <T> T getPostAsT(Class<T> type, PayloadType payloadType, ObjectGraphComplexity objectGraphComplexity) {
         T testData;
         testData = type.cast(postFactory.create((Class<Post<?, ?>>) type, payloadType));
         Post post = ((Post) testData);
         for (int i = 0; i < objectGraphComplexity.getEntityCount(); i++) {
-            post.getComments().add(create(post.getChildType(), payloadType, objectGraphComplexity));
+            var comment = create(post.getChildType(), payloadType, objectGraphComplexity);
+            post.addChild((Comment) comment);
         }
         return testData;
     }

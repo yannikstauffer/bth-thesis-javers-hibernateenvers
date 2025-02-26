@@ -15,13 +15,6 @@ class ThreadFactory extends AbstractPayloadFactory<Thread<?>> {
         super(payloadService);
     }
 
-    public Thread<?> create(Class<Thread<?>> type, ObjectGraphComplexity objectGraphComplexity, PayloadType payloadType) {
-        Thread<?> thread = super.create(type, payloadType);
-        thread.setTitle(payloadService.name(objectGraphComplexity, payloadType));
-
-        return thread;
-    }
-
     @Override
     Thread<?> create(Class<Thread<?>> type) {
         return switch (type.getSimpleName()) {

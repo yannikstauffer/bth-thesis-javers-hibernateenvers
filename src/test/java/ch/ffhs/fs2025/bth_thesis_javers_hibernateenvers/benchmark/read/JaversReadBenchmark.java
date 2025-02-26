@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class JaversReadBenchmark extends AbstractReadBenchmark<JaversThread, JaversThreadRepository> {
 
-    protected JaversThread getThread() {
-        return new JaversThread();
+    protected Class<JaversThread> getTestObjectClass() {
+        return JaversThread.class;
     }
 
     protected Class<JaversThreadRepository> getRepositoryClass() {

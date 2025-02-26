@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class JaversDeleteBenchmark extends AbstractDeleteBenchmark<JaversThread, JaversThreadRepository> {
 
-    protected JaversThread getThread() {
-        return new JaversThread();
+    protected Class<JaversThread> getTestObjectClass() {
+        return JaversThread.class;
     }
 
     protected Class<JaversThreadRepository> getRepositoryClass() {

@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class EnversUpdateBenchmark extends AbstractUpdateBenchmark<EnversThread, EnversThreadRepository> {
 
-    protected EnversThread getThread() {
-        return new EnversThread();
+    protected Class<EnversThread> getTestObjectClass() {
+        return EnversThread.class;
     }
 
     protected Class<EnversThreadRepository> getRepositoryClass() {

@@ -7,7 +7,6 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
-import org.springframework.context.ApplicationContext;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,8 +16,6 @@ public abstract class JmhBenchmarkBase {
     private static final Integer MEASUREMENT_ITERATIONS = 5;
     private static final Integer WARMUP_ITERATIONS = 5;
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-
-    protected ApplicationContext context;
 
     @Test
     public void executeJmhRunner() throws RunnerException {

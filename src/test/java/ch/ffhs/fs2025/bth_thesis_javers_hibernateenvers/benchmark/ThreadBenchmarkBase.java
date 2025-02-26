@@ -2,6 +2,9 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.BthThesisJaversHibernateenversApplication;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.TestDataFactory;
 import jakarta.persistence.EntityManager;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.TearDown;
 import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.ArrayList;
@@ -19,28 +23,38 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRep
 
     @Getter(AccessLevel.PROTECTED)
     private R repository;
+    private TestDataFactory testDataFactory;
 
-    private final List<T> threads = new ArrayList<>();
+    private final List<T> testObjects = new ArrayList<>();
     private int pointer = 0;
+    private ApplicationContext context;
 
     @Setup
     public void setup() {
         this.context = new SpringApplication(BthThesisJaversHibernateenversApplication.class).run();
-        repository = this.context.getBean(getRepositoryClass());
+        repository = getBean(getRepositoryClass());
 
         beforeSetupRoutine();
         for (int i = 0; i < initObjectCount(); i++) {
             repeatedSetupRoutine(i);
         }
         afterSetupRoutine();
-        System.out.println("Benchmark setup finished. Total test objects staged: " + threads.size());
+        System.out.println("Benchmark setup finished. Total test objects staged: " + testObjects.size());
     }
 
-    protected abstract T getThread();
+    protected T getTestObject() {
+        return testDataFactory.create(getTestObjectClass(), PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
+    }
+
+    protected abstract Class<T> getTestObjectClass();
 
     protected abstract Class<R> getRepositoryClass();
 
     protected abstract void repeatedSetupRoutine(int i);
+
+    protected <B> B getBean(Class<B> type) {
+        return this.context.getBean(type);
+    }
 
     protected int initObjectCount() {
         return 1000000;
@@ -50,15 +64,16 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRep
         return ++pointer;
     }
 
-    protected void addTestObject(T thread) {
-        threads.add(thread);
+    protected void addTestObject(T testObject) {
+        testObjects.add(testObject);
     }
 
     protected T nextTestObject() {
-        return this.threads.get(nextTestObjectPointer() - 1);
+        return this.testObjects.get(nextTestObjectPointer() - 1);
     }
 
     protected void beforeSetupRoutine() {
+        testDataFactory = getBean(TestDataFactory.class);
     }
 
     protected void afterSetupRoutine() {
@@ -68,10 +83,10 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRep
 
     @TearDown
     public void tearDown() {
-        if (threads.size() < pointer) {
-            throw new IllegalStateException("Benchmark failed. There were not enough test objects staged. Total test objects created: " + threads.size() + ". Items processed: " + pointer);
+        if (testObjects.size() < pointer) {
+            throw new IllegalStateException("Benchmark failed. There were not enough test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
         }
-        System.out.println("Benchmark finished. Total test objects staged: " + threads.size() + ". Test objects processed: " + pointer);
+        System.out.println("Benchmark finished. Total test objects staged: " + testObjects.size() + ". Test objects processed: " + pointer);
     }
 
 }

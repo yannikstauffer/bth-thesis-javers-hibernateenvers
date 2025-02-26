@@ -16,10 +16,12 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class JaversUpdateBenchmark extends AbstractUpdateBenchmark<JaversThread, JaversThreadRepository> {
 
-    protected JaversThread getThread() {
-        return new JaversThread();
+    @Override
+    protected Class<JaversThread> getTestObjectClass() {
+        return JaversThread.class;
     }
 
+    @Override
     protected Class<JaversThreadRepository> getRepositoryClass() {
         return JaversThreadRepository.class;
     }

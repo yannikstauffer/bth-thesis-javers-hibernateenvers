@@ -14,7 +14,7 @@ public abstract class AbstractDeleteBenchmark<T extends Thread<?>, R extends Cru
     }
 
     protected void repeatedSetupRoutine(int i) {
-        var thread = getThread();
+        var thread = getTestObject();
         thread.setContent("TestThread");
         var created = getRepository().save(thread);
         addTestObject(created);

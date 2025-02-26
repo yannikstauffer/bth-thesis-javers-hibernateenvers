@@ -17,7 +17,7 @@ public abstract class AbstractUpdateBenchmark<T extends Thread<?>, R extends Cru
     }
 
     protected void repeatedSetupRoutine(int i) {
-        var thread = getThread();
+        var thread = getTestObject();
         thread.setContent("TestThread");
         var updated = getRepository().save(thread);
         updated.setContent("UpdatedThread_" + UUID.randomUUID());

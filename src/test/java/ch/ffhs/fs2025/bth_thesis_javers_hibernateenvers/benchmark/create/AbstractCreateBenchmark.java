@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class AbstractCreateBenchmark<T extends Thread<?>, R extends CrudRepository<T, Integer>> extends ThreadBenchmarkBase<T, R> {
 
     protected void repeatedSetupRoutine(int i) {
-        var thread = getThread();
+        var thread = getTestObject();
         thread.setContent("TestThread");
         addTestObject(thread);
     }

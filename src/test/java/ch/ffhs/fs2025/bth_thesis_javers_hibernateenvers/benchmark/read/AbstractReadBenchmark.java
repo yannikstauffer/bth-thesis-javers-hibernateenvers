@@ -15,7 +15,7 @@ public abstract class AbstractReadBenchmark<T extends Thread<?>, R extends CrudR
     }
 
     protected void repeatedSetupRoutine(int i) {
-        var thread = getThread();
+        var thread = getTestObject();
         thread.setContent("TestThread");
         var created = getRepository().save(thread);
 

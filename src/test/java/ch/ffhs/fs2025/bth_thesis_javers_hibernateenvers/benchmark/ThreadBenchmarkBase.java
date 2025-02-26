@@ -2,8 +2,8 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.BthThesisJaversHibernateenversApplication;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.TearDown;
 import org.springframework.boot.SpringApplication;
@@ -20,7 +20,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRep
     protected List<T> threads = new ArrayList<>();
     protected int pointer = 0;
 
-    @Setup(Level.Iteration)
+    @Setup
     public void setup() {
         this.context = new SpringApplication(BthThesisJaversHibernateenversApplication.class).run();
         repository = this.context.getBean(getRepositoryClass());
@@ -42,17 +42,17 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRep
 
     protected abstract void repeatedSetupRoutine(int i);
 
-    protected void afterSetup() {}
+    protected void afterSetup() {
+        EntityManager entityManager = context.getBean(EntityManager.class);
+        entityManager.clear();
+    }
 
-    @TearDown(Level.Iteration)
+    @TearDown
     public void tearDown() {
         if (threads.size() < pointer) {
             throw new IllegalStateException("Benchmark failed. There were not enough items staged. Total items created: " + threads.size() + ". Items processed: " + pointer);
         }
         System.out.println("Benchmark finished. Total items created: " + threads.size() + ". Items processed: " + pointer);
-        threads.clear();
-        pointer = 0;
-
     }
 
 }

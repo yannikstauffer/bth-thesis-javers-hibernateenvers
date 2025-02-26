@@ -3,7 +3,6 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.read;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.ThreadBenchmarkBase;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
-import jakarta.persistence.EntityManager;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.infra.Blackhole;
 import org.springframework.data.repository.CrudRepository;
@@ -21,12 +20,6 @@ public abstract class AbstractReadBenchmark<T extends Thread<?>, R extends CrudR
         var created = repository.save(thread);
 
         threads.add(created);
-    }
-
-    @Override
-    protected void afterSetup() {
-        EntityManager entityManager = context.getBean(EntityManager.class);
-        entityManager.clear();
     }
 
     @Benchmark

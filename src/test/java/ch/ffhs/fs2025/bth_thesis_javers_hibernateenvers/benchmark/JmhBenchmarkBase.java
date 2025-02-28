@@ -20,15 +20,16 @@ import java.util.stream.Stream;
 
 public abstract class JmhBenchmarkBase {
 
-    private static final Integer MEASUREMENT_ITERATIONS = 5;
-    private static final Integer WARMUP_ITERATIONS = 5;
+    private static final Integer MEASUREMENT_ITERATIONS = 5; // on Raspberry: 5
+    private static final Integer WARMUP_ITERATIONS = 5; // on Raspberry: 10
+    private static final TimeValue MEASUREMENT_TIME = TimeValue.milliseconds(1000); // on Raspberry: 2000
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 
-    private static final String benchmarkDirectory = "./benchmark-results/" +LocalDateTime.now().format(DATE_TIME_FORMATTER);
+    private static final String BENCHMARK_DIRECTORY = "./benchmark-results/" +LocalDateTime.now().format(DATE_TIME_FORMATTER);
 
     @BeforeAll
     public static void init() {
-        File directory = new File(benchmarkDirectory);
+        File directory = new File(BENCHMARK_DIRECTORY);
         if (!directory.exists()) {
             directory.mkdirs();
         }
@@ -49,14 +50,14 @@ public abstract class JmhBenchmarkBase {
                 .include("\\." + benchmarkClassName + "\\.")
                 .warmupIterations(WARMUP_ITERATIONS) // CITE: traini_2023
                 .measurementIterations(MEASUREMENT_ITERATIONS)
-                .measurementTime(TimeValue.milliseconds(1000))
-                .warmupTime(TimeValue.milliseconds(1000))
+                .measurementTime(MEASUREMENT_TIME)
+                .warmupTime(MEASUREMENT_TIME)
                 .forks(1) // CITE: costa_2021
                 .threads(1)
                 .shouldDoGC(true)
                 .shouldFailOnError(true)
                 .resultFormat(ResultFormatType.JSON)
-                .result(benchmarkDirectory + "/" + benchmarkFileName)
+                .result(BENCHMARK_DIRECTORY + "/" + benchmarkFileName)
                 .shouldFailOnError(true)
                 .jvmArgs("-server", "-Xms6g", "-Xmx6g",
                         "-Dbenchmark.config.objectGraphComplexity=" + objectGraphComplexity.name(),

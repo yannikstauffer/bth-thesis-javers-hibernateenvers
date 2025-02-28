@@ -1,6 +1,7 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.delete;
 
 
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.javers.model.JaversThread;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.javers.repository.JaversThreadRepository;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -18,11 +19,13 @@ public class JaversDeleteBenchmark extends AbstractDeleteBenchmark<JaversThread,
 
     @Override
     protected int getTestObjectCount() {
-        int baseline = 300000;
-        int divisor = switch (getObjectGraphComplexity()) {
-            case SINGLE -> 1;
-            case MEDIUM -> 3;
-            case HIGH -> 15;
+        int baseline = 45000;
+
+        boolean hasAttachment = getPayloadType().equals(PayloadType.EXTENDED);
+        int divisor = switch (getObjectGraphComplexity()) { // finetuning for heap usage optimization
+            case SINGLE -> hasAttachment ? 2 : 1;
+            case MEDIUM -> hasAttachment ? 3 : 1;
+            case HIGH -> hasAttachment ? 12 : 4;
         };
         return baseline / divisor;
     }

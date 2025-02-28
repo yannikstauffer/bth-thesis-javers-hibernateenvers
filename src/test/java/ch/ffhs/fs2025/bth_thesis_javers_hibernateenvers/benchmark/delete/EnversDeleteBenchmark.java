@@ -18,8 +18,9 @@ public class EnversDeleteBenchmark extends AbstractDeleteBenchmark<EnversThread,
 
     @Override
     protected int getTestObjectCount() {
-        int baseline = 300000;
-        int divisor = switch (getObjectGraphComplexity()) {
+        int baseline = 120000;
+
+        int divisor = switch (getObjectGraphComplexity()) { // finetuning for heap usage optimization
             case SINGLE -> 1;
             case MEDIUM -> 3;
             case HIGH -> 15;

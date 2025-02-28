@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TestDataFactory {
 
-    //todo test
-
     private final CommentFactory commentFactory;
     private final PostFactory postFactory;
     private final ThreadFactory threadFactory;

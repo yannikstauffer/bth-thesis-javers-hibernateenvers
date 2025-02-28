@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -32,7 +32,7 @@ public class EnversThread extends BaseEntity implements Thread<EnversPost> {
     private byte[] attachment;
 
     @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EnversPost> posts = new ArrayList<>();
+    private Set<EnversPost> posts = new HashSet<>();
 
     @Override
     public Class<EnversPost> getChildType() {

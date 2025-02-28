@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -32,7 +32,7 @@ public class EnversPost extends BaseEntity implements Post<EnversThread, EnversC
     private byte[] attachment;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EnversComment> comments = new ArrayList<>();
+    private Set<EnversComment> comments = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "thread_id")

@@ -1,6 +1,6 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common;
 
-import java.util.List;
+import java.util.Set;
 
 public interface Thread<P extends Post<? extends Thread<P>, ? extends Comment<P>>> extends Payload, ChildType<P>, Parent<P> {
 
@@ -8,9 +8,9 @@ public interface Thread<P extends Post<? extends Thread<P>, ? extends Comment<P>
 
     void setTitle(String title);
 
-    List<P> getPosts();
+    Set<P> getPosts();
 
-    void setPosts(List<P> comments);
+    void setPosts(Set<P> comments);
 
     default void addChild(P post) {
         getPosts().add(post);

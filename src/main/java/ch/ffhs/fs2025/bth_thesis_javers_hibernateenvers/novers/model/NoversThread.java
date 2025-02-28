@@ -12,8 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,7 +31,7 @@ public class NoversThread extends BaseEntity implements Thread<NoversPost> {
 
 
     @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NoversPost> posts = new ArrayList<>();
+    private Set<NoversPost> posts = new HashSet<>();
 
     @Override
     public Class<NoversPost> getChildType() {

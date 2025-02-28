@@ -71,7 +71,7 @@ class TestDataFactoryTest {
                 .hasSize(1)
                 .first()
                 .isInstanceOf(postType);
-        assertThat(thread.getPosts().getFirst().getComments())
+        assertThat(thread.getPosts().stream().findFirst().get().getComments())
                 .isNotNull()
                 .hasSize(1)
                 .first()
@@ -110,10 +110,10 @@ class TestDataFactoryTest {
         assertThat(thread.getAttachment())
                 .isEqualTo(mockAttachment);
 
-        assertThat(thread.getPosts().getFirst().getAttachment())
+        assertThat(thread.getPosts().stream().findFirst().get().getAttachment())
                 .isEqualTo(mockAttachment);
 
-        assertThat(thread.getPosts().getFirst().getComments().getFirst().getAttachment())
+        assertThat(thread.getPosts().stream().findFirst().get().getComments().stream().findFirst().get().getAttachment())
                 .isEqualTo(mockAttachment);
     }
 
@@ -125,10 +125,10 @@ class TestDataFactoryTest {
         assertThat(thread.getAttachment())
                 .isNull();
 
-        assertThat(thread.getPosts().getFirst().getAttachment())
+        assertThat(thread.getPosts().stream().findFirst().get().getAttachment())
                 .isNull();
 
-        assertThat(thread.getPosts().getFirst().getComments().getFirst().getAttachment())
+        assertThat(thread.getPosts().stream().findFirst().get().getComments().stream().findFirst().get().getAttachment())
                 .isNull();
     }
 

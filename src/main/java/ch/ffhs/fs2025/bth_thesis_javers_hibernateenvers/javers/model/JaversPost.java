@@ -14,8 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -30,7 +30,7 @@ public class JaversPost extends BaseEntity implements Post<JaversThread, JaversC
     private byte[] attachment;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<JaversComment> comments = new ArrayList<>();
+    private Set<JaversComment> comments = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "thread_id")

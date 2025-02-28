@@ -2,6 +2,7 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -12,6 +13,7 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
@@ -22,13 +24,22 @@ public abstract class JmhBenchmarkBase {
     private static final Integer WARMUP_ITERATIONS = 5;
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 
+    private static final String benchmarkDirectory = "./benchmark-results/" +LocalDateTime.now().format(DATE_TIME_FORMATTER);
+
+    @BeforeAll
+    public static void init() {
+        File directory = new File(benchmarkDirectory);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+    }
+
     @ParameterizedTest
     @MethodSource("provideParameters")
     public void executeJmhRunner(ObjectGraphComplexity objectGraphComplexity, PayloadType payloadType) throws RunnerException {
 
         String benchmarkClassName = this.getClass().getSimpleName();
         String benchmarkFileName = String.join("_",
-                        LocalDateTime.now().format(DATE_TIME_FORMATTER),
                         benchmarkClassName,
                         objectGraphComplexity.name(),
                         payloadType.name())
@@ -45,7 +56,7 @@ public abstract class JmhBenchmarkBase {
                 .shouldDoGC(true)
                 .shouldFailOnError(true)
                 .resultFormat(ResultFormatType.JSON)
-                .result("./benchmark-results/" + benchmarkFileName)
+                .result(benchmarkDirectory + "/" + benchmarkFileName)
                 .shouldFailOnError(true)
                 .jvmArgs("-server", "-Xms6g", "-Xmx6g",
                         "-Dbenchmark.config.objectGraphComplexity=" + objectGraphComplexity.name(),

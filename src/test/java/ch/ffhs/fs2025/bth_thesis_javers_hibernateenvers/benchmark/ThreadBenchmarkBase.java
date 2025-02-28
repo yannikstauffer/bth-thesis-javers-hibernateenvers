@@ -2,9 +2,9 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.BthThesisJaversHibernateenversApplication;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.DataFactory;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.TestDataFactory;
 import jakarta.persistence.EntityManager;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRep
     @Getter
     private R repository;
     @Getter
-    private TestDataFactory testDataFactory;
+    private DataFactory dataFactory;
     @Getter
     private ObjectGraphComplexity objectGraphComplexity;
     @Getter
@@ -38,7 +38,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRep
         testObjects = new ArrayList<>();
         springContext = new SpringApplication(BthThesisJaversHibernateenversApplication.class).run();
         repository = getBean(getRepositoryClass());
-        testDataFactory = getBean(TestDataFactory.class);
+        dataFactory = getBean(DataFactory.class);
         objectGraphComplexity = fromEnv(ObjectGraphComplexity.class, "benchmark.config.objectGraphComplexity");
         payloadType = fromEnv(PayloadType.class, "benchmark.config.payloadType");
 
@@ -63,7 +63,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRep
     }
 
     protected T getTestObject() {
-        return testDataFactory.create(getTestObjectClass(), getPayloadType(), getObjectGraphComplexity());
+        return dataFactory.create(getTestObjectClass(), getPayloadType(), getObjectGraphComplexity());
     }
 
     protected abstract Class<T> getTestObjectClass();

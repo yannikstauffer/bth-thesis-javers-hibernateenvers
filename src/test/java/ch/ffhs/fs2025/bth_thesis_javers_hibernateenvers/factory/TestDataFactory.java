@@ -22,15 +22,18 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class TestDataFactoryTest {
+class TestDataFactory {
 
     @Mock
     private PayloadService payloadService;
@@ -38,15 +41,19 @@ class TestDataFactoryTest {
     private PostFactory postFactory;
     private ThreadFactory threadFactory;
 
-    private TestDataFactory testDataFactory;
+    private DataFactory dataFactory;
 
     @BeforeEach
     void setUp() {
+        // todo: add tests for these instead of lenient mock
+        lenient().when(payloadService.name(any(), any())).thenCallRealMethod();
+        lenient().when(payloadService.content()).thenReturn(UUID.fromString("00000000-0000-0000-0000-000000000000").toString());
+
         commentFactory = new CommentFactory(payloadService);
         postFactory = new PostFactory(payloadService);
         threadFactory = new ThreadFactory(payloadService);
 
-        testDataFactory = new TestDataFactory(commentFactory, postFactory, threadFactory);
+        dataFactory = new DataFactory(commentFactory, postFactory, threadFactory);
 
     }
 
@@ -61,7 +68,7 @@ class TestDataFactoryTest {
         Class<? extends Post<?, ?>> postType = types.getPost();
         Class<? extends Comment<?>> commentType = types.getComment();
 
-        Thread<?> thread = testDataFactory.create(threadType, PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
+        Thread<?> thread = dataFactory.create(threadType, PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
 
         assertThat(thread)
                 .isNotNull()
@@ -86,7 +93,7 @@ class TestDataFactoryTest {
     @ParameterizedTest
     @MethodSource("complexities")
     void create_assertComplexity(ObjectGraphComplexity complexity) {
-        Thread<?> thread = testDataFactory.create(Types.novers().getThread(), PayloadType.BASIC, complexity);
+        Thread<?> thread = dataFactory.create(Types.novers().getThread(), PayloadType.BASIC, complexity);
 
         assertThat(thread)
                 .isNotNull();
@@ -105,7 +112,7 @@ class TestDataFactoryTest {
         byte[] mockAttachment = new byte[0];
         when(payloadService.attachment()).thenReturn(mockAttachment);
 
-        Thread<?> thread = testDataFactory.create(Types.novers().getThread(), PayloadType.EXTENDED, ObjectGraphComplexity.SINGLE);
+        Thread<?> thread = dataFactory.create(Types.novers().getThread(), PayloadType.EXTENDED, ObjectGraphComplexity.SINGLE);
 
         assertThat(thread.getAttachment())
                 .isEqualTo(mockAttachment);
@@ -119,7 +126,7 @@ class TestDataFactoryTest {
 
     @Test
     void create_withBasicPayload() {
-        Thread<?> thread = testDataFactory.create(Types.novers().getThread(), PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
+        Thread<?> thread = dataFactory.create(Types.novers().getThread(), PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
 
         verify(payloadService, never()).attachment();
         assertThat(thread.getAttachment())

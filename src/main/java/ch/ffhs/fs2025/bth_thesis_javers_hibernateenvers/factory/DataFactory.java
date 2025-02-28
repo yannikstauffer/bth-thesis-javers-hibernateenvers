@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class TestDataFactory {
+public class DataFactory {
 
     private final CommentFactory commentFactory;
     private final PostFactory postFactory;
@@ -20,7 +20,7 @@ public class TestDataFactory {
         if (isPost(type)) {
             testData = getPostAsT(type, payloadType, objectGraphComplexity);
         } else if (isThread(type)) {
-            testData = type.cast(threadFactory.create((Class<Thread<?>>) type, payloadType));
+            testData = type.cast(threadFactory.create((Class<Thread<?>>) type, payloadType, objectGraphComplexity));
             Thread thread = ((Thread) testData);
             for (int i = 0; i < objectGraphComplexity.getEntityCount(); i++) {
                 var post = create(thread.getChildType(), payloadType, objectGraphComplexity);

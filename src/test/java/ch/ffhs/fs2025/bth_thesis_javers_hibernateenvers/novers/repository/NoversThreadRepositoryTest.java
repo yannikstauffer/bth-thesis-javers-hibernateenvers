@@ -1,8 +1,8 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.novers.repository;
 
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.DataFactory;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.TestDataFactory;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.novers.model.NoversThread;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +15,11 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@ComponentScan(basePackageClasses = {TestDataFactory.class})
+@ComponentScan(basePackageClasses = {DataFactory.class})
 class NoversThreadRepositoryTest {
 
     @Autowired
-    private TestDataFactory testDataFactory;
+    private DataFactory dataFactory;
 
     @Autowired
     private TestEntityManager entityManager;
@@ -29,7 +29,7 @@ class NoversThreadRepositoryTest {
 
     @Test
     void findById_existingId_returnsThreadWithPostsAndComments() {
-        NoversThread thread = testDataFactory.create(NoversThread.class, PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
+        NoversThread thread = dataFactory.create(NoversThread.class, PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
 
         // Add posts and comments to the thread
         entityManager.persistAndFlush(thread);

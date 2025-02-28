@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ThreadFactoryTest {
@@ -23,6 +24,21 @@ class ThreadFactoryTest {
 
     @InjectMocks
     private ThreadFactory threadFactory;
+
+    @ParameterizedTest
+    @MethodSource("threadTypes")
+    void create_withOptions_addsName(Class<Thread<?>> threadType) {
+        when(payloadService.name(ObjectGraphComplexity.SINGLE, PayloadType.BASIC)).thenReturn("title");
+
+        Thread<?> thread = threadFactory.create(threadType, PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
+
+        assertThat(thread)
+                .isNotNull()
+                .isInstanceOf(threadType);
+        assertThat(thread.getTitle())
+                .isNotBlank()
+                .isEqualTo("title");
+    }
 
     static Stream<Class<? extends Thread<?>>> threadTypes() {
         return Stream.of(NoversThread.class, JaversThread.class, EnversThread.class);

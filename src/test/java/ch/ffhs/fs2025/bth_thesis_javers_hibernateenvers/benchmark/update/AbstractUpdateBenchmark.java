@@ -11,11 +11,6 @@ import java.util.UUID;
 
 public abstract class AbstractUpdateBenchmark<T extends Thread<?>, R extends CrudRepository<T, Integer>> extends ThreadBenchmarkBase<T, R> {
 
-    @Override
-    protected int initObjectCount() {
-        return 500000;
-    }
-
     protected void repeatedSetupRoutine(int i) {
         var thread = getTestObject();
         thread.setContent("TestThread");
@@ -24,7 +19,6 @@ public abstract class AbstractUpdateBenchmark<T extends Thread<?>, R extends Cru
         updated.setAttachment(new byte[1000]);
         addTestObject(updated);
     }
-
 
     @Benchmark
     public void update(Blackhole blackhole) {

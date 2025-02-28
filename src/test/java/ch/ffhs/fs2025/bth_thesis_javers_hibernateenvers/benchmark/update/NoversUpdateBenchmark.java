@@ -16,6 +16,17 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class NoversUpdateBenchmark extends AbstractUpdateBenchmark<NoversThread, NoversThreadRepository> {
 
+    @Override
+    protected int getTestObjectCount() {
+        int baseline = 350000;
+        int divisor = switch (getObjectGraphComplexity()) {
+            case SINGLE -> 1;
+            case MEDIUM -> 2;
+            case HIGH -> 10;
+        };
+        return baseline / divisor;
+    }
+
     protected Class<NoversThread> getTestObjectClass() {
         return NoversThread.class;
     }

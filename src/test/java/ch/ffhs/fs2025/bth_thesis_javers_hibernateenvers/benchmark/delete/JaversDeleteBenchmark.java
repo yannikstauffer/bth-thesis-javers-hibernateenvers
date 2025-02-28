@@ -16,6 +16,17 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class JaversDeleteBenchmark extends AbstractDeleteBenchmark<JaversThread, JaversThreadRepository> {
 
+    @Override
+    protected int getTestObjectCount() {
+        int baseline = 300000;
+        int divisor = switch (getObjectGraphComplexity()) {
+            case SINGLE -> 1;
+            case MEDIUM -> 3;
+            case HIGH -> 15;
+        };
+        return baseline / divisor;
+    }
+
     protected Class<JaversThread> getTestObjectClass() {
         return JaversThread.class;
     }

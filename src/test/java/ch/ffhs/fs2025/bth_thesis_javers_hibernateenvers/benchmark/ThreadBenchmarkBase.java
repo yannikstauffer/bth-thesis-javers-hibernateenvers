@@ -6,7 +6,6 @@ import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphCompl
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.TestDataFactory;
 import jakarta.persistence.EntityManager;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.openjdk.jmh.annotations.Setup;
@@ -21,29 +20,50 @@ import java.util.List;
 @Slf4j
 public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRepository<T, Integer>> extends JmhBenchmarkBase {
 
-    @Getter(AccessLevel.PROTECTED)
+    @Getter
     private R repository;
+    @Getter
     private TestDataFactory testDataFactory;
+    @Getter
+    private ObjectGraphComplexity objectGraphComplexity;
+    @Getter
+    private PayloadType payloadType;
 
-    private final List<T> testObjects = new ArrayList<>();
+    private List<T> testObjects;
     private int pointer = 0;
-    private ApplicationContext context;
+    private ApplicationContext springContext;
 
     @Setup
     public void setup() {
-        this.context = new SpringApplication(BthThesisJaversHibernateenversApplication.class).run();
+        testObjects = new ArrayList<>();
+        springContext = new SpringApplication(BthThesisJaversHibernateenversApplication.class).run();
         repository = getBean(getRepositoryClass());
+        testDataFactory = getBean(TestDataFactory.class);
+        objectGraphComplexity = fromEnv(ObjectGraphComplexity.class, "benchmark.config.objectGraphComplexity");
+        payloadType = fromEnv(PayloadType.class, "benchmark.config.payloadType");
 
         beforeSetupRoutine();
-        for (int i = 0; i < initObjectCount(); i++) {
+        logBenchmarkSetupStart();
+
+        for (int i = 0; i < getTestObjectCount(); i++) {
             repeatedSetupRoutine(i);
         }
+
         afterSetupRoutine();
-        System.out.println("Benchmark setup finished. Total test objects staged: " + testObjects.size());
+        logBenchmarkSetupFinished();
+    }
+
+    @TearDown
+    public void tearDown() {
+        if (testObjects.size() < pointer) {
+            throw new IllegalStateException("Benchmark failed. There were not enough test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
+        }
+        System.out.println();
+        System.out.println("Benchmark finished. Total test objects staged: " + testObjects.size() + ". Test objects processed: " + pointer);
     }
 
     protected T getTestObject() {
-        return testDataFactory.create(getTestObjectClass(), PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
+        return testDataFactory.create(getTestObjectClass(), getPayloadType(), getObjectGraphComplexity());
     }
 
     protected abstract Class<T> getTestObjectClass();
@@ -52,12 +72,10 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRep
 
     protected abstract void repeatedSetupRoutine(int i);
 
-    protected <B> B getBean(Class<B> type) {
-        return this.context.getBean(type);
-    }
+    protected abstract int getTestObjectCount();
 
-    protected int initObjectCount() {
-        return 1000000;
+    private <B> B getBean(Class<B> type) {
+        return this.springContext.getBean(type);
     }
 
     protected int nextTestObjectPointer() {
@@ -72,21 +90,30 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRep
         return this.testObjects.get(nextTestObjectPointer() - 1);
     }
 
-    protected void beforeSetupRoutine() {
-        testDataFactory = getBean(TestDataFactory.class);
-    }
+    protected void beforeSetupRoutine() {}
 
     protected void afterSetupRoutine() {
-        EntityManager entityManager = context.getBean(EntityManager.class);
+        EntityManager entityManager = springContext.getBean(EntityManager.class);
         entityManager.clear();
     }
 
-    @TearDown
-    public void tearDown() {
-        if (testObjects.size() < pointer) {
-            throw new IllegalStateException("Benchmark failed. There were not enough test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
-        }
-        System.out.println("Benchmark finished. Total test objects staged: " + testObjects.size() + ". Test objects processed: " + pointer);
+    private <E extends Enum<E>> E fromEnv(Class<E> clazz, String key) {
+        return Enum.valueOf(clazz, springContext.getEnvironment().getProperty(key));
+    }
+
+    private void logBenchmarkSetupStart() {
+        System.out.println();
+        System.out.println("*****************************************************************************************");
+        System.out.println("Benchmark setup started.");
+        System.out.println("Object graph complexity: " + getObjectGraphComplexity());
+        System.out.println("Payload type: " + getPayloadType());
+        System.out.println("Total test objects requested: " + getTestObjectCount());
+        System.out.println("Staging test objects...");
+    }
+
+    private void logBenchmarkSetupFinished() {
+        System.out.println("Benchmark setup finished.");
+        System.out.println("*****************************************************************************************");
     }
 
 }

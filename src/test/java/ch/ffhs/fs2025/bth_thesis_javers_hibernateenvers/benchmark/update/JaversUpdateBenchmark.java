@@ -17,6 +17,17 @@ import java.util.concurrent.TimeUnit;
 public class JaversUpdateBenchmark extends AbstractUpdateBenchmark<JaversThread, JaversThreadRepository> {
 
     @Override
+    protected int getTestObjectCount() {
+        int baseline = 350000;
+        int divisor = switch (getObjectGraphComplexity()) {
+            case SINGLE -> 1;
+            case MEDIUM -> 2;
+            case HIGH -> 10;
+        };
+        return baseline / divisor;
+    }
+
+    @Override
     protected Class<JaversThread> getTestObjectClass() {
         return JaversThread.class;
     }

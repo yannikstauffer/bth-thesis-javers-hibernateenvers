@@ -9,11 +9,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public abstract class AbstractReadBenchmark<T extends Thread<?>, R extends CrudRepository<T, Integer>> extends ThreadBenchmarkBase<T, R> {
 
-    @Override
-    protected int initObjectCount() {
-        return 1500000;
-    }
-
     protected void repeatedSetupRoutine(int i) {
         var thread = getTestObject();
         thread.setContent("TestThread");

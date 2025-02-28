@@ -16,6 +16,15 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class EnversReadBenchmark extends AbstractReadBenchmark<EnversThread, EnversThreadRepository> {
 
+    @Override
+    protected int getTestObjectCount() {
+        int baseline = 1300000;
+        int divisor = switch (getObjectGraphComplexity()) {
+            case SINGLE, MEDIUM, HIGH -> 1;
+        };
+        return baseline / divisor;
+    }
+
     protected Class<EnversThread> getTestObjectClass() {
         return EnversThread.class;
     }

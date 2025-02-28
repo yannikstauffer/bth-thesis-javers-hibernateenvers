@@ -1,6 +1,7 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.create;
 
 
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.javers.model.JaversThread;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.javers.repository.JaversThreadRepository;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -18,11 +19,13 @@ public class JaversCreateBenchmark extends AbstractCreateBenchmark<JaversThread,
 
     @Override
     protected int getTestObjectCount() {
-        int baseline = 350000;
-        int divisor = switch (getObjectGraphComplexity()) {
-            case SINGLE -> 1;
-            case MEDIUM -> 3;
-            case HIGH -> 20;
+        int baseline = 80000;
+
+        boolean hasAttachment = getPayloadType().equals(PayloadType.EXTENDED);
+        int divisor = switch (getObjectGraphComplexity()) { // finetuning for heap usage optimization
+            case SINGLE -> hasAttachment ? 13: 1;
+            case MEDIUM -> hasAttachment ? 50 : 3;
+            case HIGH -> hasAttachment ? 400 : 20;
         };
         return baseline / divisor;
     }

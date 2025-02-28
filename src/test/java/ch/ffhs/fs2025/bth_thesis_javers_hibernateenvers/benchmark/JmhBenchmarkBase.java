@@ -57,20 +57,20 @@ public abstract class JmhBenchmarkBase {
         runner.run();
     }
 
-    private static Stream<Arguments> provideParameters() {
-        return Stream.of(
-//                Arguments.of(ObjectGraphComplexity.SINGLE, PayloadType.BASIC),
-                Arguments.of(ObjectGraphComplexity.SINGLE, PayloadType.EXTENDED),
-//                Arguments.of(ObjectGraphComplexity.MEDIUM, PayloadType.BASIC),
-                Arguments.of(ObjectGraphComplexity.MEDIUM, PayloadType.EXTENDED),
-//                Arguments.of(ObjectGraphComplexity.HIGH, PayloadType.BASIC),
-                Arguments.of(ObjectGraphComplexity.HIGH, PayloadType.EXTENDED)
-        );
-    }
-
 //    private static Stream<Arguments> provideParameters() {
-//        return Stream.of(ObjectGraphComplexity.values())
-//                .flatMap(objectGraphComplexity -> Stream.of(PayloadType.values())
-//                        .map(payloadType -> Arguments.of(objectGraphComplexity, payloadType)));
+//        return Stream.of(
+////                Arguments.of(ObjectGraphComplexity.SINGLE, PayloadType.BASIC),
+//                Arguments.of(ObjectGraphComplexity.SINGLE, PayloadType.EXTENDED),
+////                Arguments.of(ObjectGraphComplexity.MEDIUM, PayloadType.BASIC),
+//                Arguments.of(ObjectGraphComplexity.MEDIUM, PayloadType.EXTENDED),
+////                Arguments.of(ObjectGraphComplexity.HIGH, PayloadType.BASIC),
+//                Arguments.of(ObjectGraphComplexity.HIGH, PayloadType.EXTENDED)
+//        );
 //    }
+
+    private static Stream<Arguments> provideParameters() {
+        return Stream.of(ObjectGraphComplexity.values())
+                .flatMap(objectGraphComplexity -> Stream.of(PayloadType.values())
+                        .map(payloadType -> Arguments.of(objectGraphComplexity, payloadType)));
+    }
 }

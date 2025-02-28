@@ -19,7 +19,8 @@ public class NoversCreateBenchmark extends AbstractCreateBenchmark<NoversThread,
     @Override
     protected int getTestObjectCount() {
         int baseline = 350000;
-        int divisor = switch (getObjectGraphComplexity()) {
+
+        int divisor = switch (getObjectGraphComplexity()) { // finetuning for heap usage optimization
             case SINGLE -> 1;
             case MEDIUM -> 3;
             case HIGH -> 20;

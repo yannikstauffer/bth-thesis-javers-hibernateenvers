@@ -22,7 +22,7 @@ public class EnversCreateBenchmark extends AbstractCreateBenchmark<EnversThread,
         int baseline = 350000;
 
         boolean hasAttachment = getPayloadType().equals(PayloadType.EXTENDED);
-        int divisor = switch (getObjectGraphComplexity()) {
+        int divisor = switch (getObjectGraphComplexity()) { // finetuning for heap usage optimization
             case SINGLE -> 1;
             case MEDIUM -> hasAttachment ? 7 : 3;
             case HIGH -> hasAttachment ? 50 : 20;

@@ -3,6 +3,7 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.envers.model;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.BaseEntity;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
@@ -27,6 +28,7 @@ public class EnversThread extends BaseEntity implements Thread<EnversPost> {
 
     private String content;
     @Lob
+    @Column(columnDefinition="BLOB")
     private byte[] attachment;
 
     @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL, orphanRemoval = true)

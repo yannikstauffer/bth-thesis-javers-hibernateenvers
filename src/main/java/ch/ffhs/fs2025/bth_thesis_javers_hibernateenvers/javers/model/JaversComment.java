@@ -2,6 +2,7 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.javers.model;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.BaseEntity;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Comment;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
@@ -20,6 +21,7 @@ public class JaversComment extends BaseEntity implements Comment<JaversPost> {
 
     private String content;
     @Lob
+    @Column(columnDefinition="BLOB")
     private byte[] attachment;
 
     @ManyToOne

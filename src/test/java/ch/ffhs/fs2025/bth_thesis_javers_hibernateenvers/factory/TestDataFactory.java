@@ -22,12 +22,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -37,21 +35,14 @@ class TestDataFactory {
 
     @Mock
     private PayloadService payloadService;
-    private CommentFactory commentFactory;
-    private PostFactory postFactory;
-    private ThreadFactory threadFactory;
 
     private DataFactory dataFactory;
 
     @BeforeEach
     void setUp() {
-        // todo: add tests for these instead of lenient mock
-        lenient().when(payloadService.name(any(), any())).thenCallRealMethod();
-        lenient().when(payloadService.content()).thenReturn(UUID.fromString("00000000-0000-0000-0000-000000000000").toString());
-
-        commentFactory = new CommentFactory(payloadService);
-        postFactory = new PostFactory(payloadService);
-        threadFactory = new ThreadFactory(payloadService);
+        CommentFactory commentFactory = new CommentFactory(payloadService);
+        PostFactory postFactory = new PostFactory(payloadService);
+        ThreadFactory threadFactory = new ThreadFactory(payloadService);
 
         dataFactory = new DataFactory(commentFactory, postFactory, threadFactory);
 
@@ -137,6 +128,37 @@ class TestDataFactory {
 
         assertThat(thread.getPosts().stream().findFirst().get().getComments().stream().findFirst().get().getAttachment())
                 .isNull();
+    }
+
+    @Test
+    void create_addsContent() {
+        when(payloadService.content())
+                .thenReturn("content-1")
+                .thenReturn("content-2")
+                .thenReturn("content-3");
+
+        Thread<?> thread = dataFactory.create(Types.novers().getThread(), PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
+
+        verify(payloadService, never()).attachment();
+        assertThat(thread.getContent())
+                .isEqualTo("content-1");
+
+        assertThat(thread.getPosts().stream().findFirst().get().getContent())
+                .isEqualTo("content-2");
+
+        assertThat(thread.getPosts().stream().findFirst().get().getComments().stream().findFirst().get().getContent())
+                .isEqualTo("content-3");
+    }
+
+    @Test
+    void create_addsThreadTitle() {
+        when(payloadService.name(any(), any())).thenReturn("title");
+
+        Thread<?> thread = dataFactory.create(Types.novers().getThread(), PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
+
+        verify(payloadService, never()).attachment();
+        assertThat(thread.getTitle())
+                .contains("title");
     }
 
 }

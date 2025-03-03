@@ -1,0 +1,164 @@
+benchmark:
+  create:
+    novers:
+      single:
+        objects:
+          basic: 350000
+          extended: 320000
+      medium:
+        objects:
+          basic: 120000
+          extended: 110000
+      high:
+        objects:
+          basic: 17000
+          extended: 15000
+    envers:
+      single:
+        objects:
+          basic: 160000
+          extended: 150000
+      medium:
+        objects:
+          basic: 50000
+          extended: 50000
+      high:
+        objects:
+          basic: 7500
+          extended: 7000
+    javers:
+      single:
+        objects:
+          basic: 80000
+          extended: 5500
+      medium:
+        objects:
+          basic: 23000
+          extended: 1400
+      high:
+        objects:
+          basic: 3300
+          extended: 180
+
+  read:
+    novers:
+      single:
+        objects:
+          basic: 500000
+          extended: 500000
+      medium:
+        objects:
+          basic: 300000
+          extended: 300000
+      high:
+        objects:
+          basic: 50000
+          extended: 50000
+    envers:
+      single:
+        objects:
+          basic: 500000
+          extended: 500000
+      medium:
+        objects:
+          basic: 300000
+          extended: 300000
+      high:
+        objects:
+          basic: 50000
+          extended: 50000
+    javers:
+      single:
+        objects:
+          basic: 500000
+          extended: 500000
+      medium:
+        objects:
+          basic: 300000
+          extended: 300000
+      high:
+        objects:
+          basic: 50000
+          extended: 50000
+
+  update:
+    novers:
+      single:
+        objects:
+          basic: 350000
+          extended: 320000
+      medium:
+        objects:
+          basic: 120000
+          extended: 110000
+      high:
+        objects:
+          basic: 17000
+          extended: 15000
+    envers:
+      single:
+        objects:
+          basic: 160000
+          extended: 150000
+      medium:
+        objects:
+          basic: 50000
+          extended: 50000
+      high:
+        objects:
+          basic: 7500
+          extended: 7000
+    javers:
+      single:
+        objects:
+          basic: 300000
+          extended: 55000
+      medium:
+        objects:
+          basic: 150000
+          extended: 14000
+      high:
+        objects:
+          basic: 8000
+          extended: 1800
+
+  delete:
+    novers:
+      single:
+        objects:
+          basic: 300000
+          extended: 300000
+      medium:
+        objects:
+          basic: 100000
+          extended: 100000
+      high:
+        objects:
+          basic: 20000
+          extended: 15000
+    envers:
+      single:
+        objects:
+          basic: 100000
+          extended: 100000
+      medium:
+        objects:
+          basic: 40000
+          extended: 40000
+      high:
+        objects:
+          basic: 8000
+          extended: 8000
+    javers:
+      single:
+        objects:
+          basic: 45000
+          extended: 22000
+      medium:
+        objects:
+          basic: 45000
+          extended: 15000
+      high:
+        objects:
+          basic: 11000
+          extended: 4000

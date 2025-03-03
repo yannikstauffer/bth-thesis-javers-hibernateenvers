@@ -1,8 +1,8 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.read;
 
 
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.NoversVersioning;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.novers.model.NoversThread;
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.novers.repository.NoversThreadRepository;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
@@ -14,23 +14,7 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class NoversReadBenchmark extends AbstractReadBenchmark<NoversThread, NoversThreadRepository> {
+public class NoversReadBenchmark extends AbstractReadBenchmark<NoversThread> implements NoversVersioning {
 
-    @Override
-    protected int getTestObjectCount() {
-        int baseline = 1300000;
-        int divisor = switch (getObjectGraphComplexity()) {
-            case SINGLE, MEDIUM, HIGH -> 1;
-        };
-        return baseline / divisor;
-    }
-
-    protected Class<NoversThread> getTestObjectClass() {
-        return NoversThread.class;
-    }
-
-    protected Class<NoversThreadRepository> getRepositoryClass() {
-        return NoversThreadRepository.class;
-    }
 
 }

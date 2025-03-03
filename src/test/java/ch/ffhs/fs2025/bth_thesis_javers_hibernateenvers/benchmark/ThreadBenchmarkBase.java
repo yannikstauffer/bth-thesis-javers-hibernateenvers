@@ -1,6 +1,8 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.BthThesisJaversHibernateenversApplication;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Scenario;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Versioned;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.DataFactory;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
@@ -10,18 +12,20 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.TearDown;
-import org.springframework.boot.SpringApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 @Slf4j
-public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRepository<T, Integer>> extends JmhBenchmarkBase {
+public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versioned<T> {
 
     @Getter
-    private R repository;
+    private CrudRepository<T, Integer> repository;
     @Getter
     private DataFactory dataFactory;
     @Getter
@@ -35,12 +39,15 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRep
 
     @Setup
     public void setup() {
+        String benchmarkEnvironment = System.getProperty("spring.profiles.active", "dev");
         testObjects = new ArrayList<>();
-        springContext = new SpringApplication(BthThesisJaversHibernateenversApplication.class).run();
-        repository = getBean(getRepositoryClass());
+        springContext = new SpringApplicationBuilder(BthThesisJaversHibernateenversApplication.class)
+                .profiles(benchmarkEnvironment)
+                .run();
+        repository = getBean(getVersioningDefinition().getRepositoryClass());
         dataFactory = getBean(DataFactory.class);
-        objectGraphComplexity = fromEnv(ObjectGraphComplexity.class, "benchmark.config.objectGraphComplexity");
-        payloadType = fromEnv(PayloadType.class, "benchmark.config.payloadType");
+        objectGraphComplexity = this.fromEnvEnum(ObjectGraphComplexity.class, "benchmark.config.objectGraphComplexity");
+        payloadType = this.fromEnvEnum(PayloadType.class, "benchmark.config.payloadType");
 
         beforeSetupRoutine();
         logBenchmarkSetupStart();
@@ -56,23 +63,33 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRep
     @TearDown
     public void tearDown() {
         if (testObjects.size() < pointer) {
-            throw new IllegalStateException("Benchmark failed. There were not enough test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
+            fail("Benchmark failed. There were not enough test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
+        } else if (testObjects.size() > pointer * 1.3) {
+            fail("Benchmark failed. There were too many test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
         }
+
         System.out.println();
         System.out.println("Benchmark finished. Total test objects staged: " + testObjects.size() + ". Test objects processed: " + pointer);
     }
 
     protected T getTestObject() {
-        return dataFactory.create(getTestObjectClass(), getPayloadType(), getObjectGraphComplexity());
+        return dataFactory.create(getVersioningDefinition().getTestObjectClass(), getPayloadType(), getObjectGraphComplexity());
     }
 
-    protected abstract Class<T> getTestObjectClass();
+    protected final int getTestObjectCount() {
+        String key = String.join(".",
+                "benchmark",
+                getScenario().name().toLowerCase(),
+                getVersioningDefinition().getVersioning().name().toLowerCase(),
+                getObjectGraphComplexity().name().toLowerCase(),
+                "objects",
+                getPayloadType().name().toLowerCase());
+        return fromEnv(Integer.class, key);
+    }
 
-    protected abstract Class<R> getRepositoryClass();
+    protected abstract Scenario getScenario();
 
     protected abstract void repeatedSetupRoutine(int i);
-
-    protected abstract int getTestObjectCount();
 
     private <B> B getBean(Class<B> type) {
         return this.springContext.getBean(type);
@@ -97,8 +114,26 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>, R extends CrudRep
         entityManager.clear();
     }
 
-    private <E extends Enum<E>> E fromEnv(Class<E> clazz, String key) {
+    private <E extends Enum<E>> E fromEnvEnum(Class<E> clazz, String key) {
+        if (springContext.getEnvironment().getProperty(key) == null) {
+            throw new IllegalArgumentException("Property " + key + " not found in environment.");
+        }
+
         return Enum.valueOf(clazz, springContext.getEnvironment().getProperty(key));
+    }
+
+    private <E> E fromEnv(Class<E> clazz, String key) {
+        var property = springContext.getEnvironment().getProperty(key);
+
+        if (property == null) {
+            throw new IllegalArgumentException("Property " + key + " not found in environment.");
+        }
+
+        if (clazz == Integer.class) {
+            return clazz.cast(Integer.valueOf(property));
+        }
+        return clazz.cast(property);
+
     }
 
     private void logBenchmarkSetupStart() {

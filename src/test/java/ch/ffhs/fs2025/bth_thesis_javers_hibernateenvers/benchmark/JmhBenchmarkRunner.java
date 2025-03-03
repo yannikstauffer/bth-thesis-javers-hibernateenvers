@@ -1,5 +1,6 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark;
 
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.ConfigUtils;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,14 +19,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 
-public abstract class JmhBenchmarkBase {
+public class JmhBenchmarkRunner {
 
     private static final Integer MEASUREMENT_ITERATIONS = 5; // on Raspberry: 5
     private static final Integer WARMUP_ITERATIONS = 5; // on Raspberry: 10
     private static final TimeValue MEASUREMENT_TIME = TimeValue.milliseconds(1000); // on Raspberry: 2000
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 
-    private static final String BENCHMARK_DIRECTORY = "./benchmark-results/" +LocalDateTime.now().format(DATE_TIME_FORMATTER);
+    private static final String BENCHMARK_DIRECTORY = "./benchmark-results/" + LocalDateTime.now().format(DATE_TIME_FORMATTER);
 
     @BeforeAll
     public static void init() {
@@ -37,9 +38,10 @@ public abstract class JmhBenchmarkBase {
 
     @ParameterizedTest
     @MethodSource("provideParameters")
-    public void executeJmhRunner(ObjectGraphComplexity objectGraphComplexity, PayloadType payloadType) throws RunnerException {
+    void executeJmhRunner(ObjectGraphComplexity objectGraphComplexity, PayloadType payloadType) throws RunnerException {
 
-        String benchmarkClassName = this.getClass().getSimpleName();
+        ConfigUtils.BenchmarksConfig benchmarksConfig = new ConfigUtils().getBenchmarksConfig();
+        String benchmarkClassName = "NoversCreateBenchmark";
         String benchmarkFileName = String.join("_",
                         benchmarkClassName,
                         objectGraphComplexity.name(),
@@ -52,6 +54,7 @@ public abstract class JmhBenchmarkBase {
                 .measurementIterations(MEASUREMENT_ITERATIONS)
                 .measurementTime(MEASUREMENT_TIME)
                 .warmupTime(MEASUREMENT_TIME)
+                .timeout(TimeValue.minutes(3))
                 .forks(1) // CITE: costa_2021
                 .threads(1)
                 .shouldDoGC(true)
@@ -61,7 +64,8 @@ public abstract class JmhBenchmarkBase {
                 .shouldFailOnError(true)
                 .jvmArgs("-server", "-Xms6g", "-Xmx6g",
                         "-Dbenchmark.config.objectGraphComplexity=" + objectGraphComplexity.name(),
-                        "-Dbenchmark.config.payloadType=" + payloadType.name())
+                        "-Dbenchmark.config.payloadType=" + payloadType.name(),
+                        "-Dspring.profiles.active=" + benchmarksConfig.getEnvironment())
 //                .jvmArgs("-server", "-Xms8g", "-Xmx8g", "-Dspring.config.location=classpath:/application-postgres.properties")
                 .build();
 

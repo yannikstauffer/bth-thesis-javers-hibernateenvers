@@ -1,9 +1,8 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.create;
 
 
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.EnversVersioning;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.envers.model.EnversThread;
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.envers.repository.EnversThreadRepository;
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
@@ -15,28 +14,6 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class EnversCreateBenchmark extends AbstractCreateBenchmark<EnversThread, EnversThreadRepository> {
-
-    @Override
-    protected int getTestObjectCount() {
-        int baseline = 350000;
-
-        boolean hasAttachment = getPayloadType().equals(PayloadType.EXTENDED);
-        int divisor = switch (getObjectGraphComplexity()) { // finetuning for heap usage optimization
-            case SINGLE -> 1;
-            case MEDIUM -> hasAttachment ? 7 : 3;
-            case HIGH -> hasAttachment ? 50 : 20;
-        };
-
-        return  baseline / divisor;
-    }
-
-    protected Class<EnversThread> getTestObjectClass() {
-        return EnversThread.class;
-    }
-
-    protected Class<EnversThreadRepository> getRepositoryClass() {
-        return EnversThreadRepository.class;
-    }
+public class EnversCreateBenchmark extends AbstractCreateBenchmark<EnversThread> implements EnversVersioning {
 
 }

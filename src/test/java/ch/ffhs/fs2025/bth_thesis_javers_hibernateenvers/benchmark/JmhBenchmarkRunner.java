@@ -1,6 +1,7 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark;
 
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.ConfigUtils;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkEnvironmentConfig;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkEnvironmentConfigUtils;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 
-public class JmhBenchmarkRunner {
+class JmhBenchmarkRunner {
 
     private static final Integer MEASUREMENT_ITERATIONS = 5; // on Raspberry: 5
     private static final Integer WARMUP_ITERATIONS = 5; // on Raspberry: 10
@@ -29,7 +30,7 @@ public class JmhBenchmarkRunner {
     private static final String BENCHMARK_DIRECTORY = "./benchmark-results/" + LocalDateTime.now().format(DATE_TIME_FORMATTER);
 
     @BeforeAll
-    public static void init() {
+    static void init() {
         File directory = new File(BENCHMARK_DIRECTORY);
         if (!directory.exists()) {
             directory.mkdirs();
@@ -40,7 +41,7 @@ public class JmhBenchmarkRunner {
     @MethodSource("provideParameters")
     void executeJmhRunner(ObjectGraphComplexity objectGraphComplexity, PayloadType payloadType) throws RunnerException {
 
-        ConfigUtils.BenchmarksConfig benchmarksConfig = new ConfigUtils().getBenchmarksConfig();
+        BenchmarkEnvironmentConfig benchmarksConfig = BenchmarkEnvironmentConfigUtils.getBenchmarksSetupConfig();
         String benchmarkClassName = "NoversCreateBenchmark";
         String benchmarkFileName = String.join("_",
                         benchmarkClassName,
@@ -79,11 +80,11 @@ public class JmhBenchmarkRunner {
 //                Arguments.of(ObjectGraphComplexity.SINGLE, PayloadType.EXTENDED),
 ////                Arguments.of(ObjectGraphComplexity.MEDIUM, PayloadType.BASIC),
 //                Arguments.of(ObjectGraphComplexity.MEDIUM, PayloadType.EXTENDED),
-////                Arguments.of(ObjectGraphComplexity.HIGH, PayloadType.BASIC),
+
+    /// /                Arguments.of(ObjectGraphComplexity.HIGH, PayloadType.BASIC),
 //                Arguments.of(ObjectGraphComplexity.HIGH, PayloadType.EXTENDED)
 //        );
 //    }
-
     private static Stream<Arguments> provideParameters() {
         return Stream.of(ObjectGraphComplexity.values())
                 .flatMap(objectGraphComplexity -> Stream.of(PayloadType.values())

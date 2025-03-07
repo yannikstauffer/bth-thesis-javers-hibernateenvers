@@ -9,6 +9,11 @@ class BenchmarkEnvironmentConfigUtilsTest {
     @Test
     void getBenchmarksConfig_test() {
         var config = BenchmarkEnvironmentConfigUtils.getBenchmarksSetupConfig();
-        assertThat(config).isNotNull();
+        assertThat(config)
+                .extracting(BenchmarkEnvironmentConfig::getJmhConfig,
+                        BenchmarkEnvironmentConfig::getRunConfig,
+                        BenchmarkEnvironmentConfig::getJvmConfig,
+                        BenchmarkEnvironmentConfig::getEnvironment)
+                .isNotNull();
     }
 }

@@ -86,11 +86,12 @@ class JmhBenchmarkRunner {
                 .resultFormat(ResultFormatType.JSON)
                 .result(BENCHMARK_DIRECTORY + "/" + benchmarkFileName)
                 .shouldFailOnError(true)
-                .jvmArgs("-server", "-Xms6g", "-Xmx6g",
+                .jvmArgs("-server",
+                        "-Xms" + benchmarksConfig.getJvmConfig().getMemory(),
+                        "-Xmx" + benchmarksConfig.getJvmConfig().getMemory(),
                         "-Dbenchmark.config.objectGraphComplexity=" + objectGraphComplexity.name(),
                         "-Dbenchmark.config.payloadType=" + payloadType.name(),
                         "-Dspring.profiles.active=" + benchmarksConfig.getEnvironment())
-//                .jvmArgs("-server", "-Xms8g", "-Xmx8g", "-Dspring.config.location=classpath:/application-postgres.properties")
                 .build();
 
         Runner runner = new Runner(opt);

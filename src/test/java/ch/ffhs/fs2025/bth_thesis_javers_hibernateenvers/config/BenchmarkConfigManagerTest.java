@@ -87,6 +87,10 @@ class BenchmarkConfigManagerTest {
     private void assertYamlContains(Map<String, Object> yamlData, BenchmarkOptimizationDto optimizationDto) {
         Map<String, Object> currentMap = yamlData;
 
+        assertThat(currentMap)
+                .as("Expecting YAML to contain root keys benchmark, jmhConfig, jvmConfig, runConfig")
+                .containsOnlyKeys("benchmark", "jmhConfig", "jvmConfig", "runConfig");
+
         StringBuilder keyPath = new StringBuilder();
         for (int i = 0; i < optimizationDto.getYamlKeyPath().size(); i++) {
             String key = optimizationDto.getYamlKeyPath().get(i);

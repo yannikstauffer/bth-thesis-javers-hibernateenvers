@@ -1,3 +1,23 @@
+jmhConfig:
+  warmupIterations: 5
+  warmupTime: 1000
+  measurementIterations: 5
+  measurementTime: 1000
+
+jvmConfig:
+  memory: 6g
+
+runConfig:
+  scenarios:
+    - Create
+    - Read
+    - Update
+    - Delete
+  versionings:
+    - Novers
+    - Javers
+    - Envers
+
 benchmark:
   create:
     novers:

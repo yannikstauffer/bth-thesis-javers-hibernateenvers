@@ -13,6 +13,7 @@ public class BenchmarkEnvironmentConfig {
 
     private JmhConfig jmhConfig;
     private RunConfig runConfig;
+    private JvmConfig jvmConfig;
     private String environment;
 
     @Data
@@ -31,5 +32,12 @@ public class BenchmarkEnvironmentConfig {
     public static class RunConfig {
         private Set<String> scenarios;
         private Set<String> versionings;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @RequiredArgsConstructor
+    public static class JvmConfig {
+        private String memory;
     }
 }

@@ -153,14 +153,14 @@ benchmark:
       medium:
         objects:
           basic: 172800
-          basicOptimized: false
+          basicOptimized: true
           extended: 132000
           extendedOptimized: true
       high:
         objects:
-          basic: 24480
-          basicOptimized: false
-          extended: 21600
+          basic: 36720
+          basicOptimized: true
+          extended: 22780
           extendedOptimized: false
     envers:
       single:
@@ -171,35 +171,35 @@ benchmark:
           extendedOptimized: true
       medium:
         objects:
-          basic: 72000
-          basicOptimized: false
-          extended: 60000
-          extendedOptimized: false
+          basic: 108000
+          basicOptimized: true
+          extended: 102298
+          extendedOptimized: true
       high:
         objects:
-          basic: 9000
-          basicOptimized: false
-          extended: 8400
+          basic: 30375
+          basicOptimized: true
+          extended: 22780
           extendedOptimized: false
     javers:
       single:
         objects:
-          basic: 243000
-          basicOptimized: false
-          extended: 44550
-          extendedOptimized: false
+          basic: 12986
+          basicOptimized: true
+          extended: 3900
+          extendedOptimized: true
       medium:
         objects:
-          basic: 121500
-          basicOptimized: false
-          extended: 11340
-          extendedOptimized: false
+          basic: 8475
+          basicOptimized: true
+          extended: 1166
+          extendedOptimized: true
       high:
         objects:
-          basic: 6480
-          basicOptimized: false
-          extended: 1458
-          extendedOptimized: false
+          basic: 2349
+          basicOptimized: true
+          extended: 152
+          extendedOptimized: true
   delete:
     novers:
       single:
@@ -229,16 +229,16 @@ benchmark:
           extendedOptimized: true
       medium:
         objects:
-          basic: 48000
-          basicOptimized: false
+          basic: 47798
+          basicOptimized: true
           extended: 40000
           extendedOptimized: true
       high:
         objects:
           basic: 8000
           basicOptimized: true
-          extended: 7200
-          extendedOptimized: false
+          extended: 7500
+          extendedOptimized: true
     javers:
       single:
         objects:
@@ -248,13 +248,13 @@ benchmark:
           extendedOptimized: true
       medium:
         objects:
-          basic: 36450
-          basicOptimized: false
+          basic: 35000
+          basicOptimized: true
           extended: 15000
           extendedOptimized: true
       high:
         objects:
           basic: 11000
           basicOptimized: true
-          extended: 4800
+          extended: 5746
           extendedOptimized: false

@@ -2,8 +2,11 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkEnvironmentConfig;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkEnvironmentConfigUtils;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.ResourceUtils;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -16,9 +19,13 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
+
+import static org.assertj.core.api.Fail.fail;
 
 class JmhBenchmarkRunner {
 
@@ -29,11 +36,28 @@ class JmhBenchmarkRunner {
 
     private static final String BENCHMARK_DIRECTORY = "./benchmark-results/" + LocalDateTime.now().format(DATE_TIME_FORMATTER);
 
+    private static BenchmarkEnvironmentConfig benchmarksConfig;
+
     @BeforeAll
     static void init() {
         File directory = new File(BENCHMARK_DIRECTORY);
         if (!directory.exists()) {
             directory.mkdirs();
+        }
+
+        benchmarksConfig = BenchmarkEnvironmentConfigUtils.getBenchmarksSetupConfig();
+    }
+
+    @AfterAll
+    @SneakyThrows
+    static void cleanUp() {
+        String applicationYaml = "application-" + benchmarksConfig.getEnvironment() + ".yaml";
+        Path applicationYamlPath = ResourceUtils.getPath("application-" + benchmarksConfig.getEnvironment() + ".yaml");
+
+        if (ResourceUtils.fileExists(applicationYaml)) {
+            Files.copy(applicationYamlPath, Path.of(BENCHMARK_DIRECTORY + "/application-optimized.yaml"));
+        } else {
+            fail("Expected optimization file missing.");
         }
     }
 
@@ -41,7 +65,6 @@ class JmhBenchmarkRunner {
     @MethodSource("provideParameters")
     void executeJmhRunner(ObjectGraphComplexity objectGraphComplexity, PayloadType payloadType) throws RunnerException {
 
-        BenchmarkEnvironmentConfig benchmarksConfig = BenchmarkEnvironmentConfigUtils.getBenchmarksSetupConfig();
         String benchmarkClassName = "NoversCreateBenchmark";
         String benchmarkFileName = String.join("_",
                         benchmarkClassName,
@@ -74,17 +97,6 @@ class JmhBenchmarkRunner {
         runner.run();
     }
 
-//    private static Stream<Arguments> provideParameters() {
-//        return Stream.of(
-////                Arguments.of(ObjectGraphComplexity.SINGLE, PayloadType.BASIC),
-//                Arguments.of(ObjectGraphComplexity.SINGLE, PayloadType.EXTENDED),
-////                Arguments.of(ObjectGraphComplexity.MEDIUM, PayloadType.BASIC),
-//                Arguments.of(ObjectGraphComplexity.MEDIUM, PayloadType.EXTENDED),
-
-    /// /                Arguments.of(ObjectGraphComplexity.HIGH, PayloadType.BASIC),
-//                Arguments.of(ObjectGraphComplexity.HIGH, PayloadType.EXTENDED)
-//        );
-//    }
     private static Stream<Arguments> provideParameters() {
         return Stream.of(ObjectGraphComplexity.values())
                 .flatMap(objectGraphComplexity -> Stream.of(PayloadType.values())

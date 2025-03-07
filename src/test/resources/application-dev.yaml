@@ -39,7 +39,6 @@ benchmark:
         objects:
           basic: 3300
           extended: 180
-
   read:
     novers:
       single:
@@ -80,7 +79,6 @@ benchmark:
         objects:
           basic: 50000
           extended: 50000
-
   update:
     novers:
       single:
@@ -121,7 +119,6 @@ benchmark:
         objects:
           basic: 8000
           extended: 1800
-
   delete:
     novers:
       single:

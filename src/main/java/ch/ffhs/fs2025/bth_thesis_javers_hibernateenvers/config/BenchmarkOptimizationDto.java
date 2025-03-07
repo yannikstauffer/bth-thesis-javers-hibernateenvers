@@ -5,19 +5,20 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Data
 @Builder
-public class BenchmarkConfigElement {
+public class BenchmarkOptimizationDto {
     private String scenario;
-    private String benchmark;
     private String versioning;
     private String complexity;
     private String payloadType;
-    private int currentAmount;
-    private int targetAmount;
+    private int objectCount;
     private LocalDateTime timestamp;
+
+    public void setObjectCount(double targetAmount) {
+        this.objectCount = (int) targetAmount;
+    }
 
     public List<String> getYamlKeyPath() {
         return List.of("benchmark", scenario, versioning, complexity, "objects", payloadType);
@@ -25,12 +26,5 @@ public class BenchmarkConfigElement {
 
     public String getYamlKey() {
         return String.format("benchmark.%s.%s.%s.objects.%s", scenario, versioning, complexity, payloadType);
-    }
-
-    public Map<String, Object> getYamlValues() {
-        return Map.of(
-                "currentAmount", currentAmount,
-                "targetAmount", targetAmount,
-                "timestamp", timestamp.toString());
     }
 }

@@ -4,6 +4,8 @@ import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.BthThesisJaversHibernate
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Scenario;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Versioned;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkConfigManager;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkOptimizationDto;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.DataFactory;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
@@ -37,6 +39,8 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
     private int pointer = 0;
     private ApplicationContext springContext;
 
+    private BenchmarkConfigManager benchmarkConfigManager;
+
     @Setup
     public void setup() {
         String benchmarkEnvironment = System.getProperty("spring.profiles.active", "dev");
@@ -48,6 +52,11 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
         dataFactory = getBean(DataFactory.class);
         objectGraphComplexity = this.fromEnvEnum(ObjectGraphComplexity.class, "benchmark.config.objectGraphComplexity");
         payloadType = this.fromEnvEnum(PayloadType.class, "benchmark.config.payloadType");
+        benchmarkConfigManager = new BenchmarkConfigManager("application-" + benchmarkEnvironment + ".yaml");
+
+        if(objectGraphComplexity == null || payloadType == null) {
+            throw new IllegalArgumentException("Object graph complexity and payload type must be set in environment.");
+        }
 
         beforeSetupRoutine();
         logBenchmarkSetupStart();
@@ -62,14 +71,28 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
 
     @TearDown
     public void tearDown() {
-        if (testObjects.size() < pointer) {
-            fail("Benchmark failed. There were not enough test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
-        } else if (testObjects.size() > pointer * 1.3) {
-            fail("Benchmark failed. There were too many test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
-        }
+        BenchmarkOptimizationDto benchmarkOptimizationDto = BenchmarkOptimizationDto.builder()
+                .scenario(getScenario().name().toLowerCase())
+                .versioning(getVersioningDefinition().getVersioning().name().toLowerCase())
+                .complexity(objectGraphComplexity.name().toLowerCase())
+                .payloadType(payloadType.name().toLowerCase())
+                .build();
 
-        System.out.println();
-        System.out.println("Benchmark finished. Total test objects staged: " + testObjects.size() + ". Test objects processed: " + pointer);
+        try {
+            if (testObjects.size() < pointer) {
+                benchmarkOptimizationDto.setObjectCount(testObjects.size() * 1.2);
+                fail("Benchmark failed. There were not enough test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
+            } else if (testObjects.size() > pointer * 1.3) {
+                benchmarkOptimizationDto.setObjectCount(testObjects.size() * 0.9);
+                fail("Benchmark failed. There were too many test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
+            }
+
+            System.out.println();
+            System.out.println("Benchmark finished. Total test objects staged: " + testObjects.size() + ". Test objects processed: " + pointer);
+        } finally {
+            benchmarkConfigManager.upsertEntry(benchmarkOptimizationDto);
+            benchmarkConfigManager.save();
+        }
     }
 
     protected T getTestObject() {
@@ -104,7 +127,12 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
     }
 
     protected T nextTestObject() {
-        return this.testObjects.get(nextTestObjectPointer() - 1);
+        int nextPointer = nextTestObjectPointer();
+        if(nextPointer > testObjects.size()) {
+            // ensure that benchmark finishes - error handling will be done in tearDown
+            return this.testObjects.get(0);
+        }
+        return this.testObjects.get(nextPointer - 1);
     }
 
     protected void beforeSetupRoutine() {}

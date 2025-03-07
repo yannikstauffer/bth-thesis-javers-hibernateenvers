@@ -34,8 +34,8 @@ public class BenchmarkConfigManager {
         ResourceUtils.copy(fileName, backupFileName);
     }
 
-    public void upsertEntry(BenchmarkConfigElement dataElement) {
-        addValues(yamlData, dataElement);
+    public void upsertEntry(BenchmarkOptimizationDto optimizationDto) {
+        addTargetAmount(yamlData, optimizationDto);
     }
 
     private static String fileNameWithSuffix(String fileName, String suffix) {
@@ -48,15 +48,20 @@ public class BenchmarkConfigManager {
         return namePart + "." + suffix + extensionPart;
     }
 
-    private static void addValues(Map<String, Object> yamlData, BenchmarkConfigElement dataElement) {
+    private static void addTargetAmount(Map<String, Object> yamlData, BenchmarkOptimizationDto optimizationDto) {
         Map<String, Object> currentMap = yamlData;
 
-        for (String key : dataElement.getYamlKeyPath()) {
+        for (int i = 0; i < optimizationDto.getYamlKeyPath().size(); i++) {
+            String key = optimizationDto.getYamlKeyPath().get(i);
             currentMap.computeIfAbsent(key, k -> new HashMap<String, Object>());
-            currentMap = (Map<String, Object>) currentMap.get(key);
+
+            if(i == optimizationDto.getYamlKeyPath().size() - 1) {
+                currentMap.put(key, optimizationDto.getObjectCount());
+            } else {
+                currentMap = (Map<String, Object>) currentMap.get(key);
+            }
         }
 
-        currentMap.putAll(dataElement.getYamlValues());
     }
 
 }

@@ -21,8 +21,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
 @Slf4j
 public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versioned<T> {
 
@@ -81,10 +79,10 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
         try {
             if (testObjects.size() < pointer) {
                 benchmarkOptimizationDto.setObjectCount(testObjects.size() * 1.2);
-                fail("Benchmark failed. There were not enough test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
+                throw new IllegalStateException("Benchmark failed. There were not enough test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
             } else if (testObjects.size() > pointer * 1.3) {
                 benchmarkOptimizationDto.setObjectCount(testObjects.size() * 0.9);
-                fail("Benchmark failed. There were too many test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
+                throw new IllegalStateException("Benchmark failed. There were too many test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
             }
 
             System.out.println();
@@ -130,7 +128,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
         int nextPointer = nextTestObjectPointer();
         if(nextPointer > testObjects.size()) {
             // ensure that benchmark finishes - error handling will be done in tearDown
-            return this.testObjects.get(0);
+            return this.testObjects.getFirst();
         }
         return this.testObjects.get(nextPointer - 1);
     }

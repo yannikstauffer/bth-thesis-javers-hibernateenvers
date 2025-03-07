@@ -24,7 +24,4 @@ public class BenchmarkOptimizationDto {
         return List.of("benchmark", scenario, versioning, complexity, "objects", payloadType);
     }
 
-    public String getYamlKey() {
-        return String.format("benchmark.%s.%s.%s.objects.%s", scenario, versioning, complexity, payloadType);
-    }
 }

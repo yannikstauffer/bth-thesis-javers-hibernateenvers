@@ -1,13 +1,20 @@
 #!/bin/bash
 
-# Benchmarks to run
-benchmark_classes=(
-  "EnversCreateBenchmark"
-  "JaversCreateBenchmark"
-  "NoversCreateBenchmark"
-)
+max_retries=5
+count=0
 
-for benchmark_class in "${benchmark_classes[@]}"; do
-  echo "Running benchmark: $benchmark_class"
-  mvn test -Dtest=$benchmark_class
+until mvn test -Dtest="JmhBenchmarkRunner" || [ $count -eq $max_retries ]; do
+  count=$((count + 1))
+  echo ""
+  echo "######################################################################"
+  echo "### Benchmarks failed. Attempt $count/$max_retries. Retrying... ###"
+  echo "######################################################################"
+  echo ""
 done
+
+if [ $count -eq $max_retries ]; then
+  echo "Reached maximum retry limit of $max_retries. Exiting."
+  exit 1
+else
+  echo "Benchmarks completed successfully."
+fi

@@ -2,9 +2,8 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkEnvironmentConfig;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkEnvironmentConfigUtils;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkRunConfigDto;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.ResourceUtils;
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -63,17 +62,16 @@ class JmhBenchmarkRunner {
 
     @ParameterizedTest
     @MethodSource("provideParameters")
-    void executeJmhRunner(ObjectGraphComplexity objectGraphComplexity, PayloadType payloadType) throws RunnerException {
+    void executeJmhRunner(BenchmarkRunConfigDto runConfigDto) throws RunnerException {
 
-        String benchmarkClassName = "NoversCreateBenchmark";
         String benchmarkFileName = String.join("_",
-                        benchmarkClassName,
-                        objectGraphComplexity.name(),
-                        payloadType.name())
+                        runConfigDto.getBenchmarkClassName(),
+                        runConfigDto.getComplexity().name(),
+                        runConfigDto.getPayloadType().name())
                 .concat(".json");
 
         Options opt = new OptionsBuilder()
-                .include("\\." + benchmarkClassName + "\\.")
+                .include("\\." + runConfigDto.getBenchmarkClassName() + "\\.")
                 .warmupIterations(WARMUP_ITERATIONS) // CITE: traini_2023
                 .measurementIterations(MEASUREMENT_ITERATIONS)
                 .measurementTime(MEASUREMENT_TIME)
@@ -89,8 +87,9 @@ class JmhBenchmarkRunner {
                 .jvmArgs("-server",
                         "-Xms" + benchmarksConfig.getJvmConfig().getMemory(),
                         "-Xmx" + benchmarksConfig.getJvmConfig().getMemory(),
-                        "-Dbenchmark.config.objectGraphComplexity=" + objectGraphComplexity.name(),
-                        "-Dbenchmark.config.payloadType=" + payloadType.name(),
+                        "-XX:+UseG1GC",
+                        "-Dbenchmark.config.objectGraphComplexity=" + runConfigDto.getComplexity().name(),
+                        "-Dbenchmark.config.payloadType=" + runConfigDto.getPayloadType().name(),
                         "-Dspring.profiles.active=" + benchmarksConfig.getEnvironment())
                 .build();
 
@@ -98,9 +97,10 @@ class JmhBenchmarkRunner {
         runner.run();
     }
 
+
     private static Stream<Arguments> provideParameters() {
-        return Stream.of(ObjectGraphComplexity.values())
-                .flatMap(objectGraphComplexity -> Stream.of(PayloadType.values())
-                        .map(payloadType -> Arguments.of(objectGraphComplexity, payloadType)));
+        return benchmarksConfig.getBenchmarkRunConfigs()
+                        .map(Arguments::of);
     }
+
 }

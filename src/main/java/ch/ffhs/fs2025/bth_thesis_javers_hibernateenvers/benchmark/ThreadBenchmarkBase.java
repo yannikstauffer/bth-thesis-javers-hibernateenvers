@@ -74,6 +74,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
                 .versioning(getVersioningDefinition().getVersioning().name().toLowerCase())
                 .complexity(objectGraphComplexity.name().toLowerCase())
                 .payloadType(payloadType.name().toLowerCase())
+                .objectCount(testObjects.size())
                 .build();
 
         try {

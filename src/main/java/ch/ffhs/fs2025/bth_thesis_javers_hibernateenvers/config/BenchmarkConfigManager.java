@@ -35,7 +35,7 @@ public class BenchmarkConfigManager {
     }
 
     public void upsertEntry(BenchmarkOptimizationDto optimizationDto) {
-        addTargetAmount(yamlData, optimizationDto);
+        updateAmount(yamlData, optimizationDto);
     }
 
     private static String fileNameWithSuffix(String fileName, String suffix) {
@@ -48,7 +48,7 @@ public class BenchmarkConfigManager {
         return namePart + "." + suffix + extensionPart;
     }
 
-    private static void addTargetAmount(Map<String, Object> yamlData, BenchmarkOptimizationDto optimizationDto) {
+    private static void updateAmount(Map<String, Object> yamlData, BenchmarkOptimizationDto optimizationDto) {
         Map<String, Object> currentMap = yamlData;
 
         for (int i = 0; i < optimizationDto.getYamlKeyPath().size(); i++) {
@@ -56,7 +56,9 @@ public class BenchmarkConfigManager {
             currentMap.computeIfAbsent(key, k -> new HashMap<String, Object>());
 
             if(i == optimizationDto.getYamlKeyPath().size() - 1) {
+                boolean optimized = Integer.parseInt((currentMap.getOrDefault(key, 0)).toString()) == optimizationDto.getObjectCount();
                 currentMap.put(key, optimizationDto.getObjectCount());
+                currentMap.put(key + "Optimized", optimized);
             } else {
                 currentMap = (Map<String, Object>) currentMap.get(key);
             }

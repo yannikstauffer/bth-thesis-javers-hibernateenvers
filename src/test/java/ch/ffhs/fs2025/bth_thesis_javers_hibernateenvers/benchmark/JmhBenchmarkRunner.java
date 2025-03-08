@@ -45,6 +45,7 @@ class JmhBenchmarkRunner {
         }
 
         benchmarksConfig = BenchmarkEnvironmentConfigUtils.getBenchmarksSetupConfig();
+        System.out.println("Benchmark directory: " + BENCHMARK_DIRECTORY);
     }
 
     @AfterAll

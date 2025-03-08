@@ -113,7 +113,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
 
     protected abstract void repeatedSetupRoutine(int i);
 
-    private <B> B getBean(Class<B> type) {
+    protected <B> B getBean(Class<B> type) {
         return this.springContext.getBean(type);
     }
 

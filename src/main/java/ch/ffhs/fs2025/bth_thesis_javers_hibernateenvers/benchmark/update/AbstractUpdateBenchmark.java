@@ -4,12 +4,19 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.update;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.ThreadBenchmarkBase;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Scenario;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.DataUpdater;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.infra.Blackhole;
 
-import java.util.UUID;
 
 public abstract class AbstractUpdateBenchmark<T extends Thread<?>> extends ThreadBenchmarkBase<T> {
+
+    private DataUpdater dataUpdater;
+
+    @Override
+    protected void beforeSetupRoutine() {
+        dataUpdater = getBean(DataUpdater.class);
+    }
 
     @Override
     protected Scenario getScenario() {
@@ -17,10 +24,8 @@ public abstract class AbstractUpdateBenchmark<T extends Thread<?>> extends Threa
     }
 
     protected void repeatedSetupRoutine(int i) {
-        var thread = getTestObject();
-        var updated = getRepository().save(thread);
-        updated.setContent("UpdatedThread_" + UUID.randomUUID());
-        updated.setAttachment(new byte[1000]);
+        var thread = getRepository().save(getTestObject());
+        var updated = dataUpdater.update(thread, getPayloadType());
         addTestObject(updated);
     }
 

@@ -15,6 +15,9 @@ services:
     entrypoint:
         - /bin/bash
         - -c
-        - "cd /benchmark/scripts && ./run-benchmarks.sh"
-    mem_limit: 6g
+        - "cd /benchmark/scripts && ./run-dev-benchmarks.sh"
+    mem_limit: 18g
+    mem_reservation: 18g
+    cpu_count: 2
     cpus: 2
+    cpuset: 0,1

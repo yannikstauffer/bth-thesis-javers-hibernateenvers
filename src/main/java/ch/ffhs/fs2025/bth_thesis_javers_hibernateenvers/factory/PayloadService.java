@@ -9,7 +9,7 @@ import java.util.UUID;
 @Service
 class PayloadService {
 
-    @Value("${thesis.payload.size:1000}")
+    @Value("${thesis.payload.size:200}")
     private int payloadSize;
 
     private final Random random = new Random();

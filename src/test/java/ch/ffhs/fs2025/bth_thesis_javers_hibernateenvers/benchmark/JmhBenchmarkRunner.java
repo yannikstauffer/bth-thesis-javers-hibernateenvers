@@ -60,7 +60,7 @@ class JmhBenchmarkRunner {
 
     @ParameterizedTest
     @MethodSource("provideParameters")
-    void executeJmhRunner(BenchmarkRunConfigDto runConfigDto, BenchmarkEnvironmentConfig.JmhConfig jmhConfig) throws RunnerException {
+    void executeJmhRunner(BenchmarkRunConfigDto runConfigDto) throws RunnerException {
 
         String benchmarkFileName = String.join("_",
                         runConfigDto.getBenchmarkClassName(),
@@ -70,10 +70,10 @@ class JmhBenchmarkRunner {
 
         Options opt = new OptionsBuilder()
                 .include("\\." + runConfigDto.getBenchmarkClassName() + "\\.")
-                .warmupIterations(jmhConfig.getWarmupIterations()) // CITE: traini_2023
-                .measurementIterations(jmhConfig.getMeasurementIterations())
-                .measurementTime(TimeValue.milliseconds(jmhConfig.getMeasurementTime()))
-                .warmupTime(TimeValue.milliseconds(jmhConfig.getWarmupTime()))
+                .warmupIterations(benchmarksConfig.getJmhConfig().getWarmupIterations()) // CITE: traini_2023
+                .measurementIterations(benchmarksConfig.getJmhConfig().getMeasurementIterations())
+                .measurementTime(TimeValue.milliseconds(benchmarksConfig.getJmhConfig().getMeasurementTime()))
+                .warmupTime(TimeValue.milliseconds(benchmarksConfig.getJmhConfig().getWarmupTime()))
                 .timeout(TimeValue.minutes(3))
                 .forks(1) // CITE: costa_2021
                 .threads(1)
@@ -86,6 +86,8 @@ class JmhBenchmarkRunner {
                         "-Xms" + benchmarksConfig.getJvmConfig().getMemory(),
                         "-Xmx" + benchmarksConfig.getJvmConfig().getMemory(),
                         "-XX:+UseG1GC",
+                        "-XX:+AlwaysPreTouch",
+                        "-XX:MaxRAMPercentage=90",
                         "-Dbenchmark.config.objectGraphComplexity=" + runConfigDto.getComplexity().name(),
                         "-Dbenchmark.config.payloadType=" + runConfigDto.getPayloadType().name(),
                         "-Dspring.profiles.active=" + benchmarksConfig.getEnvironment())

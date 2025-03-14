@@ -5,7 +5,7 @@ count=0
 
 cd ../
 
-until mvn test -Dtest="JmhBenchmarkRunner" -Dspring.profiles.active="benchmark" || [ $count -eq $max_retries ]; do
+until mvn test -Dtest="JmhBenchmarkRunner" -Dspring.profiles.active="benchmark" -Dorg.slf4j.simpleLogger.defaultLogLevel="warn" || [ $count -eq $max_retries ]; do
   count=$((count + 1))
   echo ""
   echo "######################################################################"

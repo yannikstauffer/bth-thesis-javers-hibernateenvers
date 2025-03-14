@@ -28,9 +28,6 @@ import static org.assertj.core.api.Fail.fail;
 
 class JmhBenchmarkRunner {
 
-    private static final Integer MEASUREMENT_ITERATIONS = 5; // on Raspberry: 5
-    private static final Integer WARMUP_ITERATIONS = 5; // on Raspberry: 10
-    private static final TimeValue MEASUREMENT_TIME = TimeValue.milliseconds(1000); // on Raspberry: 2000
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 
     private static final String BENCHMARK_DIRECTORY = "./benchmark-results/" + LocalDateTime.now().format(DATE_TIME_FORMATTER);
@@ -63,7 +60,7 @@ class JmhBenchmarkRunner {
 
     @ParameterizedTest
     @MethodSource("provideParameters")
-    void executeJmhRunner(BenchmarkRunConfigDto runConfigDto) throws RunnerException {
+    void executeJmhRunner(BenchmarkRunConfigDto runConfigDto, BenchmarkEnvironmentConfig.JmhConfig jmhConfig) throws RunnerException {
 
         String benchmarkFileName = String.join("_",
                         runConfigDto.getBenchmarkClassName(),
@@ -73,10 +70,10 @@ class JmhBenchmarkRunner {
 
         Options opt = new OptionsBuilder()
                 .include("\\." + runConfigDto.getBenchmarkClassName() + "\\.")
-                .warmupIterations(WARMUP_ITERATIONS) // CITE: traini_2023
-                .measurementIterations(MEASUREMENT_ITERATIONS)
-                .measurementTime(MEASUREMENT_TIME)
-                .warmupTime(MEASUREMENT_TIME)
+                .warmupIterations(jmhConfig.getWarmupIterations()) // CITE: traini_2023
+                .measurementIterations(jmhConfig.getMeasurementIterations())
+                .measurementTime(TimeValue.milliseconds(jmhConfig.getMeasurementTime()))
+                .warmupTime(TimeValue.milliseconds(jmhConfig.getWarmupTime()))
                 .timeout(TimeValue.minutes(3))
                 .forks(1) // CITE: costa_2021
                 .threads(1)
@@ -101,7 +98,7 @@ class JmhBenchmarkRunner {
 
     private static Stream<Arguments> provideParameters() {
         return benchmarksConfig.getBenchmarkRunConfigs()
-                        .map(Arguments::of);
+                .map(runConfigDto -> Arguments.of(runConfigDto, benchmarksConfig.getJmhConfig()));
     }
 
 }

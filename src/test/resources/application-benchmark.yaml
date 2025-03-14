@@ -1,5 +1,5 @@
 jmhConfig:
-  warmupIterations: 15
+  warmupIterations: 5
   warmupTime: 2000
   measurementIterations: 5
   measurementTime: 2000

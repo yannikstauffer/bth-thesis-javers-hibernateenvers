@@ -1,8 +1,8 @@
 jmhConfig:
   warmupIterations: 10
-  warmupTime: 1000
+  warmupTime: 2000
   measurementIterations: 5
-  measurementTime: 1000
+  measurementTime: 2000
 jvmConfig:
   memory: 6g
 runConfig:

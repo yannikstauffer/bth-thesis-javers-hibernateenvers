@@ -1,0 +1,258 @@
+jmhConfig:
+  warmupIterations: 10
+  warmupTime: 1000
+  measurementIterations: 5
+  measurementTime: 1000
+jvmConfig:
+  memory: 6g
+runConfig:
+  optimizeOnly: true
+  scenarios:
+    - Create
+    - Read
+    - Update
+    - Delete
+  versionings:
+    - Novers
+    - Javers
+    - Envers
+  payloadTypes:
+    - Basic
+    - Extended
+  objectGraphComplexities:
+    - Single
+    - Medium
+    - High
+benchmark:
+  create:
+    novers:
+      single:
+        objects:
+          basic: 36000
+          basicOptimized: false
+          extended: 32000
+          extendedOptimized: false
+      medium:
+        objects:
+          basic: 12000
+          basicOptimized: false
+          extended: 11000
+          extendedOptimized: false
+      high:
+        objects:
+          basic: 1700
+          basicOptimized: false
+          extended: 1500
+          extendedOptimized: false
+    envers:
+      single:
+        objects:
+          basic: 16000
+          basicOptimized: false
+          extended: 15000
+          extendedOptimized: false
+      medium:
+        objects:
+          basic: 5000
+          basicOptimized: false
+          extended: 5000
+          extendedOptimized: false
+      high:
+        objects:
+          basic: 750
+          basicOptimized: false
+          extended: 700
+          extendedOptimized: false
+    javers:
+      single:
+        objects:
+          basic: 8361
+          basicOptimized: false
+          extended: 550
+          extendedOptimized: false
+      medium:
+        objects:
+          basic: 2300
+          basicOptimized: false
+          extended: 127
+          extendedOptimized: false
+      high:
+        objects:
+          basic: 294
+          basicOptimized: false
+          extended: 18
+          extendedOptimized: false
+  read:
+    novers:
+      single:
+        objects:
+          basic: 75000
+          basicOptimized: false
+          extended: 75000
+          extendedOptimized: false
+      medium:
+        objects:
+          basic: 33750
+          basicOptimized: false
+          extended: 33750
+          extendedOptimized: false
+      high:
+        objects:
+          basic: 10125
+          basicOptimized: false
+          extended: 3000
+          extendedOptimized: false
+    envers:
+      single:
+        objects:
+          basic: 75000
+          basicOptimized: false
+          extended: 68075
+          extendedOptimized: false
+      medium:
+        objects:
+          basic: 22500
+          basicOptimized: false
+          extended: 22500
+          extendedOptimized: false
+      high:
+        objects:
+          basic: 6750
+          basicOptimized: false
+          extended: 4500
+          extendedOptimized: false
+    javers:
+      single:
+        objects:
+          basic: 75000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
+      medium:
+        objects:
+          basic: 33750
+          basicOptimized: false
+          extended: 15000
+          extendedOptimized: false
+      high:
+        objects:
+          basic: 6750
+          basicOptimized: false
+          extended: 3000
+          extendedOptimized: false
+  update:
+    novers:
+      single:
+        objects:
+          basic: 35000
+          basicOptimized: false
+          extended: 32000
+          extendedOptimized: false
+      medium:
+        objects:
+          basic: 17280
+          basicOptimized: false
+          extended: 13200
+          extendedOptimized: false
+      high:
+        objects:
+          basic: 3295
+          basicOptimized: false
+          extended: 2250
+          extendedOptimized: false
+    envers:
+      single:
+        objects:
+          basic: 19200
+          basicOptimized: false
+          extended: 21313
+          extendedOptimized: false
+      medium:
+        objects:
+          basic: 12961
+          basicOptimized: false
+          extended: 10229
+          extendedOptimized: false
+      high:
+        objects:
+          basic: 3037
+          basicOptimized: false
+          extended: 2037
+          extendedOptimized: false
+    javers:
+      single:
+        objects:
+          basic: 2921
+          basicOptimized: false
+          extended: 390
+          extendedOptimized: false
+      medium:
+        objects:
+          basic: 1906
+          basicOptimized: false
+          extended: 102
+          extendedOptimized: false
+      high:
+        objects:
+          basic: 234
+          basicOptimized: false
+          extended: 15
+          extendedOptimized: false
+  delete:
+    novers:
+      single:
+        objects:
+          basic: 27000
+          basicOptimized: false
+          extended: 24577
+          extendedOptimized: false
+      medium:
+        objects:
+          basic: 10000
+          basicOptimized: false
+          extended: 9000
+          extendedOptimized: false
+      high:
+        objects:
+          basic: 1800
+          basicOptimized: false
+          extended: 1350
+          extendedOptimized: false
+    envers:
+      single:
+        objects:
+          basic: 10000
+          basicOptimized: false
+          extended: 10000
+          extendedOptimized: false
+      medium:
+        objects:
+          basic: 4779
+          basicOptimized: false
+          extended: 4000
+          extendedOptimized: false
+      high:
+        objects:
+          basic: 800
+          basicOptimized: false
+          extended: 750
+          extendedOptimized: false
+    javers:
+      single:
+        objects:
+          basic: 4500
+          basicOptimized: false
+          extended: 2007
+          extendedOptimized: false
+      medium:
+        objects:
+          basic: 3204
+          basicOptimized: false
+          extended: 1500
+          extendedOptimized: false
+      high:
+        objects:
+          basic: 1100
+          basicOptimized: false
+          extended: 787
+          extendedOptimized: false

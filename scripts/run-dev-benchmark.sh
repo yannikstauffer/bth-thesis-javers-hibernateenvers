@@ -1,9 +1,11 @@
 #!/bin/bash
 
-max_retries=10
+max_retries=5
 count=0
 
-until mvn test -Dtest="JmhBenchmarkRunner" || [ $count -eq $max_retries ]; do
+cd ../
+
+until mvn test -Dtest="JmhBenchmarkRunner" -Dspring.profiles.active="dev" || [ $count -eq $max_retries ]; do
   count=$((count + 1))
   echo ""
   echo "######################################################################"

@@ -1,9 +1,20 @@
 services:
-  postgres:
-    image: 'postgres:17.2'
-    environment:
-      - 'POSTGRES_DB=thesis'
-      - 'POSTGRES_PASSWORD=password'
-      - 'POSTGRES_USER=sa'
-    ports:
-      - '5432:5432'
+  benchmark-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: benchmark-runner
+    volumes:
+      - ./src:/benchmark/src:ro
+      - ./pom.xml:/benchmark/pom.xml:ro
+      - ./scripts:/benchmark/scripts:ro
+      - ./benchmark-results:/benchmark/benchmark-results
+      - ~/.m2/repository:/root/.m2/repository:ro
+    tty: true
+    stdin_open: true
+    entrypoint:
+        - /bin/bash
+        - -c
+        - "cd /benchmark/scripts && ./run-benchmarks.sh"
+    mem_limit: 6g
+    cpus: 2

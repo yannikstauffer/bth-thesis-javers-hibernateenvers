@@ -223,19 +223,19 @@ benchmark:
         objects:
           basic: 77053
           basicOptimized: false
-          extended: 100000
+          extended: 74985
           extendedOptimized: false
       medium:
         objects:
-          basic: 47798
+          basic: 30830
           basicOptimized: false
-          extended: 40000
+          extended: 28306
           extendedOptimized: false
       high:
         objects:
-          basic: 8000
+          basic: 6370
           basicOptimized: false
-          extended: 7500
+          extended: 6187
           extendedOptimized: false
     javers:
       single:

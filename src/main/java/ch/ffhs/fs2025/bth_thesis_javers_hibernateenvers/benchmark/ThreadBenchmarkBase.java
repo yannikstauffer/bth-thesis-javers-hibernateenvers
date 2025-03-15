@@ -78,9 +78,9 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
                 .build();
 
         try {
-            if (testObjects.size() < pointer) {
+            if (testObjects.size() * .9 < pointer) {
                 benchmarkOptimizationDto.setObjectCount(testObjects.size() * 1.5);
-                throw new IllegalStateException("Benchmark failed. There were not enough test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
+                throw new IllegalStateException("Benchmark failed. There were not/barely enough test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
             } else if (testObjects.size() > pointer * 1.3) {
                 benchmarkOptimizationDto.setObjectCount(pointer * 1.2);
                 throw new IllegalStateException("Benchmark failed. There were too many test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);

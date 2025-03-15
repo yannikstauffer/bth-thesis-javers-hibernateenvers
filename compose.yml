@@ -15,7 +15,7 @@ services:
     entrypoint:
         - /bin/bash
         - -c
-        - "cd /benchmark/scripts && ./run-dev-benchmarks.sh"
+        - "cd /benchmark/scripts && ./run-docker-benchmarks.sh"
     mem_limit: 18g
     mem_reservation: 18g
     cpu_count: 2

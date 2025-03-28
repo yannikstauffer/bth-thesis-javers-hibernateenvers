@@ -88,7 +88,6 @@ class JmhBenchmarkRunner {
                         "-XX:+UseG1GC",
                         "-XX:+AlwaysPreTouch",
                         "-XX:MaxRAMPercentage=90",
-                        "-XX:TieredStopAtLevel=1",
                         "-Dbenchmark.config.objectGraphComplexity=" + runConfigDto.getComplexity().name(),
                         "-Dbenchmark.config.payloadType=" + runConfigDto.getPayloadType().name(),
                         "-Dspring.profiles.active=" + benchmarksConfig.getEnvironment())

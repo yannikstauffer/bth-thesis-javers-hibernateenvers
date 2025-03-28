@@ -53,13 +53,13 @@ public class BenchmarkConfigManager {
 
         for (int i = 0; i < optimizationDto.getYamlKeyPath().size(); i++) {
             String key = optimizationDto.getYamlKeyPath().get(i);
-            currentMap.computeIfAbsent(key, k -> new HashMap<String, Object>());
 
             if(i == optimizationDto.getYamlKeyPath().size() - 1) {
                 boolean optimized = Integer.parseInt((currentMap.getOrDefault(key, 0)).toString()) == optimizationDto.getObjectCount();
                 currentMap.put(key, optimizationDto.getObjectCount());
                 currentMap.put(key + "Optimized", optimized);
             } else {
+                currentMap.computeIfAbsent(key, k -> new HashMap<String, Object>());
                 currentMap = (Map<String, Object>) currentMap.get(key);
             }
         }

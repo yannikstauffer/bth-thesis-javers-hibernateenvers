@@ -4,7 +4,11 @@ jmhConfig:
   measurementIterations: 5
   measurementTime: 1000
 jvmConfig:
-  memory: 16g
+  options:
+    - -Xms16g
+    - -Xmx16g
+    - -XX:+UseG1GC
+    - -XX:+AlwaysPreTouch
 runConfig:
   optimizeOnly: true
   scenarios:

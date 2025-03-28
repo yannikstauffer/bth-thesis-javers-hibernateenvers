@@ -99,6 +99,6 @@ public class BenchmarkEnvironmentConfig {
     @AllArgsConstructor
     @RequiredArgsConstructor
     public static class JvmConfig {
-        private String memory;
+        private Set<String> options;
     }
 }

@@ -22,9 +22,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class JmhBenchmarkRunner {
 
@@ -82,20 +85,22 @@ class JmhBenchmarkRunner {
                 .resultFormat(ResultFormatType.JSON)
                 .result(BENCHMARK_DIRECTORY + "/" + benchmarkFileName)
                 .shouldFailOnError(true)
-                .jvmArgs("-server",
-                        "-Xms" + benchmarksConfig.getJvmConfig().getMemory(),
-                        "-Xmx" + benchmarksConfig.getJvmConfig().getMemory(),
-                        "-XX:+UseG1GC",
-                        "-XX:+AlwaysPreTouch",
-                        "-Dbenchmark.config.objectGraphComplexity=" + runConfigDto.getComplexity().name(),
-                        "-Dbenchmark.config.payloadType=" + runConfigDto.getPayloadType().name(),
-                        "-Dspring.profiles.active=" + benchmarksConfig.getEnvironment())
+                .jvmArgs(getJvmOptions(runConfigDto))
                 .build();
 
         Runner runner = new Runner(opt);
-        runner.run();
+
+        assertDoesNotThrow(runner::run);
     }
 
+    private String[] getJvmOptions(BenchmarkRunConfigDto runConfigDto) {
+        Set<String> jvmOptions = new HashSet<>(benchmarksConfig.getJvmConfig().getOptions());
+        jvmOptions.add("-server");
+        jvmOptions.add("-Dbenchmark.config.objectGraphComplexity=" + runConfigDto.getComplexity().name());
+        jvmOptions.add("-Dbenchmark.config.payloadType=" + runConfigDto.getPayloadType().name());
+        jvmOptions.add("-Dspring.profiles.active=" + benchmarksConfig.getEnvironment());
+        return jvmOptions.toArray(new String[0]);
+    }
 
     private static Stream<Arguments> provideParameters() {
         return benchmarksConfig.getBenchmarkRunConfigs()

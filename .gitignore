@@ -30,3 +30,5 @@ out/
 .idea/httpRequests
 
 target
+
+docker/

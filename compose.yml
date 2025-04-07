@@ -10,17 +10,18 @@ services:
       - ./scripts:/benchmark/scripts:ro
       - ./benchmark-results:/benchmark/benchmark-results
       - ~/.m2/repository:/root/.m2/repository:ro
+      - ./docker/test-classes:/benchmark/target/test-classes
     tty: true
     stdin_open: true
     entrypoint:
         - /bin/bash
         - -c
         - "cd /benchmark/scripts && ./run-docker-benchmarks.sh"
-    mem_limit: 48g
-    mem_reservation: 48g
-    cpu_count: 2
-    cpus: 2
-    cpuset: 0,1
+    mem_limit: 38g
+    mem_reservation: 38g
+    cpu_count: 1
+    cpus: 1
+    cpuset: "0"
     ulimits:
       rtprio:
         soft: 99

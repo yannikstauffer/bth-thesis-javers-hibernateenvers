@@ -18,8 +18,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Array;
 
 @Slf4j
 public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versioned<T> {
@@ -33,16 +32,18 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
     @Getter
     private PayloadType payloadType;
 
-    private List<T> testObjects;
+    private T[] testObjects;
     private int pointer = 0;
     private ApplicationContext springContext;
 
     private BenchmarkConfigManager benchmarkConfigManager;
 
+    private int testObjectCount;
+
     @Setup
     public void setup() {
         String benchmarkEnvironment = System.getProperty("spring.profiles.active", "dev");
-        testObjects = new ArrayList<>();
+
         springContext = new SpringApplicationBuilder(BthThesisJaversHibernateenversApplication.class)
                 .profiles(benchmarkEnvironment)
                 .run();
@@ -50,6 +51,10 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
         dataFactory = getBean(DataFactory.class);
         objectGraphComplexity = this.fromEnvEnum(ObjectGraphComplexity.class, "benchmark.config.objectGraphComplexity");
         payloadType = this.fromEnvEnum(PayloadType.class, "benchmark.config.payloadType");
+
+        testObjectCount = loadTestObjectCountFromEnv();
+        testObjects = (T[]) Array.newInstance(getVersioningDefinition().getTestObjectClass(), testObjectCount);
+
         benchmarkConfigManager = new BenchmarkConfigManager("application-" + benchmarkEnvironment + ".yaml");
 
         if(objectGraphComplexity == null || payloadType == null) {
@@ -59,7 +64,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
         beforeSetupRoutine();
         logBenchmarkSetupStart();
 
-        for (int i = 0; i < getTestObjectCount(); i++) {
+        for (int i = 0; i < testObjectCount; i++) {
             repeatedSetupRoutine(i);
         }
 
@@ -74,20 +79,20 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
                 .versioning(getVersioningDefinition().getVersioning().name().toLowerCase())
                 .complexity(objectGraphComplexity.name().toLowerCase())
                 .payloadType(payloadType.name().toLowerCase())
-                .objectCount(testObjects.size())
+                .objectCount(testObjects.length)
                 .build();
 
         try {
-            if (testObjects.size() * .9 < pointer) {
-                benchmarkOptimizationDto.setObjectCount(testObjects.size() * 1.5);
-                throw new IllegalStateException("Benchmark failed. There were not/barely enough test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
-            } else if (testObjects.size() > pointer * 1.3) {
+            if (testObjectCount * .9 < pointer) {
+                benchmarkOptimizationDto.setObjectCount(testObjectCount * 1.5);
+                throw new IllegalStateException("Benchmark failed. There were not/barely enough test objects staged. Total test objects created: " + testObjectCount + ". Items processed: " + pointer);
+            } else if (testObjectCount > pointer * 1.3) {
                 benchmarkOptimizationDto.setObjectCount(pointer * 1.2);
-                throw new IllegalStateException("Benchmark failed. There were too many test objects staged. Total test objects created: " + testObjects.size() + ". Items processed: " + pointer);
+                throw new IllegalStateException("Benchmark failed. There were too many test objects staged. Total test objects created: " + testObjectCount + ". Items processed: " + pointer);
             }
 
             System.out.println();
-            System.out.println("Benchmark finished. Total test objects staged: " + testObjects.size() + ". Test objects processed: " + pointer);
+            System.out.println("Benchmark finished. Total test objects staged: " + testObjectCount + ". Test objects processed: " + pointer);
         } finally {
             benchmarkConfigManager.upsertEntry(benchmarkOptimizationDto);
             benchmarkConfigManager.save();
@@ -98,7 +103,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
         return dataFactory.create(getVersioningDefinition().getTestObjectClass(), getPayloadType(), getObjectGraphComplexity());
     }
 
-    protected final int getTestObjectCount() {
+    protected final int loadTestObjectCountFromEnv() {
         String key = String.join(".",
                 "benchmark",
                 getScenario().name().toLowerCase(),
@@ -122,16 +127,19 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
     }
 
     protected void addTestObject(T testObject) {
-        testObjects.add(testObject);
+        this.testObjects[pointer++] = testObject;
     }
 
     protected T nextTestObject() {
         int nextPointer = nextTestObjectPointer();
-        if(nextPointer > testObjects.size()) {
+        if(nextPointer == 1 || nextPointer > testObjectCount) {
             // ensure that benchmark finishes - error handling will be done in tearDown
-            return this.testObjects.getFirst();
+            return this.testObjects[0];
         }
-        return this.testObjects.get(nextPointer - 1);
+
+        T testObject = this.testObjects[nextPointer - 1];
+        this.testObjects[nextPointer - 1] = null;
+        return testObject;
     }
 
     protected void beforeSetupRoutine() {}
@@ -139,6 +147,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
     protected void afterSetupRoutine() {
         EntityManager entityManager = springContext.getBean(EntityManager.class);
         entityManager.clear();
+        this.pointer = 0;
     }
 
     private <E extends Enum<E>> E fromEnvEnum(Class<E> clazz, String key) {
@@ -169,7 +178,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
         System.out.println("Benchmark setup started.");
         System.out.println("Object graph complexity: " + getObjectGraphComplexity());
         System.out.println("Payload type: " + getPayloadType());
-        System.out.println("Total test objects requested: " + getTestObjectCount());
+        System.out.println("Total test objects requested: " + testObjectCount);
         System.out.println("Staging test objects...");
     }
 

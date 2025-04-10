@@ -12,7 +12,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
@@ -63,7 +62,7 @@ class JmhBenchmarkRunner {
 
     @ParameterizedTest
     @MethodSource("provideParameters")
-    void executeJmhRunner(BenchmarkRunConfigDto runConfigDto) throws RunnerException {
+    void executeJmhRunner(BenchmarkRunConfigDto runConfigDto) {
 
         String benchmarkFileName = String.join("_",
                         runConfigDto.getBenchmarkClassName(),
@@ -77,7 +76,7 @@ class JmhBenchmarkRunner {
                 .measurementIterations(benchmarksConfig.getJmhConfig().getMeasurementIterations())
                 .measurementTime(TimeValue.milliseconds(benchmarksConfig.getJmhConfig().getMeasurementTime()))
                 .warmupTime(TimeValue.milliseconds(benchmarksConfig.getJmhConfig().getWarmupTime()))
-                .timeout(TimeValue.minutes(3))
+                .timeout(TimeValue.minutes(5))
                 .forks(1) // CITE: costa_2021
                 .threads(1)
                 .shouldDoGC(true)

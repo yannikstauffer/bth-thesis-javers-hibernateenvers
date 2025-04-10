@@ -5,28 +5,28 @@ jmhConfig:
   measurementTime: 1000
 jvmConfig:
   options:
-    - -Xms32g
-    - -Xmx32g
-    - -XX:+UseZGC
-    - -XX:+AlwaysPreTouch
+  - -Xms32g
+  - -Xmx32g
+  - -XX:+UseZGC
+  - -XX:+AlwaysPreTouch
 runConfig:
   optimizeOnly: true
   scenarios:
-    - Create
-    - Read
-    - Update
-    - Delete
+  - Create
+  - Read
+  - Update
+  - Delete
   versionings:
-    - Novers
-    - Javers
-    - Envers
+  - Novers
+  - Javers
+  - Envers
   payloadTypes:
-    - Basic
-    - Extended
+  - Basic
+  - Extended
   objectGraphComplexities:
-    - Single
-    - Medium
-    - High
+  - Single
+  - Medium
+  - High
 benchmark:
   create:
     novers:

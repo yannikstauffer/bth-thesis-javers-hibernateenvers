@@ -17,8 +17,8 @@ services:
         - /bin/bash
         - -c
         - "cd /benchmark/scripts && ./run-docker-benchmarks.sh"
-    mem_limit: 38g
-    mem_reservation: 38g
+    mem_limit: 48g
+    mem_reservation: 48g
     cpu_count: 1
     cpus: 1
     cpuset: "0"

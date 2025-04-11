@@ -9,8 +9,10 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
 
 import java.io.Serializable;
+import java.sql.Types;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
@@ -19,12 +21,16 @@ import java.time.LocalDateTime;
 public abstract class BaseEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
-    @Column(name = "created_at")
+    private String content;
+
+    @JdbcTypeCode(Types.BINARY)
+    @Column(columnDefinition = "BYTEA", nullable = false)
+    private byte[] attachment = new byte[0];
+
     private LocalDateTime createdAt;
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @PrePersist

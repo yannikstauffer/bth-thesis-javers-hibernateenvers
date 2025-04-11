@@ -2,6 +2,7 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.BthThesisJaversHibernateenversApplication;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Scenario;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.SetupRoutine;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Versioned;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkConfigManager;
@@ -19,6 +20,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.repository.CrudRepository;
 
 import java.lang.reflect.Array;
+import java.util.List;
+import java.util.stream.IntStream;
 
 @Slf4j
 public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versioned<T> {
@@ -64,9 +67,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
         beforeSetupRoutine();
         logBenchmarkSetupStart();
 
-        for (int i = 0; i < testObjectCount; i++) {
-            repeatedSetupRoutine(i);
-        }
+        runSetupRoutine();
 
         afterSetupRoutine();
         logBenchmarkSetupFinished();
@@ -86,9 +87,9 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
             if (testObjectCount * .9 < pointer) {
                 benchmarkOptimizationDto.setObjectCount(testObjectCount * 1.5);
                 throw new IllegalStateException("Benchmark failed. There were not/barely enough test objects staged. Total test objects created: " + testObjectCount + ". Items processed: " + pointer);
-            } else if (testObjectCount > pointer * 1.3) {
-                benchmarkOptimizationDto.setObjectCount(pointer * 1.2);
-                throw new IllegalStateException("Benchmark failed. There were too many test objects staged. Total test objects created: " + testObjectCount + ". Items processed: " + pointer);
+//            } else if (testObjectCount > pointer * 1.3) {
+//                benchmarkOptimizationDto.setObjectCount(pointer * 1.2);
+//                throw new IllegalStateException("Benchmark failed. There were too many test objects staged. Total test objects created: " + testObjectCount + ". Items processed: " + pointer);
             }
 
             System.out.println();
@@ -116,7 +117,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
 
     protected abstract Scenario getScenario();
 
-    protected abstract void repeatedSetupRoutine(int i);
+    protected abstract SetupRoutine<T> getSetupRoutine();
 
     protected <B> B getBean(Class<B> type) {
         return this.springContext.getBean(type);
@@ -172,10 +173,28 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
 
     }
 
+    private void runSetupRoutine() {
+        SetupRoutine<T> setupRoutine = getSetupRoutine();
+
+        IntStream.range(0, testObjectCount)
+                .forEach(_ -> setupRoutine.getPreSaveSetupRoutine().run());
+
+        if (setupRoutine.isSaveSetup()) {
+            repository.saveAll(List.of(this.testObjects));
+        }
+
+        setupRoutine.getPostSaveSetupRoutine().ifPresent(routine -> {
+            for (T testObject : testObjects) {
+                routine.accept(testObject);
+            }
+        });
+    }
+
     private void logBenchmarkSetupStart() {
         System.out.println();
         System.out.println("*****************************************************************************************");
         System.out.println("Benchmark setup started.");
+        System.out.println("Count of objects in repository: " + repository.count());
         System.out.println("Object graph complexity: " + getObjectGraphComplexity());
         System.out.println("Payload type: " + getPayloadType());
         System.out.println("Total test objects requested: " + testObjectCount);
@@ -184,6 +203,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
 
     private void logBenchmarkSetupFinished() {
         System.out.println("Benchmark setup finished.");
+        System.out.println("Count of objects in repository: " + repository.count());
         System.out.println("*****************************************************************************************");
     }
 

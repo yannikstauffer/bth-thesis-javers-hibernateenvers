@@ -7,7 +7,7 @@ jvmConfig:
   options:
     - -Xms6g
     - -Xmx6g
-    - -XX:+UseG1GC
+    - -XX:+UseZGC
     - -XX:+AlwaysPreTouch
 runConfig:
   optimizeOnly: true

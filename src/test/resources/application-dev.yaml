@@ -1,262 +1,254 @@
 jmhConfig:
-  warmupIterations: 5
-  warmupTime: 1000
-  measurementIterations: 5
-  measurementTime: 1000
+  warmupIterations: 15
+  warmupTime: 2000
+  measurementIterations: 15
+  measurementTime: 2000
 jvmConfig:
   options:
     - -Xms16g
     - -Xmx16g
-    - -XX:+UseG1GC
+    - -XX:+UseZGC
     - -XX:+AlwaysPreTouch
 runConfig:
-  optimizeOnly: true
+  optimizeOnly: false
   scenarios:
-    - Create
-    - Read
     - Update
-    - Delete
   versionings:
     - Novers
-    - Javers
-    - Envers
   payloadTypes:
-    - Basic
     - Extended
   objectGraphComplexities:
     - Single
-    - Medium
-    - High
 benchmark:
   create:
     novers:
       single:
         objects:
-          basic: 360000
-          basicOptimized: true
-          extended: 320000
-          extendedOptimized: true
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
       medium:
         objects:
-          basic: 120000
-          basicOptimized: true
-          extended: 110000
-          extendedOptimized: true
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
       high:
         objects:
-          basic: 17000
-          basicOptimized: true
-          extended: 15000
-          extendedOptimized: true
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
     envers:
       single:
         objects:
-          basic: 160000
-          basicOptimized: true
-          extended: 150000
-          extendedOptimized: true
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
       medium:
         objects:
-          basic: 50000
-          basicOptimized: true
+          basic: 100000
+          basicOptimized: false
           extended: 50000
-          extendedOptimized: true
+          extendedOptimized: false
       high:
         objects:
-          basic: 7500
-          basicOptimized: true
-          extended: 7000
-          extendedOptimized: true
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
     javers:
       single:
         objects:
-          basic: 83612
+          basic: 100000
           basicOptimized: false
-          extended: 5500
-          extendedOptimized: true
+          extended: 50000
+          extendedOptimized: false
       medium:
         objects:
-          basic: 23000
-          basicOptimized: true
-          extended: 1278
-          extendedOptimized: true
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
       high:
         objects:
-          basic: 2944
-          basicOptimized: true
-          extended: 180
-          extendedOptimized: true
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
   read:
     novers:
       single:
         objects:
-          basic: 750000
-          basicOptimized: true
-          extended: 750000
-          extendedOptimized: true
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
       medium:
         objects:
-          basic: 337500
+          basic: 100000
           basicOptimized: false
-          extended: 337500
+          extended: 50000
           extendedOptimized: false
       high:
         objects:
-          basic: 101250
+          basic: 100000
           basicOptimized: false
-          extended: 30000
-          extendedOptimized: true
+          extended: 50000
+          extendedOptimized: false
     envers:
       single:
         objects:
-          basic: 750000
-          basicOptimized: true
-          extended: 680758
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
           extendedOptimized: false
       medium:
         objects:
-          basic: 225000
+          basic: 100000
           basicOptimized: false
-          extended: 225000
+          extended: 50000
           extendedOptimized: false
       high:
         objects:
-          basic: 67500
+          basic: 100000
           basicOptimized: false
-          extended: 45000
+          extended: 50000
           extendedOptimized: false
     javers:
       single:
         objects:
-          basic: 750000
-          basicOptimized: true
-          extended: 500000
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
           extendedOptimized: false
       medium:
         objects:
-          basic: 337500
+          basic: 100000
           basicOptimized: false
-          extended: 150000
+          extended: 50000
           extendedOptimized: false
       high:
         objects:
-          basic: 67500
-          basicOptimized: true
-          extended: 30000
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
           extendedOptimized: false
   update:
     novers:
       single:
         objects:
-          basic: 350000
-          basicOptimized: true
-          extended: 320000
-          extendedOptimized: true
-      medium:
-        objects:
-          basic: 172800
-          basicOptimized: true
-          extended: 132000
-          extendedOptimized: true
-      high:
-        objects:
-          basic: 32959
-          basicOptimized: true
-          extended: 22500
-          extendedOptimized: true
-    envers:
-      single:
-        objects:
-          basic: 192000
-          basicOptimized: true
-          extended: 213139
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
           extendedOptimized: false
       medium:
         objects:
-          basic: 129619
+          basic: 100000
           basicOptimized: false
-          extended: 102298
-          extendedOptimized: true
+          extended: 50000
+          extendedOptimized: false
       high:
         objects:
-          basic: 30375
-          basicOptimized: true
-          extended: 20371
-          extendedOptimized: true
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
+    envers:
+      single:
+        objects:
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
+      medium:
+        objects:
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
+      high:
+        objects:
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
     javers:
       single:
         objects:
-          basic: 29218
+          basic: 100000
           basicOptimized: false
-          extended: 3900
-          extendedOptimized: true
+          extended: 50000
+          extendedOptimized: false
       medium:
         objects:
-          basic: 19068
+          basic: 100000
           basicOptimized: false
-          extended: 1029
-          extendedOptimized: true
+          extended: 50000
+          extendedOptimized: false
       high:
         objects:
-          basic: 2349
-          basicOptimized: true
-          extended: 152
-          extendedOptimized: true
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
   delete:
     novers:
       single:
         objects:
-          basic: 270000
-          basicOptimized: true
-          extended: 245770
-          extendedOptimized: true
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
       medium:
         objects:
           basic: 100000
-          basicOptimized: true
-          extended: 90000
-          extendedOptimized: true
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
       high:
         objects:
-          basic: 18000
-          basicOptimized: true
-          extended: 13500
-          extendedOptimized: true
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
     envers:
       single:
         objects:
           basic: 100000
-          basicOptimized: true
-          extended: 100000
-          extendedOptimized: true
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
       medium:
         objects:
-          basic: 47798
-          basicOptimized: true
-          extended: 40000
-          extendedOptimized: true
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
       high:
         objects:
-          basic: 8000
-          basicOptimized: true
-          extended: 7500
-          extendedOptimized: true
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
     javers:
       single:
         objects:
-          basic: 45000
-          basicOptimized: true
-          extended: 20072
-          extendedOptimized: true
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
       medium:
         objects:
-          basic: 32048
-          basicOptimized: true
-          extended: 15000
-          extendedOptimized: true
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
+          extendedOptimized: false
       high:
         objects:
-          basic: 11000
-          basicOptimized: true
-          extended: 7875
+          basic: 100000
+          basicOptimized: false
+          extended: 50000
           extendedOptimized: false

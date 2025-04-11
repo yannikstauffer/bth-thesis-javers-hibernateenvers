@@ -1,3 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://benchmark-db:5432/benchmark
+
 jmhConfig:
   warmupIterations: 20
   warmupTime: 1000

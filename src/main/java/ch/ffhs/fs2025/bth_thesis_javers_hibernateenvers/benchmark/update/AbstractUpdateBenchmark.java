@@ -28,7 +28,7 @@ public abstract class AbstractUpdateBenchmark<T extends Thread<?>> extends Threa
     protected SetupRoutine<T> getSetupRoutine() {
         return SetupRoutine.<T>builder()
                 .preSaveSetupRoutine(() -> {
-                    var thread = getRepository().save(getTestObject());
+                    var thread = getTestObject();
                     addTestObject(thread);
                 })
                 .saveSetup(true)

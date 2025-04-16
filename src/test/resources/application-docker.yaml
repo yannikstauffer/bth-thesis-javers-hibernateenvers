@@ -16,17 +16,13 @@ jvmConfig:
 runConfig:
   optimizeOnly: true
   scenarios:
-    - Create
     - Read
     - Update
     - Delete
   versionings:
     - Novers
-    - Javers
-    - Envers
   payloadTypes:
     - Basic
-    - Extended
   objectGraphComplexities:
     - Single
     - Medium
@@ -36,39 +32,39 @@ usecase:
     single:
       objects:
         basic: 170000
-        basicOptimized: false
+        basicOptimized: true
         extended: 170000
-        extendedOptimized: false
+        extendedOptimized: true
     medium:
       objects:
-        basic: 170000
-        basicOptimized: false
-        extended: 170000
-        extendedOptimized: false
+        basic: 70000
+        basicOptimized: true
+        extended: 70000
+        extendedOptimized: true
     high:
       objects:
-        basic: 170000
-        basicOptimized: false
-        extended: 170000
-        extendedOptimized: false
+        basic: 9000
+        basicOptimized: true
+        extended: 9000
+        extendedOptimized: true
   read:
     single:
       objects:
-        basic: 170000
-        basicOptimized: false
-        extended: 170000
-        extendedOptimized: false
+        basic: 7000
+        basicOptimized: true
+        extended: 7000
+        extendedOptimized: true
     medium:
       objects:
-        basic: 170000
+        basic: 1500
         basicOptimized: false
-        extended: 170000
+        extended: 1500
         extendedOptimized: false
     high:
       objects:
-        basic: 170000
+        basic: 500
         basicOptimized: false
-        extended: 170000
+        extended: 500
         extendedOptimized: false
   update:
     single:
@@ -79,15 +75,15 @@ usecase:
         extendedOptimized: false
     medium:
       objects:
-        basic: 170000
+        basic: 70000
         basicOptimized: false
-        extended: 170000
+        extended: 70000
         extendedOptimized: false
     high:
       objects:
-        basic: 170000
+        basic: 9000
         basicOptimized: false
-        extended: 170000
+        extended: 9000
         extendedOptimized: false
   delete:
     single:
@@ -98,13 +94,13 @@ usecase:
         extendedOptimized: false
     medium:
       objects:
-        basic: 170000
+        basic: 70000
         basicOptimized: false
-        extended: 170000
+        extended: 70000
         extendedOptimized: false
     high:
       objects:
-        basic: 170000
+        basic: 9000
         basicOptimized: false
-        extended: 170000
+        extended: 9000
         extendedOptimized: false

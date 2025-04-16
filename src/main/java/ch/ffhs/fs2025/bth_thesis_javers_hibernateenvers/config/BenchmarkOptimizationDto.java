@@ -24,7 +24,6 @@ public class BenchmarkOptimizationDto {
         return List.of(
                 BenchmarkEnvironmentConfig.USECASE_KEY,
                 scenario,
-                versioning,
                 complexity,
                 BenchmarkEnvironmentConfig.OBJECTS_KEY,
                 payloadType);

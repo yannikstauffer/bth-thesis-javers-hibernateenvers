@@ -6,6 +6,7 @@ import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.SetupRo
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Versioned;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkConfigManager;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkEnvironmentConfig;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkOptimizationDto;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.DataFactory;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
@@ -103,11 +104,10 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
 
     protected final int loadTestObjectCountFromEnv() {
         String key = String.join(".",
-                "benchmark",
+                BenchmarkEnvironmentConfig.USECASE_KEY,
                 getScenario().name().toLowerCase(),
-                getVersioningDefinition().getVersioning().name().toLowerCase(),
                 getObjectGraphComplexity().name().toLowerCase(),
-                "objects",
+                BenchmarkEnvironmentConfig.OBJECTS_KEY,
                 getPayloadType().name().toLowerCase());
         return fromEnv(Integer.class, key);
     }

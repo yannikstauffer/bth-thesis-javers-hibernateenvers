@@ -17,11 +17,11 @@ services:
         - /bin/bash
         - -c
         - "cd /benchmark/scripts && ./run-docker-benchmarks.sh"
-    mem_limit: 48g
-    mem_reservation: 48g
-    cpu_count: 1
-    cpus: 1
-    cpuset: "0"
+    mem_limit: 20g
+    mem_reservation: 20g
+    cpu_count: 2
+    cpus: 2
+    cpuset: "2,3"
     cap_add:
       - SYS_NICE
     ulimits:
@@ -47,3 +47,14 @@ services:
       timeout: 30s
       retries: 10
       start_period: 2s
+    mem_limit: 4g
+    mem_reservation: 4g
+    cpu_count: 1
+    cpus: 2
+    cpuset: "4,5"
+    cap_add:
+      - SYS_NICE
+    ulimits:
+      rtprio:
+        soft: 99
+        hard: 99

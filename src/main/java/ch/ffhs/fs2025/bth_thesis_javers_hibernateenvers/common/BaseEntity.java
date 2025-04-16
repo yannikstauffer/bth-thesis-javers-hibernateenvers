@@ -28,7 +28,9 @@ public abstract class BaseEntity implements Serializable {
     @Column(columnDefinition = "BYTEA", nullable = false)
     private byte[] attachment = new byte[0];
 
+    @Column(nullable = false)
     private LocalDateTime createdAt;
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     @PrePersist

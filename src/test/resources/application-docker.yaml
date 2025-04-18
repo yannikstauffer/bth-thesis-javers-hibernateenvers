@@ -1,7 +1,6 @@
 spring:
   datasource:
     url: jdbc:postgresql://benchmark-db:5432/benchmark
-
 jmhConfig:
   warmupIterations: 30
   warmupTime: 1000
@@ -56,51 +55,51 @@ usecase:
         extendedOptimized: true
     medium:
       objects:
-        basic: 1500
-        basicOptimized: false
+        basic: 17083
+        basicOptimized: true
         extended: 1500
         extendedOptimized: false
     high:
       objects:
-        basic: 500
-        basicOptimized: false
+        basic: 3795
+        basicOptimized: true
         extended: 500
         extendedOptimized: false
   update:
     single:
       objects:
         basic: 170000
-        basicOptimized: false
+        basicOptimized: true
         extended: 170000
         extendedOptimized: false
     medium:
       objects:
         basic: 70000
-        basicOptimized: false
+        basicOptimized: true
         extended: 70000
         extendedOptimized: false
     high:
       objects:
         basic: 9000
-        basicOptimized: false
+        basicOptimized: true
         extended: 9000
         extendedOptimized: false
   delete:
     single:
       objects:
         basic: 170000
-        basicOptimized: false
+        basicOptimized: true
         extended: 170000
         extendedOptimized: false
     medium:
       objects:
         basic: 70000
-        basicOptimized: false
+        basicOptimized: true
         extended: 70000
         extendedOptimized: false
     high:
       objects:
         basic: 9000
-        basicOptimized: false
+        basicOptimized: true
         extended: 9000
         extendedOptimized: false

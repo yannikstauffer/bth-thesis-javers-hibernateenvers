@@ -24,7 +24,6 @@ public class EnversThread extends BaseEntity implements Thread<EnversPost> {
 
     private String title;
 
-
     @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<EnversPost> posts = new HashSet<>();
 
@@ -32,4 +31,5 @@ public class EnversThread extends BaseEntity implements Thread<EnversPost> {
     public Class<EnversPost> getChildType() {
         return EnversPost.class;
     }
+
 }

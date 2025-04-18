@@ -15,7 +15,7 @@ public interface EnversThreadRepository extends CrudRepository<EnversThread, Int
 
     @Override
     @NonNull
-    @EntityGraph(attributePaths = {"posts", "posts.comments"}, type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(attributePaths = {"posts", "posts.comments"})
     @Query("SELECT t FROM envers_threads t WHERE t.id = :id")
     Optional<EnversThread> findById(@NonNull @Param("id") Integer id);
 

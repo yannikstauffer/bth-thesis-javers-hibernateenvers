@@ -22,7 +22,6 @@ import lombok.Setter;
 })
 public class JaversComment extends BaseEntity implements Comment<JaversPost> {
 
-
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private JaversPost post;

@@ -29,7 +29,6 @@ import java.util.Set;
 @Audited
 public class EnversPost extends BaseEntity implements Post<EnversThread, EnversComment> {
 
-
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<EnversComment> comments = new HashSet<>();
 
@@ -41,4 +40,5 @@ public class EnversPost extends BaseEntity implements Post<EnversThread, EnversC
     public Class<EnversComment> getChildType() {
         return EnversComment.class;
     }
+
 }

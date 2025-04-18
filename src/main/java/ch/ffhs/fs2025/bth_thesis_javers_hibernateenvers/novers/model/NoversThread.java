@@ -30,4 +30,5 @@ public class NoversThread extends BaseEntity implements Thread<NoversPost> {
     public Class<NoversPost> getChildType() {
         return NoversPost.class;
     }
+
 }

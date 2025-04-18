@@ -38,4 +38,5 @@ public class NoversPost extends BaseEntity implements Post<NoversThread, NoversC
     public Class<NoversComment> getChildType() {
         return NoversComment.class;
     }
+
 }

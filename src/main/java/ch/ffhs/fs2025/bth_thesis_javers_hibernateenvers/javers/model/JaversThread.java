@@ -22,7 +22,6 @@ public class JaversThread extends BaseEntity implements Thread<JaversPost> {
 
     private String title;
 
-
     @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<JaversPost> posts = new HashSet<>();
 
@@ -30,4 +29,5 @@ public class JaversThread extends BaseEntity implements Thread<JaversPost> {
     public Class<JaversPost> getChildType() {
         return JaversPost.class;
     }
+
 }

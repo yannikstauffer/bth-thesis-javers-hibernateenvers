@@ -15,7 +15,7 @@ public interface NoversThreadRepository extends CrudRepository<NoversThread, Int
 
     @Override
     @NonNull
-    @EntityGraph(attributePaths = {"posts", "posts.comments"}, type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(attributePaths = {"posts", "posts.comments"})
     @Query("SELECT t FROM novers_threads t WHERE t.id = :id")
     Optional<NoversThread> findById(@NonNull @Param("id") Integer id);
 

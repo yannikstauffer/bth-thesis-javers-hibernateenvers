@@ -24,7 +24,6 @@ import org.hibernate.envers.Audited;
 @Audited
 public class EnversComment extends BaseEntity implements Comment<EnversPost> {
 
-
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private EnversPost post;

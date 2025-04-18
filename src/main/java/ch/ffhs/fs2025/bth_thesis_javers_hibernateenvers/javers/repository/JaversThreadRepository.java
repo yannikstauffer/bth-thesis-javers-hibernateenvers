@@ -17,7 +17,7 @@ public interface JaversThreadRepository extends CrudRepository<JaversThread, Int
 
     @Override
     @NonNull
-    @EntityGraph(attributePaths = {"posts", "posts.comments"}, type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(attributePaths = {"posts", "posts.comments"})
     @Query("SELECT t FROM javers_threads t WHERE t.id = :id")
     Optional<JaversThread> findById(@NonNull @Param("id") Integer id);
 }

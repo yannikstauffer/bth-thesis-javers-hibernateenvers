@@ -34,9 +34,9 @@ public class JaversPost extends BaseEntity implements Post<JaversThread, JaversC
     @JoinColumn(name = "thread_id", nullable = false)
     private JaversThread thread;
 
-
     @Override
     public Class<JaversComment> getChildType() {
         return JaversComment.class;
     }
+
 }

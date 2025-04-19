@@ -5,6 +5,8 @@ import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.api.model.Ulimit;
+import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.List;
@@ -35,6 +37,7 @@ public class PostgresBenchmarkContainer extends PostgreSQLContainer<PostgresBenc
                                 .withCapAdd(Capability.SYS_NICE)
                                 .withUlimits(List.of(new Ulimit("rtprio", 99L, 99L)))
                 );
+        this.setCommand("postgres");
 
     }
 
@@ -49,5 +52,15 @@ public class PostgresBenchmarkContainer extends PostgreSQLContainer<PostgresBenc
         );
     }
 
-
+    @Override
+    public void setCommand(@NotNull @NonNull String... commandParts) {
+        if (commandParts.length == 3 &&
+                "postgres".equalsIgnoreCase(commandParts[0]) &&
+                "-c".equalsIgnoreCase(commandParts[1]) &&
+                "fsync=off".equalsIgnoreCase(commandParts[2])) {
+            //ignore testcontainer magic
+            return;
+        }
+        super.setCommand(commandParts);
+    }
 }

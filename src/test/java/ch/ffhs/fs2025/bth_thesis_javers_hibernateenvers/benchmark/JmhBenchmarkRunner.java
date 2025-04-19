@@ -98,6 +98,10 @@ class JmhBenchmarkRunner {
         jvmOptions.add("-Dbenchmark.config.objectGraphComplexity=" + runConfigDto.getComplexity().name());
         jvmOptions.add("-Dbenchmark.config.payloadType=" + runConfigDto.getPayloadType().name());
         jvmOptions.add("-Dspring.profiles.active=" + benchmarksConfig.getEnvironment());
+
+        if (benchmarksConfig.getRunConfig().isOptimizeOnly()) {
+            jvmOptions.add("-Dbenchmark.config.optimizeOnly=true");
+        }
         return jvmOptions.toArray(new String[0]);
     }
 

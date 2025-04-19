@@ -54,14 +54,17 @@ public class BenchmarkEnvironmentConfig {
         return runConfigDtos.stream().filter(optimizerFilter());
     }
 
+    /**
+     * Run benchmarks only for {@link Versioning#NOVERS} and not optimized
+     */
     private Predicate<BenchmarkRunConfigDto> optimizerFilter() {
         return dto -> {
             if(!runConfig.isOptimizeOnly()) {
                 return true;
             }
-
+            boolean isNovers = dto.getVersioning() == Versioning.NOVERS;
             boolean isOptimized = Boolean.parseBoolean(YamlUtils.readKey(usecase, dto.getBenchmarkYamlKey() + "Optimized"));
-            return !isOptimized;
+            return isNovers && !isOptimized;
         };
     }
 

@@ -90,6 +90,9 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
             if (testObjectCount * .9 < pointer) {
                 benchmarkOptimizationDto.setObjectCount(testObjectCount * 1.5);
                 throw new IllegalStateException("Benchmark failed. There were not/barely enough test objects staged. Total test objects created: " + testObjectCount + ". Items processed: " + pointer);
+            } else if (isOptimizeOnly() && testObjectCount > pointer * 1.3) {
+                benchmarkOptimizationDto.setObjectCount(pointer * 1.2);
+                throw new IllegalStateException("Benchmark failed. There were too many test objects staged. Total test objects created: " + testObjectCount + ". Items processed: " + pointer);
             }
 
         } finally {
@@ -165,9 +168,15 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
 
         if (clazz == Integer.class) {
             return clazz.cast(Integer.valueOf(property));
+        } else if (clazz == Boolean.class) {
+            return clazz.cast(Boolean.valueOf(property));
         }
         return clazz.cast(property);
 
+    }
+
+    private boolean isOptimizeOnly() {
+        return Boolean.TRUE.equals(fromEnv(Boolean.class, "benchmark.config.optimizeOnly"));
     }
 
     private void runSetupRoutine() {

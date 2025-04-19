@@ -1,6 +1,9 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark;
 
 import com.github.dockerjava.api.model.Capability;
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.PostgreSQLContainer;
 
@@ -20,6 +23,9 @@ public class PostgresBenchmarkContainer extends PostgreSQLContainer<PostgresBenc
                 .withCreateContainerCmdModifier(cmd ->
                         cmd.withName("benchmark-db-" + UUID.randomUUID())
                                 .getHostConfig()
+                                .withPortBindings(new PortBinding(
+                                        Ports.Binding.bindPort(54321),
+                                        ExposedPort.tcp(5432)))
                                 .withNetworkMode("bth-thesis-javers-hibernateenvers_benchmark") // needs to match compose network of benchmark-runner
                                 .withMemory(4 * GIGABYTE)
                                 .withMemoryReservation(4 * GIGABYTE)

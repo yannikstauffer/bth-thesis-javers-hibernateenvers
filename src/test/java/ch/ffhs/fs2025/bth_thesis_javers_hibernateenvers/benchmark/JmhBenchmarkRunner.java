@@ -6,7 +6,9 @@ import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkRunConfi
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.ResourceUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -15,6 +17,7 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -28,12 +31,13 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Fail.fail;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+@Testcontainers
 class JmhBenchmarkRunner {
 
+    private PostgresBenchmarkContainer postgres;
+
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-
     private static final String BENCHMARK_DIRECTORY = "./benchmark-results/" + LocalDateTime.now().format(DATE_TIME_FORMATTER);
-
     private static BenchmarkEnvironmentConfig benchmarksConfig;
 
     @BeforeAll
@@ -45,6 +49,17 @@ class JmhBenchmarkRunner {
 
         benchmarksConfig = BenchmarkEnvironmentConfigUtils.getBenchmarksSetupConfig();
         System.out.println("Benchmark directory: " + BENCHMARK_DIRECTORY);
+    }
+
+    @BeforeEach
+    void setUp() {
+        postgres = new PostgresBenchmarkContainer();
+        postgres.start();
+    }
+
+    @AfterEach
+    void stopContainer() {
+        postgres.stop();
     }
 
     @AfterAll
@@ -98,6 +113,8 @@ class JmhBenchmarkRunner {
         jvmOptions.add("-Dbenchmark.config.objectGraphComplexity=" + runConfigDto.getComplexity().name());
         jvmOptions.add("-Dbenchmark.config.payloadType=" + runConfigDto.getPayloadType().name());
         jvmOptions.add("-Dspring.profiles.active=" + benchmarksConfig.getEnvironment());
+
+        postgres.springBootEnvironmentProperties().forEach(prop -> jvmOptions.add("-D" + prop));
 
         if (benchmarksConfig.getRunConfig().isOptimizeOnly()) {
             jvmOptions.add("-Dbenchmark.config.optimizeOnly=true");

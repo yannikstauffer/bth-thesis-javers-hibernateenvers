@@ -1,6 +1,3 @@
-spring:
-  datasource:
-    url: jdbc:postgresql://benchmark-db:5432/benchmark
 jmhConfig:
   warmupIterations: 30
   warmupTime: 1000
@@ -15,13 +12,17 @@ jvmConfig:
 runConfig:
   optimizeOnly: true
   scenarios:
+    - Create
     - Read
     - Update
     - Delete
   versionings:
     - Novers
+    - Javers
+    - Envers
   payloadTypes:
     - Basic
+    - Extended
   objectGraphComplexities:
     - Single
     - Medium
@@ -30,9 +31,9 @@ usecase:
   create:
     single:
       objects:
-        basic: 170000
-        basicOptimized: true
-        extended: 170000
+        basic: 198472
+        basicOptimized: false
+        extended: 199902
         extendedOptimized: true
     medium:
       objects:
@@ -42,64 +43,64 @@ usecase:
         extendedOptimized: true
     high:
       objects:
-        basic: 9000
-        basicOptimized: true
-        extended: 9000
+        basic: 12819
+        basicOptimized: false
+        extended: 9649
         extendedOptimized: true
   read:
     single:
       objects:
-        basic: 7000
-        basicOptimized: true
-        extended: 7000
+        basic: 182044
+        basicOptimized: false
+        extended: 255000
         extendedOptimized: true
     medium:
       objects:
-        basic: 17083
-        basicOptimized: true
-        extended: 1500
+        basic: 8019
+        basicOptimized: false
+        extended: 185811
         extendedOptimized: false
     high:
       objects:
-        basic: 3795
-        basicOptimized: true
-        extended: 500
+        basic: 104263
+        basicOptimized: false
+        extended: 57606
         extendedOptimized: false
   update:
     single:
       objects:
-        basic: 170000
-        basicOptimized: true
-        extended: 170000
+        basic: 116629
+        basicOptimized: false
+        extended: 138372
         extendedOptimized: false
     medium:
       objects:
-        basic: 70000
-        basicOptimized: true
-        extended: 70000
+        basic: 58280
+        basicOptimized: false
+        extended: 55023
         extendedOptimized: false
     high:
       objects:
         basic: 9000
         basicOptimized: true
         extended: 9000
-        extendedOptimized: false
+        extendedOptimized: true
   delete:
     single:
       objects:
-        basic: 170000
-        basicOptimized: true
-        extended: 170000
+        basic: 129963
+        basicOptimized: false
+        extended: 126752
         extendedOptimized: false
     medium:
       objects:
-        basic: 70000
-        basicOptimized: true
-        extended: 70000
+        basic: 47404
+        basicOptimized: false
+        extended: 49870
         extendedOptimized: false
     high:
       objects:
-        basic: 9000
-        basicOptimized: true
+        basic: 13500
+        basicOptimized: false
         extended: 9000
-        extendedOptimized: false
+        extendedOptimized: true

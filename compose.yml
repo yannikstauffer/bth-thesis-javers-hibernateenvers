@@ -11,6 +11,7 @@ services:
       - ./benchmark-results:/benchmark/benchmark-results
       - ~/.m2/repository:/root/.m2/repository:ro
       - ./docker/test-classes:/benchmark/target/test-classes
+      - /var/run/docker.sock:/var/run/docker.sock
     tty: true
     stdin_open: true
     entrypoint:
@@ -21,20 +22,21 @@ services:
     mem_reservation: 20g
     cpu_count: 2
     cpus: 2
-    cpuset: "2,3"
+    cpuset: "2,3" # ensure that these are not the same as PostgresBenchmarkContainer.java cpuset
     cap_add:
       - SYS_NICE
     ulimits:
       rtprio:
         soft: 99
         hard: 99
-    depends_on:
-        benchmark-db:
-          condition: service_healthy
 
+  # benchmark-db is only used for manual testing
+  # The benchmarks use PostgresBenchmarkContainer.java to start a container for each test to ensure fairness
   benchmark-db:
     image: postgres:17.4-alpine3.21
     container_name: benchmark-db
+    profiles:
+      - database
     environment:
       POSTGRES_USER: benchmark
       POSTGRES_PASSWORD: benchmark

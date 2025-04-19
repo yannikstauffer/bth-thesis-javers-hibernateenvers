@@ -20,6 +20,7 @@ public class PostgresBenchmarkContainer extends PostgreSQLContainer<PostgresBenc
                 .withCreateContainerCmdModifier(cmd ->
                         cmd.withName("benchmark-db-" + UUID.randomUUID())
                                 .getHostConfig()
+                                .withNetworkMode("bth-thesis-javers-hibernateenvers_benchmark") // needs to match compose network of benchmark-runner
                                 .withMemory(4 * GIGABYTE)
                                 .withMemoryReservation(4 * GIGABYTE)
                                 .withCpuCount(1L)

@@ -1,9 +1,15 @@
+networks:
+  benchmark:
+    driver: bridge
+
 services:
   benchmark-runner:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: benchmark-runner
+    networks: # has to match network config in PostgresBenchmarkContainer.java
+      - benchmark
     volumes:
       - ./src:/benchmark/src:ro
       - ./pom.xml:/benchmark/pom.xml:ro
@@ -35,6 +41,8 @@ services:
   benchmark-db:
     image: postgres:17.4-alpine3.21
     container_name: benchmark-db
+    networks:
+      - benchmark
     profiles:
       - database
     environment:

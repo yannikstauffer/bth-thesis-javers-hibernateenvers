@@ -31,76 +31,76 @@ usecase:
   create:
     single:
       objects:
-        basic: 198472
-        basicOptimized: false
-        extended: 199902
+        basic: 111136
+        basicOptimized: true
+        extended: 112024
         extendedOptimized: true
     medium:
       objects:
-        basic: 70000
+        basic: 37538
         basicOptimized: true
-        extended: 70000
+        extended: 38409
         extendedOptimized: true
     high:
       objects:
-        basic: 12819
-        basicOptimized: false
-        extended: 9649
+        basic: 4641
+        basicOptimized: true
+        extended: 4584
         extendedOptimized: true
   read:
     single:
       objects:
-        basic: 182044
-        basicOptimized: false
-        extended: 255000
+        basic: 132130
+        basicOptimized: true
+        extended: 111418
         extendedOptimized: true
     medium:
       objects:
-        basic: 8019
-        basicOptimized: false
-        extended: 185811
-        extendedOptimized: false
+        basic: 107624
+        basicOptimized: true
+        extended: 144350
+        extendedOptimized: true
     high:
       objects:
-        basic: 104263
-        basicOptimized: false
-        extended: 57606
-        extendedOptimized: false
+        basic: 87902
+        basicOptimized: true
+        extended: 44336
+        extendedOptimized: true
   update:
     single:
       objects:
-        basic: 116629
-        basicOptimized: false
-        extended: 138372
-        extendedOptimized: false
+        basic: 74642
+        basicOptimized: true
+        extended: 77716
+        extendedOptimized: true
     medium:
       objects:
-        basic: 58280
-        basicOptimized: false
-        extended: 55023
-        extendedOptimized: false
+        basic: 30082
+        basicOptimized: true
+        extended: 28825
+        extendedOptimized: true
     high:
       objects:
-        basic: 9000
+        basic: 3982
         basicOptimized: true
-        extended: 9000
+        extended: 3871
         extendedOptimized: true
   delete:
     single:
       objects:
-        basic: 129963
-        basicOptimized: false
-        extended: 126752
-        extendedOptimized: false
+        basic: 60338
+        basicOptimized: true
+        extended: 60406
+        extendedOptimized: true
     medium:
       objects:
-        basic: 47404
-        basicOptimized: false
-        extended: 49870
-        extendedOptimized: false
+        basic: 24770
+        basicOptimized: true
+        extended: 24319
+        extendedOptimized: true
     high:
       objects:
-        basic: 13500
-        basicOptimized: false
-        extended: 9000
+        basic: 3906
+        basicOptimized: true
+        extended: 3808
         extendedOptimized: true

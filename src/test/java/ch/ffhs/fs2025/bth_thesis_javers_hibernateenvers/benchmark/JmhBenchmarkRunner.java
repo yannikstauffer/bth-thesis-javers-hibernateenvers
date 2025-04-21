@@ -91,7 +91,7 @@ class JmhBenchmarkRunner {
                 .measurementIterations(benchmarksConfig.getJmhConfig().getMeasurementIterations())
                 .measurementTime(TimeValue.milliseconds(benchmarksConfig.getJmhConfig().getMeasurementTime()))
                 .warmupTime(TimeValue.milliseconds(benchmarksConfig.getJmhConfig().getWarmupTime()))
-                .timeout(TimeValue.minutes(1))
+                .timeout(TimeValue.minutes(5))
                 .forks(1) // CITE: costa_2021
                 .threads(1)
                 .shouldDoGC(true)

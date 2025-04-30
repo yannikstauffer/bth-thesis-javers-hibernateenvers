@@ -26,9 +26,9 @@ services:
         - "cd /benchmark/scripts && ./run-docker-benchmarks.sh"
     mem_limit: 20g
     mem_reservation: 20g
-    cpu_count: 2
-    cpus: 2
-    cpuset: "2,3" # ensure that these are not the same as PostgresBenchmarkContainer.java cpuset
+    cpu_count: 1
+    cpus: 1
+    cpuset: "2" # ensure that these are not the same as PostgresBenchmarkContainer.java cpuset
     cap_add:
       - SYS_NICE
     ulimits:

@@ -50,21 +50,21 @@ usecase:
   read:
     single:
       objects:
-        basic: 132130
+        basic: 120000
         basicOptimized: true
-        extended: 111418
+        extended: 110000
         extendedOptimized: true
     medium:
       objects:
-        basic: 107624
+        basic: 110000
         basicOptimized: true
-        extended: 144350
+        extended: 135000
         extendedOptimized: true
     high:
       objects:
-        basic: 87902
+        basic: 95000
         basicOptimized: true
-        extended: 44336
+        extended: 65000
         extendedOptimized: true
   update:
     single:

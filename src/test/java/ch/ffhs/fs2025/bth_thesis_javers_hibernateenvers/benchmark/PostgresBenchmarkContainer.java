@@ -31,14 +31,13 @@ public class PostgresBenchmarkContainer extends PostgreSQLContainer<PostgresBenc
                                 .withNetworkMode("bth-thesis-javers-hibernateenvers_benchmark") // needs to match compose network of benchmark-runner
                                 .withMemory(4 * GIGABYTE)
                                 .withMemoryReservation(4 * GIGABYTE)
-                                .withCpuCount(1L)
+                                .withCpuCount(2L)
                                 .withCpusetCpus("4,5") // ensure that these are not the same as benchmark-runner cpuset
                                 .withCpuShares(2)
                                 .withCapAdd(Capability.SYS_NICE)
                                 .withUlimits(List.of(new Ulimit("rtprio", 99L, 99L)))
                 );
         this.setCommand("postgres");
-
     }
 
     public List<String> springBootEnvironmentProperties() {

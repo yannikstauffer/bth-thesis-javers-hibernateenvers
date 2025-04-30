@@ -176,7 +176,11 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
     }
 
     private boolean isOptimizeOnly() {
-        return Boolean.TRUE.equals(fromEnv(Boolean.class, "benchmark.config.optimizeOnly"));
+        try {
+            return Boolean.TRUE.equals(fromEnv(Boolean.class, "benchmark.config.optimizeOnly"));
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
     private void runSetupRoutine() {

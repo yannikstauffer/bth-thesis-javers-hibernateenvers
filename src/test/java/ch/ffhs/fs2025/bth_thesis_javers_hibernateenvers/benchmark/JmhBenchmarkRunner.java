@@ -98,7 +98,6 @@ class JmhBenchmarkRunner {
                 .shouldFailOnError(true)
                 .resultFormat(ResultFormatType.JSON)
                 .result(BENCHMARK_DIRECTORY + "/" + benchmarkFileName)
-                .shouldFailOnError(true)
                 .jvmArgs(getJvmOptions(runConfigDto))
                 .build();
 

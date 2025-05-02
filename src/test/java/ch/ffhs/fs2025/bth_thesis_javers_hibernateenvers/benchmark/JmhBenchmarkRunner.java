@@ -7,8 +7,10 @@ import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.ResourceUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -24,14 +26,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Fail.fail;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @Testcontainers
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class JmhBenchmarkRunner {
 
     private PostgresBenchmarkContainer postgres;
@@ -39,6 +43,8 @@ class JmhBenchmarkRunner {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
     private static final String BENCHMARK_DIRECTORY = "./benchmark-results/" + LocalDateTime.now().format(DATE_TIME_FORMATTER);
     private static BenchmarkEnvironmentConfig benchmarksConfig;
+
+    private static final AtomicBoolean hasFailed = new AtomicBoolean(false);
 
     @BeforeAll
     static void init() {
@@ -48,7 +54,20 @@ class JmhBenchmarkRunner {
         }
 
         benchmarksConfig = BenchmarkEnvironmentConfigUtils.getBenchmarksSetupConfig();
+
+        if (benchmarksConfig.getRunConfig().isOptimizeOnly()) {
+            printOptimizeOnlyMessage();
+        }
+
         System.out.println("Benchmark directory: " + BENCHMARK_DIRECTORY);
+    }
+
+    static void printOptimizeOnlyMessage() {
+        System.out.println();
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("!!! Running in optimizeOnly mode. Only Novers benchmarks will be executed. !!!");
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println();
     }
 
     @BeforeEach
@@ -78,21 +97,43 @@ class JmhBenchmarkRunner {
     @ParameterizedTest
     @MethodSource("provideParameters")
     void executeJmhRunner(BenchmarkRunConfigDto runConfigDto) {
+        failIfPreviousFailed();
 
-        String benchmarkFileName = String.join("_",
-                        runConfigDto.getBenchmarkClassName(),
-                        runConfigDto.getComplexity().name(),
-                        runConfigDto.getPayloadType().name())
+        Options opt = getRunnerOptions(runConfigDto);
+
+        Runner runner = new Runner(opt);
+
+        try {
+            var results = runner.run();
+            /* TODO: check if this should be handled manually as JMH does not seem to make the interval based on all
+             *  measurements but based on the the mean of each iteration */
+            System.out.println("Result size: " + results.size());
+            results.forEach(result -> {
+                        System.out.println("Confidence interval (95%): " + Arrays.toString(result.getPrimaryResult().getStatistics().getConfidenceIntervalAt(0.95)));
+                    }
+            );
+        } catch (Exception e) {
+            if (benchmarksConfig.getRunConfig().isOptimizeOnly()) {
+                fail("Failing parameterized test to trigger optimization: " + runConfigDto.getBenchmarkIdentifier(), e);
+            } else {
+                System.err.println("Aborting. Benchmark {" + runConfigDto.getBenchmarkIdentifier() + "} failed: " + e.getMessage());
+                hasFailed.set(true);
+            }
+        }
+    }
+
+    private Options getRunnerOptions(BenchmarkRunConfigDto runConfigDto) {
+        String benchmarkFileName = runConfigDto.getBenchmarkIdentifier()
                 .concat(".json");
 
-        Options opt = new OptionsBuilder()
+        return new OptionsBuilder()
                 .include("\\." + runConfigDto.getBenchmarkClassName() + "\\.")
                 .warmupIterations(benchmarksConfig.getJmhConfig().getWarmupIterations()) // CITE: traini_2023
                 .measurementIterations(benchmarksConfig.getJmhConfig().getMeasurementIterations())
                 .measurementTime(TimeValue.milliseconds(benchmarksConfig.getJmhConfig().getMeasurementTime()))
                 .warmupTime(TimeValue.milliseconds(benchmarksConfig.getJmhConfig().getWarmupTime()))
                 .timeout(TimeValue.minutes(5))
-                .forks(1) // CITE: costa_2021
+                .forks(5) // CITE: costa_2021
                 .threads(1)
                 .shouldDoGC(true)
                 .shouldFailOnError(true)
@@ -100,10 +141,10 @@ class JmhBenchmarkRunner {
                 .result(BENCHMARK_DIRECTORY + "/" + benchmarkFileName)
                 .jvmArgs(getJvmOptions(runConfigDto))
                 .build();
+    }
 
-        Runner runner = new Runner(opt);
-
-        assertDoesNotThrow(runner::run);
+    private void failIfPreviousFailed() {
+        Assumptions.assumeFalse(hasFailed.get(), "Aborting due to previous failure");
     }
 
     private String[] getJvmOptions(BenchmarkRunConfigDto runConfigDto) {

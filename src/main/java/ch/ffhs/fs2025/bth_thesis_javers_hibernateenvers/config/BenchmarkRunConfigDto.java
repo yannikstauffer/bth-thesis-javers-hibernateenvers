@@ -38,6 +38,13 @@ public class BenchmarkRunConfigDto {
                 .orElseThrow();
     }
 
+    public String getBenchmarkIdentifier() {
+        return String.join("_",
+                getBenchmarkClassName(),
+                getComplexity().name(),
+                getPayloadType().name());
+    }
+
     private static String toUpperCamelCase(String... parts) {
         return String.join("", Stream.of(parts)
                 .map(part -> part.substring(0, 1).toUpperCase() + part.substring(1).toLowerCase())

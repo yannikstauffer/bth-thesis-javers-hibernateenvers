@@ -32,4 +32,4 @@ logging:
 
 thesis:
   payload:
-    size: 10000
+    size: 5000

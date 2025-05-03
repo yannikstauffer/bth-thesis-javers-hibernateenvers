@@ -12,7 +12,8 @@ class PayloadService {
     @Value("${thesis.payload.size:200}")
     private int payloadSize;
 
-    private final Random random = new Random(2025);
+    private final Random uuidRandom = new Random(2020);
+    private final Random payloadRandom = new Random(2025);
 
     public String name(ObjectGraphComplexity objectGraphComplexity, PayloadType payloadType) {
         return objectGraphComplexity.name() + "_" + payloadType.name();
@@ -24,7 +25,7 @@ class PayloadService {
 
     public byte[] attachment() {
         byte[] attachment = new byte[payloadSize];
-        random.nextBytes(attachment);
+        payloadRandom.nextBytes(attachment);
         return attachment;
     }
 
@@ -33,7 +34,7 @@ class PayloadService {
      */
     private UUID randomUuid() {
         byte[] randomBytes = new byte[16];
-        random.nextBytes(randomBytes);
+        uuidRandom.nextBytes(randomBytes);
         randomBytes[6]  &= 0x0f;  /* clear version        */
         randomBytes[6]  |= 0x40;  /* set to version 4     */
         randomBytes[8]  &= 0x3f;  /* clear variant        */

@@ -4,6 +4,10 @@ import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkEnvironm
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkEnvironmentConfigUtils;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkRunConfigDto;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.ResourceUtils;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -14,6 +18,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.openjdk.jmh.results.RunResult;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.Options;
@@ -22,11 +27,14 @@ import org.openjdk.jmh.runner.options.TimeValue;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -105,13 +113,9 @@ class JmhBenchmarkRunner {
 
         try {
             var results = runner.run();
-            /* TODO: check if this should be handled manually as JMH does not seem to make the interval based on all
-             *  measurements but based on the the mean of each iteration */
-            System.out.println("Result size: " + results.size());
-            results.forEach(result -> {
-                        System.out.println("Confidence interval (95%): " + Arrays.toString(result.getPrimaryResult().getStatistics().getConfidenceIntervalAt(0.95)));
-                    }
-            );
+
+            write95CItoJson(results, getJsonFilePath(runConfigDto));
+
         } catch (Exception e) {
             if (benchmarksConfig.getRunConfig().isOptimizeOnly()) {
                 fail("Failing parameterized test to trigger optimization: " + runConfigDto.getBenchmarkIdentifier());
@@ -122,10 +126,47 @@ class JmhBenchmarkRunner {
         }
     }
 
-    private Options getRunnerOptions(BenchmarkRunConfigDto runConfigDto) {
+    private void write95CItoJson(Collection<RunResult> results, String jsonFilePath) {
+        if (results.size() != 1) {
+            fail("Expecting exactly one benchmark result. Cannot calculate 95% CI.");
+        }
+
+        results.forEach(result -> {
+            double[] ci = result.getPrimaryResult().getStatistics().getConfidenceIntervalAt(0.95);
+            System.out.println("95% CI: " + Arrays.toString(ci));
+            System.out.println();
+
+            Path jsonPath = Paths.get(jsonFilePath);
+
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                ArrayNode root = (ArrayNode) mapper.readTree(jsonPath.toFile());
+
+                for (JsonNode benchmarkResult : root) {
+                    JsonNode primaryMetric = benchmarkResult.get("primaryMetric");
+                    if (primaryMetric != null && primaryMetric.isObject()) {
+                        ((ObjectNode) primaryMetric).putArray("CI_95")
+                                .add(ci[0])
+                                .add(ci[1]);
+                    }
+                }
+
+                mapper.writerWithDefaultPrettyPrinter().writeValue(jsonPath.toFile(), root);
+
+            } catch (IOException e) {
+                throw new RuntimeException("Fehler beim Schreiben des CI ins JSON", e);
+            }
+        });
+    }
+
+    private String getJsonFilePath(BenchmarkRunConfigDto runConfigDto) {
         String benchmarkFileName = runConfigDto.getBenchmarkIdentifier()
                 .concat(".json");
 
+        return BENCHMARK_DIRECTORY + "/" + benchmarkFileName;
+    }
+
+    private Options getRunnerOptions(BenchmarkRunConfigDto runConfigDto) {
         return new OptionsBuilder()
                 .include("\\." + runConfigDto.getBenchmarkClassName() + "\\.")
                 .warmupIterations(benchmarksConfig.getJmhConfig().getWarmupIterations()) // CITE: traini_2023
@@ -138,7 +179,7 @@ class JmhBenchmarkRunner {
                 .shouldDoGC(true)
                 .shouldFailOnError(true)
                 .resultFormat(ResultFormatType.JSON)
-                .result(BENCHMARK_DIRECTORY + "/" + benchmarkFileName)
+                .result(getJsonFilePath(runConfigDto))
                 .jvmArgs(getJvmOptions(runConfigDto))
                 .build();
     }

@@ -114,9 +114,9 @@ class JmhBenchmarkRunner {
             );
         } catch (Exception e) {
             if (benchmarksConfig.getRunConfig().isOptimizeOnly()) {
-                fail("Failing parameterized test to trigger optimization: " + runConfigDto.getBenchmarkIdentifier(), e);
+                fail("Failing parameterized test to trigger optimization: " + runConfigDto.getBenchmarkIdentifier());
             } else {
-                System.err.println("Aborting. Benchmark {" + runConfigDto.getBenchmarkIdentifier() + "} failed: " + e.getMessage());
+                System.err.println("Aborting. Benchmark failed: " + runConfigDto.getBenchmarkIdentifier());
                 hasFailed.set(true);
             }
         }

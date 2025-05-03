@@ -34,74 +34,74 @@ usecase:
       objects:
         basic: 120000
         basicOptimized: true
-        extended: 90000
-        extendedOptimized: false
+        extended: 88873
+        extendedOptimized: true
     medium:
       objects:
-        basic: 40000
+        basic: 38816
         basicOptimized: true
-        extended: 30000
-        extendedOptimized: false
+        extended: 28246
+        extendedOptimized: true
     high:
       objects:
-        basic: 5000
+        basic: 4660
         basicOptimized: true
-        extended: 4000
-        extendedOptimized: false
+        extended: 3321
+        extendedOptimized: true
   read:
     single:
       objects:
-        basic: 150000
+        basic: 175394
         basicOptimized: true
-        extended: 100000
-        extendedOptimized: false
+        extended: 135000
+        extendedOptimized: true
     medium:
       objects:
-        basic: 110000
+        basic: 165000
         basicOptimized: true
-        extended: 100000
-        extendedOptimized: false
+        extended: 83404
+        extendedOptimized: true
     high:
       objects:
-        basic: 95000
+        basic: 103585
         basicOptimized: true
-        extended: 50000
-        extendedOptimized: false
+        extended: 12306
+        extendedOptimized: true
   update:
     single:
       objects:
         basic: 80000
         basicOptimized: true
-        extended: 60000
-        extendedOptimized: false
+        extended: 55435
+        extendedOptimized: true
     medium:
       objects:
-        basic: 35000
+        basic: 30933
         basicOptimized: true
-        extended: 20000
-        extendedOptimized: false
+        extended: 20488
+        extendedOptimized: true
     high:
       objects:
         basic: 4200
         basicOptimized: true
-        extended: 4200
-        extendedOptimized: false
+        extended: 2469
+        extendedOptimized: true
   delete:
     single:
       objects:
-        basic: 65000
+        basic: 73448
         basicOptimized: true
-        extended: 50000
-        extendedOptimized: false
+        extended: 57244
+        extendedOptimized: true
     medium:
       objects:
         basic: 28000
         basicOptimized: true
-        extended: 20000
-        extendedOptimized: false
+        extended: 20272
+        extendedOptimized: true
     high:
       objects:
         basic: 4200
         basicOptimized: true
-        extended: 4200
-        extendedOptimized: false
+        extended: 2952
+        extendedOptimized: true

@@ -132,8 +132,8 @@ class JmhBenchmarkRunner {
                 .measurementIterations(benchmarksConfig.getJmhConfig().getMeasurementIterations())
                 .measurementTime(TimeValue.milliseconds(benchmarksConfig.getJmhConfig().getMeasurementTime()))
                 .warmupTime(TimeValue.milliseconds(benchmarksConfig.getJmhConfig().getWarmupTime()))
-                .timeout(TimeValue.minutes(5))
-                .forks(5) // CITE: costa_2021
+                .timeout(TimeValue.minutes(10))
+                .forks(benchmarksConfig.getRunConfig().isOptimizeOnly() ? 1 : 5) // CITE: costa_2021
                 .threads(1)
                 .shouldDoGC(true)
                 .shouldFailOnError(true)
@@ -153,12 +153,15 @@ class JmhBenchmarkRunner {
         jvmOptions.add("-Dbenchmark.config.objectGraphComplexity=" + runConfigDto.getComplexity().name());
         jvmOptions.add("-Dbenchmark.config.payloadType=" + runConfigDto.getPayloadType().name());
         jvmOptions.add("-Dspring.profiles.active=" + benchmarksConfig.getEnvironment());
+        jvmOptions.add("-Dbenchmark.config.failOnTightResult=" + benchmarksConfig.getRunConfig().isFailOnTightResult());
 
         postgres.springBootEnvironmentProperties().forEach(prop -> jvmOptions.add("-D" + prop));
 
         if (benchmarksConfig.getRunConfig().isOptimizeOnly()) {
             jvmOptions.add("-Dbenchmark.config.optimizeOnly=true");
         }
+
+
         return jvmOptions.toArray(new String[0]);
     }
 

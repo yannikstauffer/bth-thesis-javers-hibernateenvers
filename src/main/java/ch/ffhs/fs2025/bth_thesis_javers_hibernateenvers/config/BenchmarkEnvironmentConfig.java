@@ -98,6 +98,7 @@ public class BenchmarkEnvironmentConfig {
     @RequiredArgsConstructor
     public static class RunConfig {
         private boolean optimizeOnly;
+        private boolean failOnTightResult;
         private Set<String> scenarios;
         private Set<String> versionings;
         private Set<String> payloadTypes;

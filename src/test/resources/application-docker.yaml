@@ -11,6 +11,7 @@ jvmConfig:
     - -XX:+AlwaysPreTouch
 runConfig:
   optimizeOnly: true
+  failOnTightResult: true
   scenarios:
     - Create
     - Read

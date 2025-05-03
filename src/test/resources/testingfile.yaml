@@ -13,6 +13,7 @@ jvmConfig:
 
 runConfig:
   optimizeOnly: true
+  failOnTightResult: true
   scenarios:
     - Create
     - Read

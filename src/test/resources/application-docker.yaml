@@ -5,8 +5,8 @@ jmhConfig:
   measurementTime: 1000
 jvmConfig:
   options:
-    - -Xms16g
-    - -Xmx16g
+    - -Xms32g
+    - -Xmx32g
     - -XX:+UseG1GC
     - -XX:+AlwaysPreTouch
 runConfig:

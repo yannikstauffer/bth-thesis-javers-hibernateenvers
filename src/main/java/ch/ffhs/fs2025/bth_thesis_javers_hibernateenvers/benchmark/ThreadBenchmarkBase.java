@@ -1,8 +1,8 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.BthThesisJaversHibernateenversApplication;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.RepeatedRunnable;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Scenario;
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.SetupRoutine;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Versioned;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkConfigManager;
@@ -21,8 +21,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.repository.CrudRepository;
 
 import java.lang.reflect.Array;
-import java.util.List;
-import java.util.stream.IntStream;
 
 @Slf4j
 public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versioned<T> {
@@ -68,7 +66,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
         beforeSetupRoutine();
         logBenchmarkSetupStart();
 
-        runSetupRoutine();
+        getSetupRoutine().run(testObjectCount);
 
         afterSetupRoutine();
         logBenchmarkSetupFinished();
@@ -87,12 +85,17 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
         logBenchmarkFinished();
 
         try {
-            if (testObjectCount * .9 < pointer) {
+            if (testObjectCount < pointer) {
                 benchmarkOptimizationDto.setObjectCount(testObjectCount * 1.5);
-                throw new IllegalStateException("Benchmark failed. There were not/barely enough test objects staged. Total test objects created: " + testObjectCount + ". Items processed: " + pointer);
+                throw new IllegalStateException("[Benchmark failed] Not enough test objects staged. Created: " + testObjectCount + ". Processed: " + pointer);
+            } else if (isOptimizeOnly() && testObjectCount * 0.9 < pointer) {
+                benchmarkOptimizationDto.setObjectCount(pointer * 1.2);
+                if (failOnTightResult()) {
+                    throw new IllegalStateException("[Benchmark failed] Barely enough test objects staged. Created: " + testObjectCount + ". Processed: " + pointer);
+                }
             } else if (isOptimizeOnly() && testObjectCount > pointer * 1.3) {
                 benchmarkOptimizationDto.setObjectCount(pointer * 1.2);
-                throw new IllegalStateException("Benchmark failed. There were too many test objects staged. Total test objects created: " + testObjectCount + ". Items processed: " + pointer);
+                throw new IllegalStateException("[Benchmark failed] Too many test objects staged. Created: " + testObjectCount + ". Processed: " + pointer);
             }
 
         } finally {
@@ -117,7 +120,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
 
     protected abstract Scenario getScenario();
 
-    protected abstract SetupRoutine<T> getSetupRoutine();
+    protected abstract RepeatedRunnable getSetupRoutine();
 
     protected <B> B getBean(Class<B> type) {
         return this.springContext.getBean(type);
@@ -183,21 +186,12 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
         }
     }
 
-    private void runSetupRoutine() {
-        SetupRoutine<T> setupRoutine = getSetupRoutine();
-
-        IntStream.range(0, testObjectCount)
-                .forEach(_ -> setupRoutine.getPreSaveSetupRoutine().run());
-
-        if (setupRoutine.isSaveSetup()) {
-            repository.saveAll(List.of(this.testObjects));
+    private boolean failOnTightResult() {
+        try {
+            return Boolean.TRUE.equals(fromEnv(Boolean.class, "benchmark.config.failOnTightResult"));
+        } catch (IllegalArgumentException e) {
+            return false;
         }
-
-        setupRoutine.getPostSaveSetupRoutine().ifPresent(routine -> {
-            for (T testObject : testObjects) {
-                routine.accept(testObject);
-            }
-        });
     }
 
     private void logBenchmarkSetupStart() {

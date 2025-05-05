@@ -121,13 +121,13 @@ class TestDataFactory {
 
         verify(payloadService, never()).attachment();
         assertThat(thread.getAttachment())
-                .isNull();
+                .isEmpty();
 
         assertThat(thread.getPosts().stream().findFirst().get().getAttachment())
-                .isNull();
+                .isEmpty();
 
         assertThat(thread.getPosts().stream().findFirst().get().getComments().stream().findFirst().get().getAttachment())
-                .isNull();
+                .isEmpty();
     }
 
     @Test

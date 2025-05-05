@@ -1,10 +1,12 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.BthThesisJaversHibernateenversApplication;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.RepeatedRunnable;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Scenario;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Versioned;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkConfigManager;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkEnvironmentConfig;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkOptimizationDto;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.DataFactory;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
@@ -64,9 +66,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
         beforeSetupRoutine();
         logBenchmarkSetupStart();
 
-        for (int i = 0; i < testObjectCount; i++) {
-            repeatedSetupRoutine(i);
-        }
+        getSetupRoutine().run(testObjectCount);
 
         afterSetupRoutine();
         logBenchmarkSetupFinished();
@@ -82,17 +82,22 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
                 .objectCount(testObjects.length)
                 .build();
 
+        logBenchmarkFinished();
+
         try {
-            if (testObjectCount * .9 < pointer) {
+            if (testObjectCount < pointer) {
                 benchmarkOptimizationDto.setObjectCount(testObjectCount * 1.5);
-                throw new IllegalStateException("Benchmark failed. There were not/barely enough test objects staged. Total test objects created: " + testObjectCount + ". Items processed: " + pointer);
-            } else if (testObjectCount > pointer * 1.3) {
+                throw new IllegalStateException("[Benchmark failed] Not enough test objects staged. Created: " + testObjectCount + ". Processed: " + pointer);
+            } else if (isOptimizeOnly() && testObjectCount * 0.9 < pointer) {
                 benchmarkOptimizationDto.setObjectCount(pointer * 1.2);
-                throw new IllegalStateException("Benchmark failed. There were too many test objects staged. Total test objects created: " + testObjectCount + ". Items processed: " + pointer);
+                if (failOnTightResult()) {
+                    throw new IllegalStateException("[Benchmark failed] Barely enough test objects staged. Created: " + testObjectCount + ". Processed: " + pointer);
+                }
+            } else if (isOptimizeOnly() && testObjectCount > pointer * 1.3) {
+                benchmarkOptimizationDto.setObjectCount(pointer * 1.2);
+                throw new IllegalStateException("[Benchmark failed] Too many test objects staged. Created: " + testObjectCount + ". Processed: " + pointer);
             }
 
-            System.out.println();
-            System.out.println("Benchmark finished. Total test objects staged: " + testObjectCount + ". Test objects processed: " + pointer);
         } finally {
             benchmarkConfigManager.upsertEntry(benchmarkOptimizationDto);
             benchmarkConfigManager.save();
@@ -105,18 +110,17 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
 
     protected final int loadTestObjectCountFromEnv() {
         String key = String.join(".",
-                "benchmark",
+                BenchmarkEnvironmentConfig.USECASE_KEY,
                 getScenario().name().toLowerCase(),
-                getVersioningDefinition().getVersioning().name().toLowerCase(),
                 getObjectGraphComplexity().name().toLowerCase(),
-                "objects",
+                BenchmarkEnvironmentConfig.OBJECTS_KEY,
                 getPayloadType().name().toLowerCase());
         return fromEnv(Integer.class, key);
     }
 
     protected abstract Scenario getScenario();
 
-    protected abstract void repeatedSetupRoutine(int i);
+    protected abstract RepeatedRunnable getSetupRoutine();
 
     protected <B> B getBean(Class<B> type) {
         return this.springContext.getBean(type);
@@ -167,24 +171,65 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
 
         if (clazz == Integer.class) {
             return clazz.cast(Integer.valueOf(property));
+        } else if (clazz == Boolean.class) {
+            return clazz.cast(Boolean.valueOf(property));
         }
         return clazz.cast(property);
 
     }
 
+    private boolean isOptimizeOnly() {
+        try {
+            return Boolean.TRUE.equals(fromEnv(Boolean.class, "benchmark.config.optimizeOnly"));
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    private boolean failOnTightResult() {
+        try {
+            return Boolean.TRUE.equals(fromEnv(Boolean.class, "benchmark.config.failOnTightResult"));
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
     private void logBenchmarkSetupStart() {
-        System.out.println();
-        System.out.println("*****************************************************************************************");
-        System.out.println("Benchmark setup started.");
-        System.out.println("Object graph complexity: " + getObjectGraphComplexity());
-        System.out.println("Payload type: " + getPayloadType());
-        System.out.println("Total test objects requested: " + testObjectCount);
-        System.out.println("Staging test objects...");
+        log.info("""
+                        
+                        *****************************************************************************************
+                        Benchmark setup started.
+                        \tCount of objects in repository: {}
+                        \tObject graph complexity: {}
+                        \tPayload type: {}
+                        \tTotal test objects requested: {}
+                        Staging test objects...
+                        """,
+                repository.count(), getObjectGraphComplexity(), getPayloadType(), testObjectCount);
     }
 
     private void logBenchmarkSetupFinished() {
-        System.out.println("Benchmark setup finished.");
-        System.out.println("*****************************************************************************************");
+        log.info("""
+                        Benchmark setup finished.
+                        \tCount of persisted objects in repository: {}
+                        *****************************************************************************************
+                        
+                        """
+                , repository.count());
+    }
+
+    private void logBenchmarkFinished() {
+        log.info("""
+                        
+                        *****************************************************************************************
+                        Benchmark finished.
+                        \tTotal objects in repository: {}
+                        \tTotal test objects staged: {}
+                        \tTest objects processed: {}
+                        *****************************************************************************************
+                        
+                        """
+                , repository.count(), testObjectCount, pointer);
     }
 
 }

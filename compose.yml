@@ -1,9 +1,15 @@
+networks:
+  benchmark:
+    driver: bridge
+
 services:
   benchmark-runner:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: benchmark-runner
+    networks: # has to match network config in PostgresBenchmarkContainer.java
+      - benchmark
     volumes:
       - ./src:/benchmark/src:ro
       - ./pom.xml:/benchmark/pom.xml:ro
@@ -11,17 +17,51 @@ services:
       - ./benchmark-results:/benchmark/benchmark-results
       - ~/.m2/repository:/root/.m2/repository:ro
       - ./docker/test-classes:/benchmark/target/test-classes
+      - /var/run/docker.sock:/var/run/docker.sock
     tty: true
     stdin_open: true
     entrypoint:
         - /bin/bash
         - -c
         - "cd /benchmark/scripts && ./run-docker-benchmarks.sh"
-    mem_limit: 48g
-    mem_reservation: 48g
+    mem_limit: 40g
+    mem_reservation: 40g
     cpu_count: 1
     cpus: 1
-    cpuset: "0"
+    cpuset: "2" # ensure that these are not the same as PostgresBenchmarkContainer.java cpuset
+    cap_add:
+      - SYS_NICE
+    ulimits:
+      rtprio:
+        soft: 99
+        hard: 99
+
+  # benchmark-db is only used for manual testing
+  # The benchmarks use PostgresBenchmarkContainer.java to start a container for each test to ensure fairness
+  benchmark-db:
+    image: postgres:17.4-alpine3.21
+    container_name: benchmark-db
+    networks:
+      - benchmark
+    profiles:
+      - database
+    environment:
+      POSTGRES_USER: benchmark
+      POSTGRES_PASSWORD: benchmark
+      POSTGRES_DB: benchmark
+    ports:
+      - "54320:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U benchmark -d benchmark -h localhost'" ]
+      interval: 2s
+      timeout: 30s
+      retries: 10
+      start_period: 2s
+    mem_limit: 4g
+    mem_reservation: 4g
+    cpu_count: 1
+    cpus: 2
+    cpuset: "4,5"
     cap_add:
       - SYS_NICE
     ulimits:

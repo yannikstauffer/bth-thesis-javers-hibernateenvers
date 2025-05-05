@@ -2,6 +2,7 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.update;
 
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.ThreadBenchmarkBase;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.RepeatedRunnable;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Scenario;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.DataUpdater;
@@ -23,10 +24,14 @@ public abstract class AbstractUpdateBenchmark<T extends Thread<?>> extends Threa
         return Scenario.UPDATE;
     }
 
-    protected void repeatedSetupRoutine(int i) {
-        var thread = getRepository().save(getTestObject());
-        var updated = dataUpdater.update(thread, getPayloadType());
-        addTestObject(updated);
+    @Override
+    protected RepeatedRunnable getSetupRoutine() {
+        return new RepeatedRunnable(() -> {
+            var thread = getTestObject();
+            addTestObject(thread);
+            getRepository().save(thread);
+            dataUpdater.update(thread, getPayloadType());
+        });
     }
 
     @Benchmark

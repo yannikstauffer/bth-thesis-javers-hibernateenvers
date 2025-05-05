@@ -1,16 +1,17 @@
 jmhConfig:
-  warmupIterations: 20
+  warmupIterations: 30
   warmupTime: 1000
-  measurementIterations: 10
+  measurementIterations: 30
   measurementTime: 1000
 jvmConfig:
   options:
-    - -Xms44g
-    - -Xmx44g
-    - -XX:+UseZGC
+    - -Xms32g
+    - -Xmx32g
+    - -XX:+UseG1GC
     - -XX:+AlwaysPreTouch
 runConfig:
   optimizeOnly: true
+  failOnTightResult: true
   scenarios:
     - Create
     - Read
@@ -27,236 +28,80 @@ runConfig:
     - Single
     - Medium
     - High
-benchmark:
+usecase:
   create:
-    novers:
-      single:
-        objects:
-          basic: 900000
-          basicOptimized: true
-          extended: 900000
-          extendedOptimized: true
-      medium:
-        objects:
-          basic: 300000
-          basicOptimized: true
-          extended: 256816
-          extendedOptimized: true
-      high:
-        objects:
-          basic: 38791
-          basicOptimized: true
-          extended: 35095
-          extendedOptimized: true
-    envers:
-      single:
-        objects:
-          basic: 357994
-          basicOptimized: true
-          extended: 343734
-          extendedOptimized: true
-      medium:
-        objects:
-          basic: 111806
-          basicOptimized: true
-          extended: 112994
-          extendedOptimized: true
-      high:
-        objects:
-          basic: 14283
-          basicOptimized: true
-          extended: 15470
-          extendedOptimized: true
-    javers:
-      single:
-        objects:
-          basic: 163831
-          basicOptimized: true
-          extended: 74490
-          extendedOptimized: true
-      medium:
-        objects:
-          basic: 47856
-          basicOptimized: true
-          extended: 18572
-          extendedOptimized: true
-      high:
-        objects:
-          basic: 6766
-          basicOptimized: true
-          extended: 2431
-          extendedOptimized: true
+    single:
+      objects:
+        basic: 120000
+        basicOptimized: true
+        extended: 88873
+        extendedOptimized: true
+    medium:
+      objects:
+        basic: 38816
+        basicOptimized: true
+        extended: 28246
+        extendedOptimized: true
+    high:
+      objects:
+        basic: 4660
+        basicOptimized: true
+        extended: 3321
+        extendedOptimized: true
   read:
-    novers:
-      single:
-        objects:
-          basic: 1961011
-          basicOptimized: true
-          extended: 1800000
-          extendedOptimized: true
-      medium:
-        objects:
-          basic: 1116964
-          basicOptimized: true
-          extended: 787725
-          extendedOptimized: true
-      high:
-        objects:
-          basic: 200000
-          basicOptimized: true
-          extended: 134107
-          extendedOptimized: true
-    envers:
-      single:
-        objects:
-          basic: 1863538
-          basicOptimized: false
-          extended: 1652450
-          extendedOptimized: false
-      medium:
-        objects:
-          basic: 1037876
-          basicOptimized: false
-          extended: 814809
-          extendedOptimized: true
-      high:
-        objects:
-          basic: 200000
-          basicOptimized: true
-          extended: 33349
-          extendedOptimized: false
-    javers:
-      single:
-        objects:
-          basic: 1874236
-          basicOptimized: true
-          extended: 1958211
-          extendedOptimized: false
-      medium:
-        objects:
-          basic: 903628
-          basicOptimized: false
-          extended: 675000
-          extendedOptimized: false
-      high:
-        objects:
-          basic: 100695
-          basicOptimized: false
-          extended: 37755
-          extendedOptimized: false
+    single:
+      objects:
+        basic: 175394
+        basicOptimized: true
+        extended: 135000
+        extendedOptimized: true
+    medium:
+      objects:
+        basic: 165000
+        basicOptimized: true
+        extended: 83404
+        extendedOptimized: true
+    high:
+      objects:
+        basic: 103585
+        basicOptimized: true
+        extended: 12306
+        extendedOptimized: true
   update:
-    novers:
-      single:
-        objects:
-          basic: 600000
-          basicOptimized: true
-          extended: 600000
-          extendedOptimized: true
-      medium:
-        objects:
-          basic: 177272
-          basicOptimized: true
-          extended: 182344
-          extendedOptimized: true
-      high:
-        objects:
-          basic: 27172
-          basicOptimized: true
-          extended: 24736
-          extendedOptimized: true
-    envers:
-      single:
-        objects:
-          basic: 391909
-          basicOptimized: true
-          extended: 385166
-          extendedOptimized: true
-      medium:
-        objects:
-          basic: 153628
-          basicOptimized: true
-          extended: 138994
-          extendedOptimized: true
-      high:
-        objects:
-          basic: 23380
-          basicOptimized: true
-          extended: 20685
-          extendedOptimized: true
-    javers:
-      single:
-        objects:
-          basic: 79814
-          basicOptimized: true
-          extended: 36820
-          extendedOptimized: true
-      medium:
-        objects:
-          basic: 25930
-          basicOptimized: true
-          extended: 10305
-          extendedOptimized: true
-      high:
-        objects:
-          basic: 3578
-          basicOptimized: true
-          extended: 1328
-          extendedOptimized: true
+    single:
+      objects:
+        basic: 80000
+        basicOptimized: true
+        extended: 55435
+        extendedOptimized: true
+    medium:
+      objects:
+        basic: 30933
+        basicOptimized: true
+        extended: 20488
+        extendedOptimized: true
+    high:
+      objects:
+        basic: 4200
+        basicOptimized: true
+        extended: 2469
+        extendedOptimized: true
   delete:
-    novers:
-      single:
-        objects:
-          basic: 639974
-          basicOptimized: true
-          extended: 600000
-          extendedOptimized: true
-      medium:
-        objects:
-          basic: 223544
-          basicOptimized: true
-          extended: 220299
-          extendedOptimized: true
-      high:
-        objects:
-          basic: 38085
-          basicOptimized: true
-          extended: 33508
-          extendedOptimized: true
-    envers:
-      single:
-        objects:
-          basic: 246334
-          basicOptimized: true
-          extended: 237266
-          extendedOptimized: true
-      medium:
-        objects:
-          basic: 95780
-          basicOptimized: true
-          extended: 89446
-          extendedOptimized: true
-      high:
-        objects:
-          basic: 17745
-          basicOptimized: false
-          extended: 3745
-          extendedOptimized: false
-    javers:
-      single:
-        objects:
-          basic: 89710
-          basicOptimized: true
-          extended: 78519
-          extendedOptimized: true
-      medium:
-        objects:
-          basic: 60114
-          basicOptimized: true
-          extended: 51117
-          extendedOptimized: true
-      high:
-        objects:
-          basic: 20767
-          basicOptimized: true
-          extended: 17515
-          extendedOptimized: true
+    single:
+      objects:
+        basic: 73448
+        basicOptimized: true
+        extended: 57244
+        extendedOptimized: true
+    medium:
+      objects:
+        basic: 28000
+        basicOptimized: true
+        extended: 20272
+        extendedOptimized: true
+    high:
+      objects:
+        basic: 4200
+        basicOptimized: true
+        extended: 2952
+        extendedOptimized: true

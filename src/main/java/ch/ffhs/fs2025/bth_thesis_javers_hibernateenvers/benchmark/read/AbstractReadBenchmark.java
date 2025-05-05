@@ -2,6 +2,7 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.read;
 
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.ThreadBenchmarkBase;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.RepeatedRunnable;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Scenario;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -14,10 +15,13 @@ public abstract class AbstractReadBenchmark<T extends Thread<?>> extends ThreadB
         return Scenario.READ;
     }
 
-    protected void repeatedSetupRoutine(int i) {
-        var thread = getTestObject();
-        var created = getRepository().save(thread);
-        addTestObject(created);
+    @Override
+    protected RepeatedRunnable getSetupRoutine() {
+        return new RepeatedRunnable(() -> {
+            var thread = getTestObject();
+            addTestObject(thread);
+            getRepository().save(thread);
+        });
     }
 
     @Benchmark

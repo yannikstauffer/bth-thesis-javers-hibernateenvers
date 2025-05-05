@@ -4,9 +4,11 @@ import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Scenari
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Versioning;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +21,17 @@ import java.util.stream.Stream;
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
+@FieldNameConstants(level = AccessLevel.PRIVATE)
 public class BenchmarkEnvironmentConfig {
 
     private JmhConfig jmhConfig;
     private RunConfig runConfig;
     private JvmConfig jvmConfig;
     private String environment;
-    private Map<String, Object> benchmark;
+    private Map<String, Object> usecase;
+
+    public static final String OBJECTS_KEY = "objects";
+    public static final String USECASE_KEY = BenchmarkEnvironmentConfig.Fields.usecase;
 
     public Stream<BenchmarkRunConfigDto> getBenchmarkRunConfigs() {
         List<BenchmarkRunConfigDto> runConfigDtos = apply(List.of(new BenchmarkRunConfigDto()),
@@ -48,14 +54,17 @@ public class BenchmarkEnvironmentConfig {
         return runConfigDtos.stream().filter(optimizerFilter());
     }
 
+    /**
+     * Run benchmarks only for {@link Versioning#NOVERS} and not optimized
+     */
     private Predicate<BenchmarkRunConfigDto> optimizerFilter() {
         return dto -> {
             if(!runConfig.isOptimizeOnly()) {
                 return true;
             }
-
-            boolean isOptimized = Boolean.parseBoolean(YamlUtils.readKey(benchmark,dto.getBenchmarkYamlKey() + "Optimized"));
-            return !isOptimized;
+            boolean isNovers = dto.getVersioning() == Versioning.NOVERS;
+            boolean isOptimized = Boolean.parseBoolean(YamlUtils.readKey(usecase, dto.getBenchmarkYamlKey() + "Optimized"));
+            return isNovers && !isOptimized;
         };
     }
 
@@ -89,6 +98,7 @@ public class BenchmarkEnvironmentConfig {
     @RequiredArgsConstructor
     public static class RunConfig {
         private boolean optimizeOnly;
+        private boolean failOnTightResult;
         private Set<String> scenarios;
         private Set<String> versionings;
         private Set<String> payloadTypes;

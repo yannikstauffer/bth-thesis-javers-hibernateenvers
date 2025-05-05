@@ -28,10 +28,21 @@ public class BenchmarkRunConfigDto {
     }
 
     public String getBenchmarkYamlKey() {
-        return Stream.of(scenario.name(), versioning.name(), complexity.name(), "objects", payloadType.name())
+        return Stream.of(
+                        scenario.name(),
+                        complexity.name(),
+                        BenchmarkEnvironmentConfig.OBJECTS_KEY,
+                        payloadType.name())
                 .map(String::toLowerCase)
                 .reduce((a, b) -> a + "." + b)
                 .orElseThrow();
+    }
+
+    public String getBenchmarkIdentifier() {
+        return String.join("_",
+                getBenchmarkClassName(),
+                getComplexity().name(),
+                getPayloadType().name());
     }
 
     private static String toUpperCamelCase(String... parts) {

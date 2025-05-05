@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: bth-thesis-javers-hibernateenvers
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:54320/benchmark
+    username: benchmark
+    password: benchmark
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create
+  main:
+    banner-mode: off
+
+logging:
+  pattern:
+    console: "%msg%n"
+  level:
+    org:
+      javers: WARN
+      hibernate:
+        orm:
+          deprecation: ERROR
+    root: WARN
+    ch:
+      ffhs:
+        fs2025:
+          bth_thesis_javers_hibernateenvers:
+            benchmark: INFO
+
+thesis:
+  payload:
+    size: 5000

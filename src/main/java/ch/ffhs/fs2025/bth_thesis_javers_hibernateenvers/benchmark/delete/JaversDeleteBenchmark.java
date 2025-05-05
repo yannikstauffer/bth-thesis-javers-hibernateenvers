@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@OutputTimeUnit(TimeUnit.SECONDS)
 public class JaversDeleteBenchmark extends AbstractDeleteBenchmark<JaversThread> implements JaversVersioning {
 
 }

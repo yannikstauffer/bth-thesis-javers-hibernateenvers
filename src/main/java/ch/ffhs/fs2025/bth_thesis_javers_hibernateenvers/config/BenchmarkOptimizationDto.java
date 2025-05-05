@@ -21,7 +21,12 @@ public class BenchmarkOptimizationDto {
     }
 
     public List<String> getYamlKeyPath() {
-        return List.of("benchmark", scenario, versioning, complexity, "objects", payloadType);
+        return List.of(
+                BenchmarkEnvironmentConfig.USECASE_KEY,
+                scenario,
+                complexity,
+                BenchmarkEnvironmentConfig.OBJECTS_KEY,
+                payloadType);
     }
 
 }

@@ -1,16 +1,16 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
 
 import java.io.Serializable;
+import java.sql.Types;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
@@ -19,12 +19,18 @@ import java.time.LocalDateTime;
 public abstract class BaseEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @InMemoryId
     private Integer id;
 
-    @Column(name = "created_at")
+    private String content;
+
+    @JdbcTypeCode(Types.BINARY)
+    @Column(columnDefinition = "BYTEA", nullable = false)
+    private byte[] attachment = new byte[0];
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
-    @Column(name = "updated_at")
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     @PrePersist

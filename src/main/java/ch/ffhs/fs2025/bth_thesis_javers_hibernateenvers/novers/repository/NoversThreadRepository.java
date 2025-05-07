@@ -19,8 +19,4 @@ public interface NoversThreadRepository extends CrudRepository<NoversThread, Int
     @Query("SELECT t FROM novers_threads t WHERE t.id = :id")
     Optional<NoversThread> findById(@NonNull @Param("id") Integer id);
 
-    // todo: test
-    @NonNull
-    @Query("SELECT t FROM novers_threads t WHERE t.id = :id")
-    Optional<NoversThread> findByIdForDelete(@NonNull @Param("id") Integer id);
 }

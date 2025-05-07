@@ -22,7 +22,6 @@ public class NoversThread extends BaseEntity implements Thread<NoversPost> {
 
     private String title;
 
-    //todo thesis: CascadeType.ALL zwingend, damit Speichern und Löschen propagiert wird
     @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<NoversPost> posts = new HashSet<>();
 

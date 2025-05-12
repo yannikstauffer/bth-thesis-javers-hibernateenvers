@@ -44,7 +44,7 @@ public class BenchmarkEnvironmentConfig {
                 CrudOperation.class);
         runConfigDtos = apply(runConfigDtos,
                 runConfig.getObjectGraphSizes(),
-                BenchmarkRunConfigDto::setComplexity,
+                BenchmarkRunConfigDto::setObjectGraphSize,
                 ObjectGraphSize.class);
         runConfigDtos = apply(runConfigDtos,
                 runConfig.getPayloadTypes(),

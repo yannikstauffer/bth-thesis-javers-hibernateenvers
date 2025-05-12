@@ -191,7 +191,7 @@ class JmhBenchmarkRunner {
     private String[] getJvmOptions(BenchmarkRunConfigDto runConfigDto) {
         Set<String> jvmOptions = new HashSet<>(benchmarksConfig.getJvmConfig().getOptions());
         jvmOptions.add("-server");
-        jvmOptions.add("-Dbenchmark.config.objectGraphSize=" + runConfigDto.getComplexity().name());
+        jvmOptions.add("-Dbenchmark.config.objectGraphSize=" + runConfigDto.getObjectGraphSize().name());
         jvmOptions.add("-Dbenchmark.config.payloadType=" + runConfigDto.getPayloadType().name());
         jvmOptions.add("-Dspring.profiles.active=" + benchmarksConfig.getEnvironment());
         jvmOptions.add("-Dbenchmark.config.failOnTightResult=" + benchmarksConfig.getRunConfig().isFailOnTightResult());

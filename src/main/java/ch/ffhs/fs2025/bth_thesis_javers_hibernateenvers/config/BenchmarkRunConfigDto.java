@@ -16,11 +16,11 @@ import java.util.stream.Stream;
 public class BenchmarkRunConfigDto {
     private CrudOperation crudOperation;
     private Versioning versioning;
-    private ObjectGraphSize complexity;
+    private ObjectGraphSize objectGraphSize;
     private PayloadType payloadType;
 
     public BenchmarkRunConfigDto copy() {
-        return new BenchmarkRunConfigDto(crudOperation, versioning, complexity, payloadType);
+        return new BenchmarkRunConfigDto(crudOperation, versioning, objectGraphSize, payloadType);
     }
 
     public String getBenchmarkClassName() {
@@ -30,7 +30,7 @@ public class BenchmarkRunConfigDto {
     public String getBenchmarkYamlKey() {
         return Stream.of(
                         crudOperation.name(),
-                        complexity.name(),
+                        objectGraphSize.name(),
                         BenchmarkEnvironmentConfig.OBJECTS_KEY,
                         payloadType.name())
                 .map(String::toLowerCase)
@@ -41,7 +41,7 @@ public class BenchmarkRunConfigDto {
     public String getBenchmarkIdentifier() {
         return String.join("_",
                 getBenchmarkClassName(),
-                getComplexity().name(),
+                getObjectGraphSize().name(),
                 getPayloadType().name());
     }
 

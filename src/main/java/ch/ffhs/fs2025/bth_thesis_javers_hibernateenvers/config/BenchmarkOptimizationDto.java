@@ -11,7 +11,7 @@ import java.util.List;
 public class BenchmarkOptimizationDto {
     private String crudOperation;
     private String versioning;
-    private String complexity;
+    private String objectGraphSize;
     private String payloadType;
     private int objectCount;
     private LocalDateTime timestamp;
@@ -24,7 +24,7 @@ public class BenchmarkOptimizationDto {
         return List.of(
                 BenchmarkEnvironmentConfig.USECASE_KEY,
                 crudOperation,
-                complexity,
+                objectGraphSize,
                 BenchmarkEnvironmentConfig.OBJECTS_KEY,
                 payloadType);
     }

@@ -77,24 +77,24 @@ class TestDataFactory {
     }
 
 
-    static Stream<ObjectGraphSize> complexities() {
+    static Stream<ObjectGraphSize> objectGraphSizes() {
         return Stream.of(ObjectGraphSize.values());
     }
 
     @ParameterizedTest
-    @MethodSource("complexities")
-    void create_assertComplexity(ObjectGraphSize complexity) {
-        Thread<?> thread = dataFactory.create(Types.novers().getThread(), PayloadType.BASIC, complexity);
+    @MethodSource("objectGraphSizes")
+    void create_assertObjectGraphSize(ObjectGraphSize objectGraphSize) {
+        Thread<?> thread = dataFactory.create(Types.novers().getThread(), PayloadType.BASIC, objectGraphSize);
 
         assertThat(thread)
                 .isNotNull();
         assertThat(thread.getPosts())
                 .isNotNull()
-                .hasSize(complexity.getEntityCount())
+                .hasSize(objectGraphSize.getEntityCount())
                 .allSatisfy(post -> {
                     assertThat(post.getComments())
                             .isNotNull()
-                            .hasSize(complexity.getEntityCount());
+                            .hasSize(objectGraphSize.getEntityCount());
                 });
     }
 

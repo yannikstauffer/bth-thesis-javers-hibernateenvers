@@ -114,7 +114,7 @@ class BenchmarkConfigManagerTest {
         return BenchmarkOptimizationDto.builder()
                 .crudOperation("create")
                 .versioning("novers")
-                .complexity("single")
+                .objectGraphSize("single")
                 .payloadType("basic")
                 .build();
     }
@@ -123,7 +123,7 @@ class BenchmarkConfigManagerTest {
         return BenchmarkOptimizationDto.builder()
                 .crudOperation("crudOperation")
                 .versioning("versioning")
-                .complexity("complexity")
+                .objectGraphSize("objectGraphSize")
                 .payloadType("payloadType")
                 .objectCount(2)
                 .build();

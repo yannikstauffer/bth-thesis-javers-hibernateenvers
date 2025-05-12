@@ -60,7 +60,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
         benchmarkConfigManager = new BenchmarkConfigManager("application-" + benchmarkEnvironment + ".yaml");
 
         if (objectGraphSize == null || payloadType == null) {
-            throw new IllegalArgumentException("Object graph complexity and payload type must be set in environment.");
+            throw new IllegalArgumentException("Object graph size and payload type must be set in environment.");
         }
 
         beforeSetupRoutine();
@@ -77,7 +77,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
         BenchmarkOptimizationDto benchmarkOptimizationDto = BenchmarkOptimizationDto.builder()
                 .crudOperation(getCrudOperation().name().toLowerCase())
                 .versioning(getVersioningDefinition().getVersioning().name().toLowerCase())
-                .complexity(objectGraphSize.name().toLowerCase())
+                .objectGraphSize(objectGraphSize.name().toLowerCase())
                 .payloadType(payloadType.name().toLowerCase())
                 .objectCount(testObjects.length)
                 .build();
@@ -200,7 +200,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
                         *****************************************************************************************
                         Benchmark setup started.
                         \tCount of objects in repository: {}
-                        \tObject graph complexity: {}
+                        \tObject graph size: {}
                         \tPayload type: {}
                         \tTotal test objects requested: {}
                         Staging test objects...

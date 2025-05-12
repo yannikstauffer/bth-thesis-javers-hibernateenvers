@@ -2,8 +2,8 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.update;
 
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.ThreadBenchmarkBase;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.CrudOperation;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.RepeatedRunnable;
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Scenario;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.DataUpdater;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -20,8 +20,8 @@ public abstract class AbstractUpdateBenchmark<T extends Thread<?>> extends Threa
     }
 
     @Override
-    protected Scenario getScenario() {
-        return Scenario.UPDATE;
+    protected CrudOperation getCrudOperation() {
+        return CrudOperation.UPDATE;
     }
 
     @Override

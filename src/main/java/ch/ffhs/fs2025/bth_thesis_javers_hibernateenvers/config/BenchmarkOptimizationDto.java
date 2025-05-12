@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Builder
 public class BenchmarkOptimizationDto {
-    private String scenario;
+    private String crudOperation;
     private String versioning;
     private String complexity;
     private String payloadType;
@@ -23,7 +23,7 @@ public class BenchmarkOptimizationDto {
     public List<String> getYamlKeyPath() {
         return List.of(
                 BenchmarkEnvironmentConfig.USECASE_KEY,
-                scenario,
+                crudOperation,
                 complexity,
                 BenchmarkEnvironmentConfig.OBJECTS_KEY,
                 payloadType);

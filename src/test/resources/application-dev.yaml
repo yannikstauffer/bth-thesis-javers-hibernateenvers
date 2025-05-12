@@ -11,7 +11,7 @@ jvmConfig:
     - -XX:+AlwaysPreTouch
 runConfig:
   optimizeOnly: false
-  scenarios:
+  crudOperations:
     - Create
   versionings:
     - Novers

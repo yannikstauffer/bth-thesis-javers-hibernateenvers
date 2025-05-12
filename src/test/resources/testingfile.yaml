@@ -14,7 +14,7 @@ jvmConfig:
 runConfig:
   optimizeOnly: true
   failOnTightResult: true
-  scenarios:
+  crudOperations:
     - Create
     - Read
     - Update

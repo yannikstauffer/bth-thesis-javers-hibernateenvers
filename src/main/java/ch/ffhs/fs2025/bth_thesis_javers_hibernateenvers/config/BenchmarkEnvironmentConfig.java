@@ -1,6 +1,6 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config;
 
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Scenario;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.CrudOperation;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Versioning;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
@@ -39,9 +39,9 @@ public class BenchmarkEnvironmentConfig {
                 BenchmarkRunConfigDto::setVersioning,
                 Versioning.class);
         runConfigDtos = apply(runConfigDtos,
-                runConfig.getScenarios(),
-                BenchmarkRunConfigDto::setScenario,
-                Scenario.class);
+                runConfig.getCrudOperations(),
+                BenchmarkRunConfigDto::setCrudOperation,
+                CrudOperation.class);
         runConfigDtos = apply(runConfigDtos,
                 runConfig.getObjectGraphComplexities(),
                 BenchmarkRunConfigDto::setComplexity,
@@ -99,7 +99,7 @@ public class BenchmarkEnvironmentConfig {
     public static class RunConfig {
         private boolean optimizeOnly;
         private boolean failOnTightResult;
-        private Set<String> scenarios;
+        private Set<String> crudOperations;
         private Set<String> versionings;
         private Set<String> payloadTypes;
         private Set<String> objectGraphComplexities;

@@ -112,7 +112,7 @@ class BenchmarkConfigManagerTest {
 
     private BenchmarkOptimizationDto getExistingOptimizationDto() {
         return BenchmarkOptimizationDto.builder()
-                .scenario("create")
+                .crudOperation("create")
                 .versioning("novers")
                 .complexity("single")
                 .payloadType("basic")
@@ -121,7 +121,7 @@ class BenchmarkConfigManagerTest {
 
     private BenchmarkOptimizationDto getNewOptimizationDto() {
         return BenchmarkOptimizationDto.builder()
-                .scenario("scenario")
+                .crudOperation("crudOperation")
                 .versioning("versioning")
                 .complexity("complexity")
                 .payloadType("payloadType")

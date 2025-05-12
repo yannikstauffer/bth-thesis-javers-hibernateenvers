@@ -1,6 +1,6 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config;
 
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Scenario;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.CrudOperation;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Versioning;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
@@ -14,22 +14,22 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BenchmarkRunConfigDto {
-    private Scenario scenario;
+    private CrudOperation crudOperation;
     private Versioning versioning;
     private ObjectGraphComplexity complexity;
     private PayloadType payloadType;
 
     public BenchmarkRunConfigDto copy() {
-        return new BenchmarkRunConfigDto(scenario, versioning, complexity, payloadType);
+        return new BenchmarkRunConfigDto(crudOperation, versioning, complexity, payloadType);
     }
 
     public String getBenchmarkClassName() {
-        return toUpperCamelCase(versioning.name(), scenario.name(), "Benchmark");
+        return toUpperCamelCase(versioning.name(), crudOperation.name(), "Benchmark");
     }
 
     public String getBenchmarkYamlKey() {
         return Stream.of(
-                        scenario.name(),
+                        crudOperation.name(),
                         complexity.name(),
                         BenchmarkEnvironmentConfig.OBJECTS_KEY,
                         payloadType.name())

@@ -1,8 +1,8 @@
 package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.BthThesisJaversHibernateenversApplication;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.CrudOperation;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.RepeatedRunnable;
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Scenario;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Versioned;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.common.Thread;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkConfigManager;
@@ -75,7 +75,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
     @TearDown
     public void tearDown() {
         BenchmarkOptimizationDto benchmarkOptimizationDto = BenchmarkOptimizationDto.builder()
-                .scenario(getScenario().name().toLowerCase())
+                .crudOperation(getCrudOperation().name().toLowerCase())
                 .versioning(getVersioningDefinition().getVersioning().name().toLowerCase())
                 .complexity(objectGraphComplexity.name().toLowerCase())
                 .payloadType(payloadType.name().toLowerCase())
@@ -111,14 +111,14 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
     protected final int loadTestObjectCountFromEnv() {
         String key = String.join(".",
                 BenchmarkEnvironmentConfig.USECASE_KEY,
-                getScenario().name().toLowerCase(),
+                getCrudOperation().name().toLowerCase(),
                 getObjectGraphComplexity().name().toLowerCase(),
                 BenchmarkEnvironmentConfig.OBJECTS_KEY,
                 getPayloadType().name().toLowerCase());
         return fromEnv(Integer.class, key);
     }
 
-    protected abstract Scenario getScenario();
+    protected abstract CrudOperation getCrudOperation();
 
     protected abstract RepeatedRunnable getSetupRoutine();
 

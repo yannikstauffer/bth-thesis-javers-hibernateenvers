@@ -14,16 +14,16 @@ public class DataFactory {
     private final PostFactory postFactory;
     private final ThreadFactory threadFactory;
 
-    public <T> T create(Class<T> type, PayloadType payloadType, ObjectGraphComplexity objectGraphComplexity) {
+    public <T> T create(Class<T> type, PayloadType payloadType, ObjectGraphSize objectGraphSize) {
         T testData;
 
         if (isPost(type)) {
-            testData = getPostAsT(type, payloadType, objectGraphComplexity);
+            testData = getPostAsT(type, payloadType, objectGraphSize);
         } else if (isThread(type)) {
-            testData = type.cast(threadFactory.create((Class<Thread<?>>) type, payloadType, objectGraphComplexity));
+            testData = type.cast(threadFactory.create((Class<Thread<?>>) type, payloadType, objectGraphSize));
             Thread thread = ((Thread) testData);
-            for (int i = 0; i < objectGraphComplexity.getEntityCount(); i++) {
-                var post = create(thread.getChildType(), payloadType, objectGraphComplexity);
+            for (int i = 0; i < objectGraphSize.getEntityCount(); i++) {
+                var post = create(thread.getChildType(), payloadType, objectGraphSize);
                 thread.addChild((Post) post);
             }
         } else if (isComment(type)) {
@@ -37,12 +37,12 @@ public class DataFactory {
     }
 
 
-    private <T> T getPostAsT(Class<T> type, PayloadType payloadType, ObjectGraphComplexity objectGraphComplexity) {
+    private <T> T getPostAsT(Class<T> type, PayloadType payloadType, ObjectGraphSize objectGraphSize) {
         T testData;
         testData = type.cast(postFactory.create((Class<Post<?, ?>>) type, payloadType));
         Post post = ((Post) testData);
-        for (int i = 0; i < objectGraphComplexity.getEntityCount(); i++) {
-            var comment = create(post.getChildType(), payloadType, objectGraphComplexity);
+        for (int i = 0; i < objectGraphSize.getEntityCount(); i++) {
+            var comment = create(post.getChildType(), payloadType, objectGraphSize);
             post.addChild((Comment) comment);
         }
         return testData;

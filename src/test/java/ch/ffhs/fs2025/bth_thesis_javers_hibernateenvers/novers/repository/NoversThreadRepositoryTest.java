@@ -2,7 +2,7 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.novers.repository;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.PostgresBenchmarkContainer;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.DataFactory;
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphSize;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.novers.model.NoversThread;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class NoversThreadRepositoryTest {
 
     @Test
     void findById_existingId_returnsThreadWithPostsAndComments() {
-        NoversThread thread = dataFactory.create(NoversThread.class, PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
+        NoversThread thread = dataFactory.create(NoversThread.class, PayloadType.BASIC, ObjectGraphSize.SINGLE);
 
         // Add posts and comments to the thread
         entityManager.persistAndFlush(thread);

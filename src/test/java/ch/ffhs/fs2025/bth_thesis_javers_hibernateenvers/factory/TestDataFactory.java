@@ -59,7 +59,7 @@ class TestDataFactory {
         Class<? extends Post<?, ?>> postType = types.getPost();
         Class<? extends Comment<?>> commentType = types.getComment();
 
-        Thread<?> thread = dataFactory.create(threadType, PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
+        Thread<?> thread = dataFactory.create(threadType, PayloadType.BASIC, ObjectGraphSize.SINGLE);
 
         assertThat(thread)
                 .isNotNull()
@@ -77,13 +77,13 @@ class TestDataFactory {
     }
 
 
-    static Stream<ObjectGraphComplexity> complexities() {
-        return Stream.of(ObjectGraphComplexity.values());
+    static Stream<ObjectGraphSize> complexities() {
+        return Stream.of(ObjectGraphSize.values());
     }
 
     @ParameterizedTest
     @MethodSource("complexities")
-    void create_assertComplexity(ObjectGraphComplexity complexity) {
+    void create_assertComplexity(ObjectGraphSize complexity) {
         Thread<?> thread = dataFactory.create(Types.novers().getThread(), PayloadType.BASIC, complexity);
 
         assertThat(thread)
@@ -103,7 +103,7 @@ class TestDataFactory {
         byte[] mockAttachment = new byte[0];
         when(payloadService.attachment()).thenReturn(mockAttachment);
 
-        Thread<?> thread = dataFactory.create(Types.novers().getThread(), PayloadType.EXTENDED, ObjectGraphComplexity.SINGLE);
+        Thread<?> thread = dataFactory.create(Types.novers().getThread(), PayloadType.EXTENDED, ObjectGraphSize.SINGLE);
 
         assertThat(thread.getAttachment())
                 .isEqualTo(mockAttachment);
@@ -117,7 +117,7 @@ class TestDataFactory {
 
     @Test
     void create_withBasicPayload() {
-        Thread<?> thread = dataFactory.create(Types.novers().getThread(), PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
+        Thread<?> thread = dataFactory.create(Types.novers().getThread(), PayloadType.BASIC, ObjectGraphSize.SINGLE);
 
         verify(payloadService, never()).attachment();
         assertThat(thread.getAttachment())
@@ -137,7 +137,7 @@ class TestDataFactory {
                 .thenReturn("content-2")
                 .thenReturn("content-3");
 
-        Thread<?> thread = dataFactory.create(Types.novers().getThread(), PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
+        Thread<?> thread = dataFactory.create(Types.novers().getThread(), PayloadType.BASIC, ObjectGraphSize.SINGLE);
 
         verify(payloadService, never()).attachment();
         assertThat(thread.getContent())
@@ -154,7 +154,7 @@ class TestDataFactory {
     void create_addsThreadTitle() {
         when(payloadService.name(any(), any())).thenReturn("title");
 
-        Thread<?> thread = dataFactory.create(Types.novers().getThread(), PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
+        Thread<?> thread = dataFactory.create(Types.novers().getThread(), PayloadType.BASIC, ObjectGraphSize.SINGLE);
 
         verify(payloadService, never()).attachment();
         assertThat(thread.getTitle())

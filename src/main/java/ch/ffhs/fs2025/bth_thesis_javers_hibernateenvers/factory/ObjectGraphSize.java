@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ObjectGraphComplexity {
+public enum ObjectGraphSize {
     SINGLE(1), MEDIUM(3), HIGH(10);
 
     private final int entityCount;

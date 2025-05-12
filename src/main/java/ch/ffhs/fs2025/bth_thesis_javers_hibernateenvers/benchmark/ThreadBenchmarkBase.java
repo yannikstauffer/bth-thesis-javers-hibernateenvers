@@ -9,7 +9,7 @@ import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkConfigMa
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkEnvironmentConfig;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config.BenchmarkOptimizationDto;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.DataFactory;
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphSize;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
 import jakarta.persistence.EntityManager;
 import lombok.Getter;
@@ -30,7 +30,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
     @Getter
     private DataFactory dataFactory;
     @Getter
-    private ObjectGraphComplexity objectGraphComplexity;
+    private ObjectGraphSize objectGraphSize;
     @Getter
     private PayloadType payloadType;
 
@@ -51,7 +51,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
                 .run();
         repository = getBean(getVersioningDefinition().getRepositoryClass());
         dataFactory = getBean(DataFactory.class);
-        objectGraphComplexity = this.fromEnvEnum(ObjectGraphComplexity.class, "benchmark.config.objectGraphComplexity");
+        objectGraphSize = this.fromEnvEnum(ObjectGraphSize.class, "benchmark.config.objectGraphSize");
         payloadType = this.fromEnvEnum(PayloadType.class, "benchmark.config.payloadType");
 
         testObjectCount = loadTestObjectCountFromEnv();
@@ -59,7 +59,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
 
         benchmarkConfigManager = new BenchmarkConfigManager("application-" + benchmarkEnvironment + ".yaml");
 
-        if(objectGraphComplexity == null || payloadType == null) {
+        if (objectGraphSize == null || payloadType == null) {
             throw new IllegalArgumentException("Object graph complexity and payload type must be set in environment.");
         }
 
@@ -77,7 +77,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
         BenchmarkOptimizationDto benchmarkOptimizationDto = BenchmarkOptimizationDto.builder()
                 .crudOperation(getCrudOperation().name().toLowerCase())
                 .versioning(getVersioningDefinition().getVersioning().name().toLowerCase())
-                .complexity(objectGraphComplexity.name().toLowerCase())
+                .complexity(objectGraphSize.name().toLowerCase())
                 .payloadType(payloadType.name().toLowerCase())
                 .objectCount(testObjects.length)
                 .build();
@@ -105,14 +105,14 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
     }
 
     protected T getTestObject() {
-        return dataFactory.create(getVersioningDefinition().getTestObjectClass(), getPayloadType(), getObjectGraphComplexity());
+        return dataFactory.create(getVersioningDefinition().getTestObjectClass(), getPayloadType(), getObjectGraphSize());
     }
 
     protected final int loadTestObjectCountFromEnv() {
         String key = String.join(".",
                 BenchmarkEnvironmentConfig.USECASE_KEY,
                 getCrudOperation().name().toLowerCase(),
-                getObjectGraphComplexity().name().toLowerCase(),
+                getObjectGraphSize().name().toLowerCase(),
                 BenchmarkEnvironmentConfig.OBJECTS_KEY,
                 getPayloadType().name().toLowerCase());
         return fromEnv(Integer.class, key);
@@ -205,7 +205,7 @@ public abstract class ThreadBenchmarkBase<T extends Thread<?>> implements Versio
                         \tTotal test objects requested: {}
                         Staging test objects...
                         """,
-                repository.count(), getObjectGraphComplexity(), getPayloadType(), testObjectCount);
+                repository.count(), getObjectGraphSize(), getPayloadType(), testObjectCount);
     }
 
     private void logBenchmarkSetupFinished() {

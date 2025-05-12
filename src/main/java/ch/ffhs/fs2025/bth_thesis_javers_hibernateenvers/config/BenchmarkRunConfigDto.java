@@ -2,7 +2,7 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.CrudOperation;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Versioning;
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphSize;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 public class BenchmarkRunConfigDto {
     private CrudOperation crudOperation;
     private Versioning versioning;
-    private ObjectGraphComplexity complexity;
+    private ObjectGraphSize complexity;
     private PayloadType payloadType;
 
     public BenchmarkRunConfigDto copy() {

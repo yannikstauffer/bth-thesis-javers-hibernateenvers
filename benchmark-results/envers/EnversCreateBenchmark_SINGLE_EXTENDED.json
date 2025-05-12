@@ -5,7 +5,7 @@
   "threads" : 1,
   "forks" : 5,
   "jvm" : "/usr/lib/jvm/zulu23-ca-arm64/bin/java",
-  "jvmArgs" : [ "-Xms32g", "-Dbenchmark.config.payloadType=EXTENDED", "-Dspring.jpa.hibernate.ddl-auto=create", "-XX:+UseG1GC", "-Dspring.datasource.username=benchmark", "-Dspring.datasource.url=jdbc:postgresql://172.17.0.1:54321/benchmark?loggerLevel=OFF", "-Xmx32g", "-Dbenchmark.config.failOnTightResult=false", "-server", "-Dspring.profiles.active=docker", "-Dspring.datasource.driver-class-name=org.postgresql.Driver", "-XX:+AlwaysPreTouch", "-Dspring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect", "-Dbenchmark.config.objectGraphComplexity=SINGLE", "-Dspring.datasource.password=benchmark" ],
+  "jvmArgs" : [ "-Xms32g", "-Dbenchmark.config.payloadType=EXTENDED", "-Dspring.jpa.hibernate.ddl-auto=create", "-XX:+UseG1GC", "-Dspring.datasource.username=benchmark", "-Dspring.datasource.url=jdbc:postgresql://172.17.0.1:54321/benchmark?loggerLevel=OFF", "-Xmx32g", "-Dbenchmark.config.failOnTightResult=false", "-server", "-Dspring.profiles.active=docker", "-Dspring.datasource.driver-class-name=org.postgresql.Driver", "-XX:+AlwaysPreTouch", "-Dspring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect", "-Dbenchmark.config.objectGraphSize=SINGLE", "-Dspring.datasource.password=benchmark" ],
   "jdkVersion" : "23.0.2",
   "vmName" : "OpenJDK 64-Bit Server VM",
   "vmVersion" : "23.0.2+7",

@@ -15,8 +15,8 @@ class PayloadService {
     private final Random uuidRandom = new Random(2020);
     private final Random payloadRandom = new Random(2025);
 
-    public String name(ObjectGraphComplexity objectGraphComplexity, PayloadType payloadType) {
-        return objectGraphComplexity.name() + "_" + payloadType.name();
+    public String name(ObjectGraphSize objectGraphSize, PayloadType payloadType) {
+        return objectGraphSize.name() + "_" + payloadType.name();
     }
 
     public String content() {

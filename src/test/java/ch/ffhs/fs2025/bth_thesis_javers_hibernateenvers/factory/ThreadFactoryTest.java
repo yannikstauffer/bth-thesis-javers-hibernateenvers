@@ -28,9 +28,9 @@ class ThreadFactoryTest {
     @ParameterizedTest
     @MethodSource("threadTypes")
     void create_withOptions_addsName(Class<Thread<?>> threadType) {
-        when(payloadService.name(ObjectGraphComplexity.SINGLE, PayloadType.BASIC)).thenReturn("title");
+        when(payloadService.name(ObjectGraphSize.SINGLE, PayloadType.BASIC)).thenReturn("title");
 
-        Thread<?> thread = threadFactory.create(threadType, PayloadType.BASIC, ObjectGraphComplexity.SINGLE);
+        Thread<?> thread = threadFactory.create(threadType, PayloadType.BASIC, ObjectGraphSize.SINGLE);
 
         assertThat(thread)
                 .isNotNull()

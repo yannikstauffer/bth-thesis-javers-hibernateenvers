@@ -24,7 +24,7 @@ runConfig:
   payloadTypes:
     - Basic
     - Extended
-  objectGraphComplexities:
+  objectGraphSizes:
     - Single
     - Medium
     - High

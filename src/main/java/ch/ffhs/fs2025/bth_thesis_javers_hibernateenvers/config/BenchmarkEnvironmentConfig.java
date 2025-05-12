@@ -2,7 +2,7 @@ package ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.config;
 
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.CrudOperation;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.benchmark.config.Versioning;
-import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphComplexity;
+import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.ObjectGraphSize;
 import ch.ffhs.fs2025.bth_thesis_javers_hibernateenvers.factory.PayloadType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -43,9 +43,9 @@ public class BenchmarkEnvironmentConfig {
                 BenchmarkRunConfigDto::setCrudOperation,
                 CrudOperation.class);
         runConfigDtos = apply(runConfigDtos,
-                runConfig.getObjectGraphComplexities(),
+                runConfig.getObjectGraphSizes(),
                 BenchmarkRunConfigDto::setComplexity,
-                ObjectGraphComplexity.class);
+                ObjectGraphSize.class);
         runConfigDtos = apply(runConfigDtos,
                 runConfig.getPayloadTypes(),
                 BenchmarkRunConfigDto::setPayloadType,
@@ -102,7 +102,7 @@ public class BenchmarkEnvironmentConfig {
         private Set<String> crudOperations;
         private Set<String> versionings;
         private Set<String> payloadTypes;
-        private Set<String> objectGraphComplexities;
+        private Set<String> objectGraphSizes;
     }
 
     @Data

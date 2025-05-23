@@ -1,7 +1,7 @@
 #!/bin/bash
 
 OUTPUT="benchmark_summary.csv"
-echo "versioning,crud,object_graph_size,payload_type,total_invocations,ci_95_upper,ci_95_lower,mean,median,minimum,maximum" > "$OUTPUT"
+echo "versioning,crud,object_graph_size,payload_type,total_invocations,ci_95_lower,ci_95_upper,mean,median,minimum,maximum" > "$OUTPUT"
 
 find . -type f -name '*.json' | while read -r file; do
   filename=$(basename "$file" .json)

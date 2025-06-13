@@ -8,7 +8,7 @@ echo "versioning,crud,object_graph_size,payload_type,total_invocations,ci_95_low
 echo "versioning,crud,object_graph_size,payload_type,total_invocations,ci_95_lower,ci_95_upper,mean,median,minimum,maximum,comparison" > "$OUTPUT"
 
 # Extract data from JSON files into temporary CSV file
-find . -type f -name '*.json' | while read -r file; do
+find envers javers novers -type f -name '*.json' | while read -r file; do
   filename=$(basename "$file" .json)
 
   # Extract parameters from filename

@@ -16,7 +16,7 @@ TMP_SORTED=$(mktemp)
 head -n 1 "$INPUT" > "$OUTPUT_SORTED"
 
 # Add sort key to each data line
-tail -n +2 "$INPUT" | while IFS=',' read -r crud graph payload versioning invocations ci_lower ci_upper mean median minimum maximum comparison; do
+tail -n +2 "$INPUT" | while IFS=',' read -r crud graph payload versioning invocations mean median minimum maximum ci_lower ci_upper comparison; do
   # Define sort priority values
   case "$crud" in
     Create) crud_order=1 ;;
@@ -43,7 +43,7 @@ tail -n +2 "$INPUT" | while IFS=',' read -r crud graph payload versioning invoca
   sortkey="${crud_order}${graph_order}${payload_order}${versioning_order}"
 
   # Write to temp file with key
-  echo "$sortkey,$crud,$graph,$payload,$versioning,$invocations,$ci_lower,$ci_upper,$mean,$median,$minimum,$maximum,$comparison" >> "$TMP_WITH_KEY"
+  echo "$sortkey,$crud,$graph,$payload,$versioning,$invocations,$mean,$median,$minimum,$maximum,$ci_lower,$ci_upper,$comparison" >> "$TMP_WITH_KEY"
 done
 
 # Sort by sortkey, remove it, and write to output

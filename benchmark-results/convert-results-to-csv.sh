@@ -5,8 +5,8 @@ OUTPUT="benchmark-summary.csv"
 RAW="benchmark-summary-RAW.csv"
 
 # Write header for output files
-echo "versioning,crud,object_graph_size,payload_type,total_invocations,ci_95_lower,ci_95_upper,mean,median,minimum,maximum" > "$RAW"
-echo "crud,object_graph_size,payload_type,versioning,total_invocations,mean,median,minimum,maximum,ci_95_lower,ci_95_upper,ci_95_comparison" > "$OUTPUT"
+echo "versioning,crud,graph,payload,invocations,ci95lower,ci95upper,mean,median,minimum,maximum" > "$RAW"
+echo "crud,graph,payload,versioning,invocations,mean,median,minimum,maximum,ci95lower,ci95upper,ci95comparison" > "$OUTPUT"
 
 # Extract benchmark results from JSON files in selected subdirectories
 find envers javers novers -type f -name '*.json' | while read -r file; do

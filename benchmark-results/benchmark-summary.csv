@@ -1,4 +1,4 @@
-crud,object_graph_size,payload_type,versioning,total_invocations,mean,median,minimum,maximum,ci_95_lower,ci_95_upper,ci_95_comparison
+crud,graph,payload,versioning,invocations,mean,median,minimum,maximum,ci95lower,ci95upper,ci95comparison
 Create,SINGLE,BASIC,Novers,253408.34,1689.39,1664.66,1516.49,1819.71,1676.89,1701.89,100.00
 Create,SINGLE,BASIC,Envers,135945.93,906.31,909.93,719.99,961.91,901.24,911.37,54.35
 Create,SINGLE,BASIC,Javers,45019.31,300.13,274.98,220.94,447.76,289.96,310.30,18.50
